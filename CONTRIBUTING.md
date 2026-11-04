@@ -43,8 +43,23 @@ obviously right or obviously wrong.
 ## Submitting a run
 
 Include `META.yaml` with the exact model id and the git sha of the prompt
-as used. A run whose prompt cannot be reconstructed from the repository is
-not a data point and will be closed.
+as used, both paths where a run used an overlay. A run whose prompt cannot
+be reconstructed from the repository is not a data point and will be
+closed.
+
+Run the validator and record its result in your `REVIEW.md`:
+
+    python protocol/validate.py runs/<run>/OUTPUT.json
+
+A deliberate violation is acceptable when the contract gives you no honest
+way to comply; say so in `REVIEW.md` and leave it visible. An undeclared
+one will be found, because the check is mechanical. If you judge a rule
+wrong rather than your run, say that instead and argue it.
+
+For an adversary run, stage the permitted inputs in their own directory and
+give the agent no repository checkout. A withholding that depends on the
+agent choosing not to read a file it holds is not a withholding. Record
+what was staged in an `INPUTS.md` beside the run.
 
 Record cost in `META.yaml` notes. Cost per usable finding is part of what
 the method experiment measures.

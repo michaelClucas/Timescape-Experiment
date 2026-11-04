@@ -91,12 +91,29 @@ is authoritative, and any divergence is a review finding.
 - `weight` on a chain step is 0-3: how much of the conclusion depends on
   it. The distribution of weight across the chain is the main result of
   Run 01, so fill it for every step.
+`protocol/validate.py` checks the mechanical rules below. Run it before
+committing a run and record the result in `REVIEW.md`. It checks whether
+the contract was followed, never whether a claim is true.
+
 - `free_params` is required in every ledger entry that has a `comparison`.
   Set either side to `null` only if the count genuinely could not be
   established, and then say so in `status`.
 - `objections[].resolved` defaults to `false`. Setting it `true` requires
-  `resolution_note` with a locator showing the field resolved it, not the
-  run's own judgement.
+  `resolution_note`, and a locator somewhere in the entry showing the field
+  resolved it, not the run's own judgement. The locator may sit in the
+  note or in either position's `sources`.
+- `objections[].attacks` names a chain step, or the reserved value
+  `"programme"` for an objection to the programme as a whole rather than to
+  one step. Run 01 needed this for two objections and wrote
+  `"the programme"`; both spellings are accepted.
+- A `comparison` whose `value` is non-null while either side of
+  `free_params` is null **must** say so in `statistic` or
+  `interpretation_scale`: "uninterpretable", "not applicable", or
+  equivalent. Quoting a value with no parameter counts and no disclaimer is
+  the C5 violation, and it is the one a reader never catches by eye,
+  because the statistic is right there and looks like a result. Run 01's
+  `C-SN-5` does exactly this with ln B = -3.46 and the validator catches
+  it.
 - `seed_corrections` being non-empty is a good sign. The seed docs were
   written without retrieval and are expected to be wrong in places.
 - Extension proposals do not belong in this schema. They have their own

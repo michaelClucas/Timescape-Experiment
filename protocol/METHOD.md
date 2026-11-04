@@ -35,14 +35,49 @@ runs/<NN>-<slug>-<YYYY-MM-DD>/
 
 - `01` Audit the derivation chain and the evidential status. No
   extensions. Prompt: `prompts/01-audit-derivation-chain.md`.
-- `02` Adversarial pass over 01. Prompt: `prompts/02-adversary.md`, role
-  card `prompts/00-system-adversary.md`. Runs on a fresh context, never a
-  fork of the target run, and produces the gate decision.
+- `02` Adversarial pass over 01. Prompts: `prompts/02-adversary.md` with
+  the overlay `prompts/02-adversary-v2.md`, role card
+  `prompts/00-system-adversary.md`. Runs on a fresh context, never a fork
+  of the target run, with the withheld inputs enforced by staging rather
+  than by instruction. Produces the gate decision.
 - `03+` Decided after 02. Extensions are unlocked only when
   `protocol/EXTENSION-RULES.md` is satisfied.
 
 Replicate 01 on at least two models plus one seed-withheld control before
 building on it.
+
+## Prompt versioning
+
+A prompt a run has used is **never edited**, not even to add a note: its
+sha must stay resolvable so a run's `prompt_commit` keeps meaning what it
+said. A fix forks to a `-v2` file.
+
+`prompts/02-adversary-v2.md` is an **overlay** on `02-adversary.md`, not a
+replacement: it changes the inputs, adds a validator step, amends four
+surfaces and adds a sixth output part, and leaves the ten surfaces as
+written in v1. Stage both. An overlay rather than a copy, because a
+near-duplicate drifts from its original silently.
+
+## Validation
+
+Every run producing `OUTPUT.json` is checked with
+
+    python protocol/validate.py runs/<run>/OUTPUT.json
+
+before it is committed, and the result goes in the run's `REVIEW.md`.
+
+On Run 01 it reports one violation: `C-SN-5` quotes ln B = -3.46 with both
+free-parameter counts null and the statistic not marked uninterpretable,
+which breaks the C5 rule in `docs/claim-ledger.md`. The rule was already
+right; nothing was checking it.
+
+Two of the validator's rules were over-strict on first run and produced
+three false hits before being relaxed: an objection may attack the
+programme as a whole rather than one chain step, and a resolved
+objection's locator may sit elsewhere in the entry than in the note. Both
+are now schema rules in their own right. A validator that cries wolf gets
+ignored, which is the same incentive problem the adversary role card
+describes for false findings.
 
 ## Roles
 
