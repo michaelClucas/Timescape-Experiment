@@ -1,0 +1,44 @@
+# Verified on this machine, 2026-11-04.
+#
+# Every version below was installed into a clean venv on Python 3.14.7
+# (CPython, MSC v.1944, 64-bit, Windows) and imported successfully. camb was
+# additionally run, not merely imported, because importing a Fortran
+# extension proves little:
+#
+#   camb.set_params(H0=67.5, ombh2=0.022, omch2=0.122, ns=0.965, As=2e-9)
+#   -> rdrag = 146.989 Mpc, thetastar = 1.04465
+#
+# Reproduce with:
+#   python -m venv .venv
+#   .venv/Scripts/python -m pip install -r env/requirements.txt
+#   .venv/Scripts/python verify/tracker_relations.py
+
+numpy==2.5.4
+scipy==1.18.1
+matplotlib==3.11.2
+pandas==3.1.1
+astropy==8.0.2
+sympy==1.14.0
+emcee==3.1.6
+corner==2.3.0
+getdist==1.7.7
+dynesty==3.1.0
+iminuit==2.33.0
+camb==2.0.5
+cobaya==3.6.2
+
+# NOT AVAILABLE, and the plan does not depend on it:
+#
+# classy  - the CLASS Python wrapper. There is no wheel for ANY version on
+#           this platform: pip reports "Could not find a version that
+#           satisfies the requirement classy (from versions: none)". It is a
+#           source distribution requiring a C toolchain and is known to be
+#           difficult on Windows.
+#
+#           camb substitutes for every use this plan has: sound horizon,
+#           theta_star, transfer functions and CMB spectra. Where a package
+#           absolutely requires CLASS, the plan says so and that work does
+#           not run on this machine.
+#
+#           Do not add classy to this file without first installing it
+#           successfully and recording how.
