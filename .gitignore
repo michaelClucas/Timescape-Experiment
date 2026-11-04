@@ -1,0 +1,18 @@
+# Local scratch, never committed
+scratch/
+*.local.md
+
+# Agent tooling
+.env
+.venv/
+__pycache__/
+node_modules/
+
+# Data products too large for git
+data/raw/
+*.fits
+*.npz
+
+# OS
+.DS_Store
+Thumbs.db
