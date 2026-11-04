@@ -34,8 +34,10 @@ runs/<NN>-<slug>-<YYYY-MM-DD>/
 ## Run sequence
 
 - `01` Audit the derivation chain and the evidential status. No
-  extensions.
-- `02` Adversarial pass over 01.
+  extensions. Prompt: `prompts/01-audit-derivation-chain.md`.
+- `02` Adversarial pass over 01. Prompt: `prompts/02-adversary.md`, role
+  card `prompts/00-system-adversary.md`. Runs on a fresh context, never a
+  fork of the target run, and produces the gate decision.
 - `03+` Decided after 02. Extensions are unlocked only when
   `protocol/EXTENSION-RULES.md` is satisfied.
 
