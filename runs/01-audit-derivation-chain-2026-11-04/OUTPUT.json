@@ -1,0 +1,963 @@
+{
+  "run": "01-audit-derivation-chain",
+  "model": "claude-opus-5",
+  "date": "2026-11-04",
+  "scaffold_version": "v0",
+
+  "_note_on_kinds": "The schema allows one kind per step. Four steps have composite kinds in OUTPUT.md (T7 THEOREM+SCHEME, T10 POSTULATE+FIT, T11 SCHEME+INTERPRETATION, T12 SCHEME/POSTULATE) and T1 is an observation, which the schema has no value for. The single value recorded here is the one the audit's conclusion rests on; OUTPUT.md is authoritative. This divergence is flagged in REVIEW.md.",
+
+  "chain": [
+    {
+      "id": "T1",
+      "seed_id": "D1",
+      "statement": "The late universe is inhomogeneous: voids with effective radii above 10 h^-1 Mpc fill 62% of the SDSS DR7 sample volume, median effective radius 17 h^-1 Mpc, density contrast delta < -0.85 at void edges.",
+      "kind": "INTERPRETATION",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": true,
+      "kind_disagreement_note": "Seed tags THEOREM. This is a measurement; no schema value fits, and THEOREM is wrong. Recorded as INTERPRETATION only because the schema requires one of five values.",
+      "support": [
+        { "locator": "arXiv:1103.4156", "section": "abstract; MNRAS 421 (2012) 926; DOI 10.1111/j.1365-2966.2011.20197.x" },
+        { "locator": "arXiv:1702.02159", "section": "abstract; homogeneity scale R_H = 63.3 +/- 0.7 h^-1 Mpc" },
+        { "locator": "arXiv:1106.1693", "section": "Sec. 4.1; coarse-graining at ~100 h^-1 Mpc" }
+      ],
+      "strongest_objection": null,
+      "if_this_fails": "Total collapse. Also note: the observed void filling factor is reproduced by LCDM mocks, so it is not a discriminating observable.",
+      "weight": 3
+    },
+    {
+      "id": "T2",
+      "seed_id": "D2 (first half)",
+      "statement": "Spatial averaging of scalars does not commute with time evolution: d/dt <Psi>_D - <dPsi/dt>_D = <Psi.theta>_D - <Psi>_D <theta>_D, an exact identity.",
+      "kind": "THEOREM",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": false,
+      "support": [
+        { "locator": "arXiv:gr-qc/9906015", "section": "Sec. 2.2, Lemma Eq. (9f); Gen. Rel. Grav. 32 (2000) 105" },
+        { "locator": "arXiv:0707.2153", "section": "Sec. 1.3.2, Eq. (7); non-commutativity is 'purely kinematical'" }
+      ],
+      "strongest_objection": null,
+      "if_this_fails": "If averaging commuted, the averaged equations would be Friedmann's and there would be no model.",
+      "weight": 3
+    },
+    {
+      "id": "T3",
+      "seed_id": "D2 (second half)",
+      "statement": "The Einstein tensor of an averaged metric differs from the average of the Einstein tensors.",
+      "kind": "INTERPRETATION",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": true,
+      "kind_disagreement_note": "Seed tags THEOREM. Nowhere stated as a theorem in the retrieved literature. Ellis calls it 'the basic point' and says the metric average used to state it is 'not a well-defined tensorial operation'. The symbolic version is an order-of-magnitude estimate argued from term structure, not proved. The run's most consequential kind correction.",
+      "support": [
+        { "locator": "arXiv:1103.2335", "section": "Sec. 2.2; Class. Quantum Grav. 28 (2011) 164001" },
+        { "locator": "arXiv:0906.3165", "section": "Sec. 1, Eq. (1.3); PhD thesis TIFR 2009" },
+        { "locator": "arXiv:0707.2153", "section": "searched; does not state it (negative result)" }
+      ],
+      "strongest_objection": null,
+      "if_this_fails": "Nothing. Timescape does not use it; the formalism rests on T2, which is exact for scalars.",
+      "weight": 0
+    },
+    {
+      "id": "T4",
+      "seed_id": "D3",
+      "statement": "The Buchert averaged scalar equations for irrotational dust, with kinematical backreaction Q_D = (2/3)<(theta-<theta>)^2> - 2<sigma^2> and the integrability condition relating Q_D to the averaged Ricci scalar.",
+      "kind": "THEOREM",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": true,
+      "kind_disagreement_note": "Seed tags SCHEME. Defensible but imprecise: the equations are theorems conditional on the chosen conditions. The scheme content is those conditions plus the closure, separated out as T5.",
+      "support": [
+        { "locator": "arXiv:gr-qc/9906015", "section": "Sec. 2.2, Theorem Eqs. (10a)-(10c), Corollary 3 Eqs. (13a)-(13b); Appendix B Eq. (B.1a) for Q_D ~ a^-6" },
+        { "locator": "arXiv:0707.2153", "section": "Eqs. (24), (27), (29); Sec. 3.2.1 Eq. (63) volume-acceleration condition Q_D > 4 pi G <rho>_D; Sec. 3.3.5 Eqs. (74)-(76) scaling solutions" },
+        { "locator": "arXiv:1112.5335", "section": "Eqs. (7)-(10); Sec. 3.2.1 upper bound on volume acceleration" }
+      ],
+      "strongest_objection": "O1",
+      "if_this_fails": "The formalism goes, and with it every quantitative claim. Note that both camps agree the system is underdetermined (Green & Wald arXiv:1407.8084 Sec. 3 fn. 4, and Buchert himself) - a point of agreement usually lost in the dispute.",
+      "weight": 3
+    },
+    {
+      "id": "T5",
+      "seed_id": "absent (folded into D3)",
+      "statement": "The Buchert system does not close, so any number requires an added closure assumption; and the equations hold only under chosen conditions: irrotational dust, a flow-orthogonal constant-proper-time foliation, scalars only, and a given time-evolving domain.",
+      "kind": "SCHEME",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": true,
+      "kind_disagreement_note": "Seed has no separate step. Separating it is necessary: this is where theorem stops and model starts.",
+      "support": [
+        { "locator": "arXiv:gr-qc/9906015", "section": "Sec. 2.2 ('we cannot solve the backreaction problem for scalars based on this system'); Sec. 2.1; Sec. 2.2 fn. 3; Sec. 3.3; Sec. 3.5 ('a general framework')" },
+        { "locator": "arXiv:1103.2335", "section": "Sec. 2.3.2; closure Ansatz 'not fully justified from the underlying dynamics'" },
+        { "locator": "arXiv:1112.5335", "section": "Sec. 2.2; 'The result does, however, depend on the hypersurface on which the average is taken'" }
+      ],
+      "strongest_objection": "O1",
+      "if_this_fails": "There is no quantitative model without a closure, and every number in timescape comes from one particular closure.",
+      "weight": 3
+    },
+    {
+      "id": "T6",
+      "seed_id": "D5",
+      "statement": "A two-phase ansatz: spatially flat walls bounded by finite-infinity surfaces where the average expansion vanishes, negatively curved voids with a single assumed curvature scale, combined by horizon-volume averaging with a-bar^3 = f_wi a_w^3 + f_vi a_v^3.",
+      "kind": "SCHEME",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": false,
+      "support": [
+        { "locator": "arXiv:gr-qc/0702082", "section": "Sec. 3.2 Eq. (11) finite infinity, 'intrinsic ambiguity in assigning the shape to the boundary'; Sec. 5.1 Eq. (22) split and f_v definition; New J. Phys. 9 (2007) 377" },
+        { "locator": "arXiv:0709.0732", "section": "text at Eq. (1); walls 'assumed to be spatially flat'" },
+        { "locator": "arXiv:1106.1693", "section": "Sec. 4.2; 'a single negative curvature scale is assumed as a simplification'; no sensitivity analysis exists" },
+        { "locator": "arXiv:0909.0749", "section": "Sec. II; no backreaction within walls or within voids separately" }
+      ],
+      "strongest_objection": "O1",
+      "if_this_fails": "The whole quantitative apparatus. Green & Wald arXiv:1407.8084 Sec. 3 argue large averaged scalar curvature from this kind of scheme is 'entirely spurious' - the line of attack that actually reaches timescape's mechanism.",
+      "weight": 3
+    },
+    {
+      "id": "T7",
+      "seed_id": "absent",
+      "statement": "There is an exact general solution of the two-scale Buchert equations (not of the Einstein field equations), and all observational work uses a late-time tracker attractor special case with h_r = 2/3.",
+      "kind": "SCHEME",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": true,
+      "kind_disagreement_note": "Seed has no step for this and does not distinguish 'exact solution' from 'solution used'. Composite kind in prose: THEOREM of the averaged equations under T6, plus SCHEME for the tracker restriction.",
+      "support": [
+        { "locator": "arXiv:0709.0732", "section": "Introduction ('the general exact solution to the Buchert equations'); Eqs. (11), (13) general solution; Eqs. (18)-(19) tracker; Phys. Rev. Lett. 99 (2007) 251101" },
+        { "locator": "arXiv:gr-qc/0702082", "section": "fn. 65; tracker accuracy 0.1% in H_0, 1% in f_v0, 3% in Omega_M0" },
+        { "locator": "arXiv:1009.5855", "section": "Sec. 2; the averaged metrics are 'not exact solutions of the Einstein equations'" },
+        { "locator": "arXiv:1311.3787", "section": "Sec. 5.1; the dressed metric 'is not a LTB solution'" }
+      ],
+      "strongest_objection": null,
+      "if_this_fails": "The qualitative claim survives; every number does not.",
+      "weight": 2
+    },
+    {
+      "id": "T8",
+      "seed_id": "D4",
+      "statement": "In the fitted solution the bare energy budget is dominated by average negative spatial curvature, Omega-bar_k0 = 0.862 (+0.024/-0.032), with kinematical backreaction small and NEGATIVE, Omega-bar_Q0 = -0.0293 (+0.0033/-0.0036), |Omega-bar_Q| <~ 0.042 at all times, and no volume acceleration (q-bar > 0).",
+      "kind": "FIT",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": true,
+      "kind_disagreement_note": "Seed states this step as 'Backreaction can be large enough to matter', tagged INTERPRETATION/disputed, and calls it the highest-priority item. Timescape does not claim large backreaction and says so. This mislocates the model's mechanism and is the largest seed error.",
+      "support": [
+        { "locator": "arXiv:1311.3787", "section": "Table 1 (bare and dressed parameters); Sec. 5.3 ('the backreaction is never large enough to make q-bar negative')" },
+        { "locator": "arXiv:0909.0749", "section": "Secs. II.3, II.4, Eqs. (18)-(21); backreaction 'at most of order 4.2%', Omega-bar_Q negative, q-bar positive; Phys. Rev. D 80 (2009) 123512" },
+        { "locator": "arXiv:1009.5855", "section": "Sec. 2; 'the backreaction is relatively small as a fraction of the total energy density (<5%)'" },
+        { "locator": "arXiv:1306.3208", "section": "Table 1; same parameter set; Class. Quantum Grav. 30 (2013) 175006" }
+      ],
+      "strongest_objection": "O1",
+      "if_this_fails": "If the fitted Omega-bar_k0 is wrong, timescape fails. If Omega-bar_Q turned out large, timescape would not need it. Green & Wald's theorems concern Q-type backreaction and therefore do not engage this step; their Sec. 3 spurious-curvature argument does.",
+      "weight": 3
+    },
+    {
+      "id": "T9",
+      "seed_id": "D6 (existence)",
+      "statement": "The Cosmological Equivalence Principle: at any event it is possible to choose a spacetime neighbourhood in which average timelike and null motions are geodesics in a geometry that is Minkowski up to a time-dependent conformal transformation.",
+      "kind": "POSTULATE",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": false,
+      "support": [
+        { "locator": "arXiv:0809.1183", "section": "Sec. II.1 at Eq. (1) for the statement; abstract, Secs. I, II.1, VII for 'extended'/'proposing an extension' of the SEP; Sec. VI for its open scope; Phys. Rev. D 78 (2008) 084032" },
+        { "locator": "arXiv:1106.1693", "section": "Sec. 3.3.1; 'a further principle of relativity that is lacking in general relativity with the SEP alone'; CIF patching procedures 'have not been developed yet'" },
+        { "locator": "arXiv:1311.3787", "section": "Sec. 4.1, Eq. (22); restatement as the cosmological inertial region; Sec. 5.2 alpha_0 = 8.6 (+1.9/-1.5) x 10^-11 m/s^2" }
+      ],
+      "strongest_objection": "O2",
+      "if_this_fails": "The model fails. Wiltshire nowhere claims it follows from standard GR.",
+      "weight": 3
+    },
+    {
+      "id": "T10",
+      "seed_id": "D6 (magnitude)",
+      "statement": "The relative lapse between wall and volume-average clocks is physical and cumulatively of order 35-38% today; gamma-bar = 1 + f_v/2 on the tracker, with a ceiling gamma < 3/2.",
+      "kind": "POSTULATE",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": true,
+      "kind_disagreement_note": "Seed folds magnitude into the postulate. The magnitude is a FIT: gamma-bar = 1 + f_v/2 on the tracker and f_v0 is fitted, so 38% tracks f_v0 ~ 0.76 and 35% tracks f_v0 ~ 0.695. No uncertainty is attached to the percentage in any paper retrieved, and the 38%-to-35% drift is never flagged.",
+      "support": [
+        { "locator": "arXiv:0709.0732", "section": "Eq. (7) general lapse; text after Eq. (19) tracker gamma-bar = 1 + f_v/2" },
+        { "locator": "arXiv:0809.1183", "section": "abstract (38%); Sec. III.1 Eqs. (11)-(12), gamma = 1.42-1.46, 'clock rate variances of 42%-46%'; gamma-bar = 1.38 (+0.06/-0.05); Sec. III.1 the uniform-Hubble-flow gauge 'can be maintained outside finite infinity regions, but not within them'" },
+        { "locator": "arXiv:gr-qc/0702082", "section": "abstract and Sec. 4.2; the bound gamma < 3/2" },
+        { "locator": "arXiv:1410.3470", "section": "Sec. I (35%); Sec. III.2 Eq. (20) volume-average CMB temperature 'up to about 35% cooler'; Phys. Rev. D 91 (2015) 063519" },
+        { "locator": "arXiv:1306.3208", "section": "Table 1; gamma-bar_0 = 1.348 (+0.021/-0.025); ages 14.2 +/- 0.5 Gyr (wall) vs 17.5 +/- 0.6 Gyr (volume average)" }
+      ],
+      "strongest_objection": "O2",
+      "if_this_fails": "The model fails, independently of T8. Granting backreaction in full does not help here.",
+      "weight": 3
+    },
+    {
+      "id": "T11",
+      "seed_id": "D7",
+      "statement": "Dressed versus bare parameters: H = gamma-bar H-bar - d(gamma-bar)/dt, Omega_M = gamma-bar^3 Omega-bar_M. Wall observers inferring FLRW from their own clocks see apparent acceleration. The dressed parameters obey no sum rule and are 'just a convenient parametrization'.",
+      "kind": "SCHEME",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": false,
+      "support": [
+        { "locator": "arXiv:0709.0732", "section": "Eqs. (8), (25); text after Eq. (7); q sign change at f_v ~= 0.5867, max apparent acceleration q ~= -0.043 at f_v ~= 0.7736 (text after Eq. 26)" },
+        { "locator": "arXiv:0909.0749", "section": "Eqs. (26), (27)" },
+        { "locator": "arXiv:1410.3470", "section": "Sec. III.1; dressed density parameters do not sum to one" },
+        { "locator": "arXiv:1812.01586", "section": "Sec. 2; the lapse-rate term reduces the inferred Hubble parameter by about -5.8 km/s/Mpc; A&A 624 (2019) A12" }
+      ],
+      "strongest_objection": "O2",
+      "if_this_fails": "The apparent acceleration does not follow.",
+      "weight": 3
+    },
+    {
+      "id": "T12",
+      "seed_id": "absent",
+      "statement": "The dressed effective metric correctly gives luminosity distances along the observer's past light cone.",
+      "kind": "POSTULATE",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": true,
+      "kind_disagreement_note": "Seed omits this step entirely. It carries weight 3 and both Buchert and Wiltshire state in print that it is not yet justified. Composite kind in prose: SCHEME/POSTULATE.",
+      "support": [
+        { "locator": "arXiv:0707.2153", "section": "Sec. 3.3.7 ('The averaged equations cannot predict luminosity distances unless one considers averages on the lightcone'); Sec. 4.3.1" },
+        { "locator": "arXiv:1106.1693", "section": "Sec. 4; identifying the volume-average Hubble parameter with the observed one 'remains to be rigorously justified'" },
+        { "locator": "arXiv:0909.0749", "section": "Sec. II and Appendix B; the dressed metric is not an exact solution; wall time is 'assumed to be a good approximation'" },
+        { "locator": "arXiv:0812.2872", "section": "Secs. 3.1, 3.2, Eqs. (38)-(40); the assumptions needed to get a distance-redshift relation from averaged quantities; JCAP 0902:011 (2009)" }
+      ],
+      "strongest_objection": "O7",
+      "if_this_fails": "The entire supernova, CMB and BAO comparison runs through this step.",
+      "weight": 3
+    },
+    {
+      "id": "T13",
+      "seed_id": "D8",
+      "statement": "The model fits the data at least as well as LCDM. The void fraction f_v0, the single parameter generating the effect, is fitted in every analysis retrieved, with values spanning 0.550 to 0.95.",
+      "kind": "FIT",
+      "kind_confidence": "SOURCED",
+      "kind_disagrees_with_seed": false,
+      "support": [
+        { "locator": "arXiv:1706.07236", "section": "Sec. 4.1.1, Table 3; ln B = 0.085 +/- 0.01 at z_min = 0.033, k = 9 both sides; MNRAS 472 (2017) 835" },
+        { "locator": "arXiv:2311.01438", "section": "Secs. 4.7.1, 4.7.3, Fig. 11; ln B from +2.93 to -2.82; MNRAS 536 (2025) 1752" },
+        { "locator": "arXiv:2412.15143", "section": "Sec. 3, Figs. 1-2; ln B > 5, parameter count unreconciled; MNRAS Lett. 537 (2025) L55" },
+        { "locator": "arXiv:2406.05048", "section": "Tables 5, 7, Sec. 7.8; half-Delta-AIC = -1.7 (SNe) and +6.3 (SNe+BAO), k = 1 both sides; MNRAS 533 (2024) 2615" }
+      ],
+      "strongest_objection": "O3",
+      "if_this_fails": "The empirical case goes.",
+      "weight": 3
+    }
+  ],
+
+  "weight_summary": {
+    "theorem_steps": ["T2", "T4"],
+    "weight_3_non_theorem_steps": ["T1", "T5", "T6", "T8", "T9", "T10", "T11", "T12", "T13"],
+    "finding": "Of thirteen steps, two are theorems (T2, and T4 conditional on T5's choices). The weight neither concentrates on one postulate nor rests on well-established steps: it is spread across eight non-theorem steps (T5, T6, T8, T9, T10, T11, T12, T13), each individually sufficient to break the conclusion, none of them well established. This is neither of the two situations the seed anticipates."
+  },
+
+  "ledger": [
+    {
+      "id": "C-SN-1",
+      "statement": "Bayesian comparison of timescape against flat LCDM on JLA supernovae at z_min = 0.033 gives ln B = 0.085 +/- 0.01, favouring timescape, with 9 free parameters on each side; at z_min = 0.024, ln B = 0.600 +/- 0.007.",
+      "source": { "locator": "arXiv:1706.07236", "section": "Sec. 4.1.1; Table 3; MNRAS 472 (2017) 835-851" },
+      "dataset": "JLA (Betoule et al. 2014), 740 SNe Ia; progressive minimum-redshift cut scanned over 0.01 <= z_min <= 0.1; headline at z_min = 0.033 and 0.024; N surviving each cut NOT tabulated in the paper",
+      "n_objects": 740,
+      "method": "March/Nielsen-Guffanti-Sarkar Bayesian hierarchical likelihood (Eq. 5). Standardisation REFITTED, not inherited: the 9 parameters {Omega_M0, alpha, x_1,0, sigma_x1,0, beta, c_0, sigma_c0, M_B,0, sigma_M_B,0} are fitted for each model, from JLA SALT2 outputs (m_B*, x1, c), not from precomputed distance moduli. No host-mass step. JLA bias corrections NOT applied. JLA's tabulated CMB-frame redshifts NOT used, because they 'already include a correction, z^pec_em, for the peculiar velocity field ... implicitly assuming the FLRW model' (Appendix B); own boost applied using Fixsen et al. 371 km/s. All priors uniform or log-uniform, Table 1: f_v0 in [0.500, 0.799], Omega_M0 in [0.143, 0.487], alpha in [0,1], beta in [0,4], M_B,0 in [-20.3,-18.3]. H_0 fixed, degenerate with M_B,0. Sampler NOT STATED.",
+      "free_params": { "timescape": 9, "comparison_model": 9 },
+      "comparison": { "statistic": "ln B = ln(E_TS/E_LCDM), positive favours timescape", "value": 0.085, "interpretation_scale": "Jeffreys / Kass-Raftery (1995) and Trotta (2008); |ln B| < 1 is 'statistically indistinguishable'" },
+      "systematics": [
+        "Light-curve fitter systematics: 'the empirical nature of light-curve fitting may mask effects due to the underlying expansion history if this deviates from the FLRW geometry' (Sec. 2)",
+        "Redshift / peculiar velocity: 0.1% differences in d_L 'lead to order 1% corrections to cosmological parameters, which we have confirmed in our analysis' (Appendix B)",
+        "Malmquist / colour-luminosity selection: 'Malmquist type biases may not be completely corrected for in the JLA catalogue' (Sec. 2)",
+        "A 'marked 30% jump in c_0 as z_min is varied from 0.01 up to z ~= 0.033', with 'clear evidence for some systematic effect at precisely the scale where we expect it' (Sec. 4.1.1)"
+      ],
+      "responses": [],
+      "status": "contested",
+      "status_changer": "An independent reanalysis. None exists. The paper's own result is 'statistically indistinguishable', so what would change the status is a measurement that discriminates, not a better supernova fit."
+    },
+    {
+      "id": "C-SN-2",
+      "statement": "Bayesian comparison on Pantheon+ gives ln B swinging from +2.93 (P+1690, z_min = 0, favouring timescape) to -2.82 (P+1690, z_min = 0.04, favouring LCDM), with the bootstrapped P+580 value +1.02 +/- 0.04 and the integrated P+1690 result 'marginally favouring LCDM' with no number given.",
+      "source": { "locator": "arXiv:2311.01438", "section": "Secs. 4.7.1, 4.7.3, Fig. 11; MNRAS 536 (2025) 1752; DOI 10.1093/mnras/stae2437" },
+      "dataset": "Pantheon+ (Scolnic et al. 2022). P+1690 = 1690 observations / 1535 unique SNe (15 dropped for non-positive-semi-definite 3x3 statistical covariance); P+580 = the Pantheon+/JLA common subsample, 580 unique SNe / 635 observations; also JLA580, JLA740, size scans at N = 580-1375 and z_min = 0.01, 0.033, 0.05, 0.075, 0.1. NOTE: Lane et al. and Seifert et al. both start from 1708 observations where Scolnic et al. report 1701 SNe after cuts; the 7-event difference is not explained in either timescape paper.",
+      "n_objects": 1535,
+      "method": "Nested sampling, 9 parameters, n_live = 1000; one cosmological parameter per model (f_v0 vs Omega_M0); H_0 a nuisance parameter. Standardisation REFITTED: alpha and beta are varied with priors (Table 3), and Scolnic et al.'s values are explicitly rejected because 'Scolnic et al. (2022) calculate their nominal fit with wwCDM ... we do not use these values'. Pantheon+ bias corrections DISCARDED: they 'are not accounted for, as they introduce a bias towards the standard cosmology based on the FLRW metric'. Malmquist and peculiar-velocity corrections also dropped; Pantheon+ redshift corrections rejected because the procedure 'implicitly assumes the standard cosmological model based on the FLRW metric and Newtonian N-body simulations'. Covariance matrix built to be as cosmology-independent as possible.",
+      "free_params": { "timescape": 9, "comparison_model": 9 },
+      "comparison": { "statistic": "ln B, positive favours timescape; values appear in Fig. 11 and text, not in a table", "value": 1.02, "interpretation_scale": "Kass & Raftery: |ln B| < 1 no preference, 1-3 positive, 3-5 strong, >5 very strong" },
+      "systematics": [
+        "'Without the standard corrections, biases such as the Malmquist bias are present in our analysis' (Sec. 5) - the direct cost of avoiding the circularity",
+        "The beta parameter 'does not converge for varying sample size' (Sec. 5)",
+        "The Nielsen et al. framework 'has some flaws in its formulation'; 'The assumption of imposing Gaussianity may emphasise different characteristics of the distribution'",
+        "SALT2 systematics 'have to be investigated further before being incorporated into the algorithm'",
+        "'more SNe Ia at high redshifts are required to be calibrated in a cosmology-independent manner' (Sec. 5)",
+        "15 SNe dropped for non-positive-semi-definite covariance"
+      ],
+      "responses": [
+        { "locator": "arXiv:2406.05048", "position": "DES Collaboration; independent fit of timescape to DES-SN5YR finds it weakly preferred on supernovae alone and disfavoured once BAO is added" }
+      ],
+      "status": "contested",
+      "status_changer": "An analysis that both avoids LCDM-derived bias corrections and corrects for selection bias. No published analysis does both. Until then every ln B here is conditional on which bias one chooses to carry."
+    },
+    {
+      "id": "C-SN-3",
+      "statement": "Bayesian comparison on the full Pantheon+ sample is reported as ln B > 5 favouring timescape, and ln B > 1 for z_min >= 0.075, with best-fit f_v0 = 0.737 +/- 0.029 against flat LCDM Omega_M0 = 0.377 +/- 0.021.",
+      "source": { "locator": "arXiv:2412.15143", "section": "abstract, Sec. 3, Figs. 1-2; MNRAS Lett. 537 (2025) L55; DOI 10.1093/mnrasl/slae112" },
+      "dataset": "Pantheon+ spectroscopic sample, same P+1690 base as C-SN-2; regimes z_min < 0.023, 0.023 <= z_min < 0.054 (the calibration regime, 'moderate to no significant preference'), and z_min >= 0.075",
+      "n_objects": 1535,
+      "method": "Tripp equation for standardisation alone; x1, c and m_B taken directly from Pantheon+ with per-supernova priors 'directly seeding the priors of x1 and c with the inferred values from the SALT2 fitting algorithm', so the paper 'does not assume any particular statistical distribution for x1 and c'. Peculiar-velocity corrections omitted; Malmquist and other metric-dependent corrections not included. Host-mass step tested and excluded (Delta BIC = -7.90 at z_min = 0, Delta Omega_M0 ~ 0.0016): 'our final results are stated without galaxy host corrections'. H_0 fixed as a nuisance parameter for both models. The authors attribute the large shift in evidence relative to Lane et al. to 'the lifting of the Gaussian assumption' - a change in the supernova population model, not the cosmology.",
+      "free_params": { "timescape": null, "comparison_model": null },
+      "comparison": { "statistic": "ln B, positive favours timescape - RECORDED AS UNINTERPRETABLE under ledger rule C5", "value": null, "interpretation_scale": "Kass & Raftery; also Delta BIC = -13.39 vs LCDM+curvature and -11.70 vs wwCDM, relative to timescape (Sec. 4)" },
+      "systematics": [
+        "'it may, however, potentially overlook astrophysical systematics inherent in the SALT2 light curve procedure'",
+        "'The largest systematic error in the Pantheon++ analysis is the standardisation of the heterogeneous mix'",
+        "'matter model calibrations in the early universe must also be revisited'",
+        "The discrepancy between full-sample and subsample results suggests further analysis of the supernova redshift distribution is needed"
+      ],
+      "responses": [],
+      "status": "contested",
+      "status_changer": "A stated and reconciled parameter count. The paper says 'nine parameters' in one place and 'only requiring five parameters' in another, and Table 1 lists eight rows, unreconciled. Under ledger rule C5 the Bayes factor is uninterpretable until that is fixed. Separately: INSPIRE lists 21 citing records (recid 2861436), none a comment, reply or independent reanalysis, roughly 23 months after the preprint. The paper's own text says 'the evidence in favour of timescape remains small but modest', which does not match the abstract's 'very strong evidence'."
+    },
+    {
+      "id": "C-SN-4",
+      "statement": "An independent fit of timescape to DES-SN5YR finds it weakly preferred over flat LCDM on supernovae alone (half-Delta-AIC = -1.7) and disfavoured once the angular BAO measurement is added (half-Delta-AIC = +6.3), with a strong tension between the two datasets reported for timescape and for none of the other 14 models tested.",
+      "source": { "locator": "arXiv:2406.05048", "section": "Sec. 7.8, Tables 5 and 7, Sec. 8.3; MNRAS 533 (2024) 2615; DOI 10.1093/mnras/stae1988" },
+      "dataset": "DES-SN5YR (1635 DES + 194 low-z), with the 'DES-SN5YR cut' adopting z_min = 0.033 after Dam et al. 2017, which 'reduces our low-z sample by 68 SNe'; CMB rest-frame redshifts excluding peculiar-velocity corrections; CMB-R summary statistic dropped for timescape; BAO-theta*-perp only (eBOSS-based, SDSS MGS/BOSS/eBOSS LRG,ELG,QSO,Lya plus a Planck-derived acoustic scale). Flat LCDM re-run with identical modifications.",
+      "n_objects": 1829,
+      "method": "Timescape tracker solution, Eqs. 44-50, with Omega_m = (1/2)(1-f_v0)(2+f_v0) derived from the single fitted parameter f_v0; H_0 a nuisance parameter. AIC = 2k - 2 ln L^max with k = 1 for each model. Standardisation: the DES BBC pipeline, i.e. bias corrections from flat-LCDM simulations at (Omega_m, w)_ref = (0.315, -1.0) - INHERITED, and the authors say so: 'The bias correction step thus holds the biggest potential for harbouring cosmological assumptions that could influence the cosmological results' (Sec. 2.3.2). They validate it with 25 realisations in flat wCDM analysed under six reference cosmologies and conclude the pipeline recovers the true distance-redshift relation to within 1 sigma 'even given a reference cosmology that is ~10 sigma from the truth' (Sec. 4) - a test performed entirely within FLRW.",
+      "free_params": { "timescape": 1, "comparison_model": 1 },
+      "comparison": { "statistic": "half-Delta-AIC and Delta ln S (Suspiciousness), relative to flat LCDM; 'A more negative half-Delta-AIC and Delta ln S value indicates a stronger preference over Flat-LCDM'", "value": 6.3, "interpretation_scale": "Trotta (2008): Delta > 1, > 2.5, > 5 are weak, moderate and strong evidence against the model with the higher value" },
+      "systematics": [
+        "Bias-correction reference cosmology, acknowledged as the biggest risk and validated only within FLRW (Sec. 2.3.2, Sec. 4)",
+        "BBC fiducial cosmology (H_0, Omega_m) = (70, 0.3), with the Marriner et al. argument that alpha and beta decouple from it given 20 log-spaced redshift bins",
+        "Fig. 9 excludes timescape from the best-fit overlays because 'it was fit against a modified Hubble diagram'"
+      ],
+      "responses": [
+        { "locator": "arXiv:2412.15143", "position": "Timescape group, Sec. 1: 'the BAO analysis of Camilleri et al. 2024 assumes purely geometric adjustments to the standard FLRW pipeline, using a LCDM calibration of the BAO drag epoch, which is not the case in timescape'" },
+        { "locator": "arXiv:2311.01438", "position": "Timescape group, fn. 22: 'this result is encouraging for the timescape scenario as it suggests it may be falsifiable if its methodology is not fully implemented'" }
+      ],
+      "status": "contested",
+      "status_changer": "A timescape-native BAO drag-epoch calibration, which does not exist (see C-BAO-1). Until one does, neither the DES result nor the timescape group's rejection of it can be adjudicated."
+    },
+    {
+      "id": "C-SN-5",
+      "statement": "Across ten supernova compilations the timescape-versus-flat-LCDM Bayes factor ranges from ln B = -4.23 (CSP, favouring LCDM) to +1.09 (MLCS31, favouring timescape), with the sign tracking the light-curve reduction method: SALT-type reductions favour LCDM, MLCS2k2 reductions favour timescape.",
+      "source": { "locator": "arXiv:1009.5855", "section": "Tables 5 and 6, Secs. 3.4, 4.2, 4.3; MNRAS 413 (2011) 367-385" },
+      "dataset": "Riess07 Gold (182), R140 (140), MLCS17 (372), MLCS31 (366), SDSS-II (288), Union (307), Constitution (397), SALT2 (351/352 - the paper's own two tables disagree), Union2 (557), CSP (56); each at no cut, z >= 0.024 (the Hubble-bubble partition) and z >= 0.033 (the statistical homogeneity scale, ~100 h^-1 Mpc)",
+      "n_objects": 557,
+      "method": "MIXED, and this is the key field. SALT-type rows were recomputed with the timescape luminosity distance, refitting the empirical parameters: 'taking the published stretch and colour parameters for each supernova, and recomputing Omega_M0 along with the empirical parameters M, alpha and beta' (Sec. 4.2). MLCS2k2 rows were analysed from PUBLISHED DISTANCE MODULI 'out of the box' (Sec. 4.1), with the cosmology step 'decoupled' from the distance-modulus determination (Sec. 3.1) - i.e. INHERITED standardisation. So the reduction-method dependence of the result is confounded with the refit-versus-inherit distinction, and the paper does not separate them.",
+      "free_params": { "timescape": null, "comparison_model": null },
+      "comparison": { "statistic": "ln B = ln(E_TS/E_LCDM), positive favours timescape", "value": -3.46, "interpretation_scale": "Jeffreys scale; the paper calls the 140-SN subsample results 'statistically indistinguishable'" },
+      "systematics": [
+        "Residual systematics in reddening and extinction; intrinsic colour; Hubble-bubble degeneracy (Sec. 3.3)",
+        "A numerical bug in Leith, Ng & Wiltshire (2008) changed that paper's quoted Bayes factor to ln B = -1.12 (Sec. 1 fn. 1); Table 6 gives -1.20 for the same sample under wider priors and the two are not reconciled"
+      ],
+      "responses": [
+        { "locator": "arXiv:0902.4249", "position": "Kwan, Francis & Lewis, MNRAS Lett. 399 (2009) L6: 'the FB model is weakly disfavoured when using the Union compilation or the Constitution set (ln B = -1.38, -1.469, respectively)', and 'there is significant tension in the best fit parameters obtained from different samples, whereas LCDM is able to fit all datasets consistently'" }
+      ],
+      "status": "contested",
+      "status_changer": "Already partly superseded by C-SN-1 to C-SN-4, but retained because it is the only analysis that varies the reduction method, and it shows the sign of the preference is not a property of the data. The paper's own conclusion: 'one cannot reliably distinguish the TS and LCDM models on the basis of SNe Ia data alone' (Sec. 3.4)."
+    },
+    {
+      "id": "C-CMB-1",
+      "statement": "A fit to the Planck 2013 TT power spectrum over 50 <= l <= 2500 gives -ln L = 3925.16 for timescape (method A), against 3895.5-3896.9 for flat LCDM over the same range, with f_v0 = 0.627 (+0.014/-0.012), dressed H_0 = 60.997 (+0.791/-0.733) km/s/Mpc, and stated systematic uncertainties of 8-13% against 1-2% statistical.",
+      "source": { "locator": "arXiv:1410.3470", "section": "Secs. IV, V, Table 2; Phys. Rev. D 91 (2015) 063519" },
+      "dataset": "Planck 2013 temperature power spectrum, 50 <= l <= 2500, CamSpec likelihood, A&A 571, A15 (2014). NOT Planck 2015 or 2018. No CMB polarization; WMAP9 used only for n_s and eta_Bgamma comparison.",
+      "n_objects": null,
+      "method": "CRITICAL: the spectrum is NOT computed from timescape perturbation theory. A matched FLRW model is constructed and its spectrum computed with the CLASS Boltzmann code - 'We fit the parameters of each matched FLRW universe by computing its CMB power spectrum with the CLASS Boltzmann code' (Sec. IV) - with the background parameters tied to the timescape history by one of three matching prescriptions: A(H-bar_dec), W(k=0), W(k!=0). The analysis must 'implicitly assume that the key features of the CMB anisotropy spectrum are close to those of a FLRW model' (Sec. III). Backreaction neglected before decoupling; late-time ISW differences 'will be neglected here' (Sec. III.2 item 5). emcee MCMC, getdist/CosmoMC, 14 CamSpec foreground and calibration nuisance parameters, N_eff = 3.046 fixed in the main run, T_0 not varied.",
+      "free_params": { "timescape": 5, "comparison_model": 6 },
+      "comparison": { "statistic": "-ln L over 50 <= l <= 2500; lower is better", "value": 3925.16, "interpretation_scale": "none stated; the paper says method A is 'only 0.7% larger' in -ln L than best-fit LCDM. No chi-squared separate from -ln L and NO DEGREES OF FREEDOM are given, and the paper states no explicit k for either side. The 5-and-6 counts here are reconstructed from Table 1 and Table 2 (timescape: f_v0, H_0, eta_Bgamma, n_s, A_s varied; LCDM base six) and should be treated as this run's reconstruction, not the paper's."
+      },
+      "systematics": [
+        "Matching-prescription dependence: f_v0 = 0.628 (A), 0.550 (W k=0), 0.557 (W k!=0) - a 12% spread, with -ln L = 3925.16, 3897.90, 3896.47 respectively",
+        "'systematic uncertainties could be as high as 8-13%, as compared to the 1-2% statistical uncertainties' (Sec. V), and 'the table uncertainties do not include any estimate of the systematic uncertainties'",
+        "'these results depend heavily on perturbation theory in the early Universe' with standard LCDM assumed (Sec. VI)",
+        "The late ISW effect 'has not yet been computed for the timescape scenario' (Sec. VI)",
+        "Radiation-era backreaction neglected; the abstract states conclusions 'may change if backreaction terms are also included'",
+        "Foreground modelling: 'we cannot entirely rule out' an impact (Sec. IV.5)",
+        "Omega_b h^2 is NOT REPORTED for timescape; I attempted to derive it and got inconsistent values (~0.033 from dressed, ~0.010 from bare), so it is recorded as unretrievable from this paper"
+      ],
+      "responses": [],
+      "status": "contested",
+      "status_changer": "A fit to Planck 2018 with a timescape perturbation calculation rather than an FLRW proxy. Neither exists. Note the paper's own most important result is a WITHDRAWAL: 'we cannot make the claim that the timescape model solves the primordial lithium abundance anomaly' (Sec. V), reversing the 2013 claim, following the revision of eta_Bgamma from (5.1 +/- 0.5) x 10^-10 to ~6.47 x 10^-10."
+    },
+    {
+      "id": "C-CMB-2",
+      "statement": "An earlier timescape analysis matched two CMB and BAO summary numbers - the acoustic angle theta* = 0.0104139 to within 2% and an effective comoving drag scale of 98.88 h^-1 Mpc to within 6% - yielding f_v0 = 0.695 (+0.041/-0.051), dressed H_0 = 61.7 +/- 3.0 km/s/Mpc, and a wall-observer age of 14.2 +/- 0.5 Gyr against a volume-average age of 17.5 +/- 0.6 Gyr.",
+      "source": { "locator": "arXiv:1306.3208", "section": "Sec. 3.2, Table 1, Figs. 1-5; Class. Quantum Grav. 30 (2013) 175006; DOI 10.1088/0264-9381/30/17/175006" },
+      "dataset": "'recent values from the Planck satellite analysis' - the paper never names the release. Two summary statistics only.",
+      "n_objects": 2,
+      "method": "Parameter matching to two summary numbers with adopted tolerances of 2% on theta* and 6% on the drag scale, the looser BAO tolerance justified because timescape 'may require recalibrating the baryonic and nonbaryonic dark matter proportions'. The authors state what this is not: 'not statistical constraints of the sort that could be obtained by fully fitting the Planck data directly' (Sec. 3.2).",
+      "free_params": { "timescape": null, "comparison_model": null },
+      "comparison": { "statistic": "none - no chi-squared, no likelihood, no degrees of freedom are reported", "value": null, "interpretation_scale": "not applicable; recorded as uninterpretable" },
+      "systematics": [
+        "The 6% drag-scale tolerance is itself a modelling choice absorbing the unrecalibrated matter proportions",
+        "eta_Bgamma = (5.1 +/- 0.5) x 10^-10, later revised upward in C-CMB-1, which is what forced the lithium-7 withdrawal"
+      ],
+      "responses": [],
+      "status": "superseded",
+      "status_changer": "Superseded by C-CMB-1 for the CMB, and its lithium-7 claim withdrawn there. Retained because its Table 1 is the source of the bare parameter budget used in chain step T8."
+    },
+    {
+      "id": "C-BAO-1",
+      "statement": "No timescape analysis has ever constrained timescape parameters from BAO distance data. The one dedicated paper fixes Omega_M0 = 0.3 as a fiducial, tests only Alcock-Paczynski isotropy, and finds both fiducials consistent with no anisotropic distortion; under the timescape fiducial the BOSS DR12 CMASS scale comes out at 95.4 +/- 1.6 Mpc/h against 102.6 +/- 1.5 Mpc/h under LCDM.",
+      "source": { "locator": "arXiv:1811.11963", "section": "Secs. 1, 2.4, 4.1-4.2, 5, 6, Tables 1-2; JCAP 03 (2019) 003; DOI 10.1088/1475-7516/2019/03/003" },
+      "dataset": "BOSS DR12: LOWZ, 0.15 <= z <= 0.43, 361,762 galaxies; CMASS, 0.43 <= z <= 0.7, 777,202 galaxies; each split NGC/SGC. Validated against LCDM QPM mocks.",
+      "n_objects": 1138964,
+      "method": "Empirical fitting procedure for a characteristic scale with no model assumptions, applied under two fiducial cosmologies. Timescape fiducial has Omega_M0 = 0.3 FIXED, 'equal to that of the LCDM matter density parameter', and 'we aim to demonstrate feasibility of the method'; 'we do not assume any calibration of r_BAO in this study' (Sec. 4.1 fn. 11). No f_v0 or H_0 value is given anywhere in the paper.",
+      "free_params": { "timescape": 0, "comparison_model": 0 },
+      "comparison": { "statistic": "Alcock-Paczynski anisotropy parameter epsilon", "value": 0.021, "interpretation_scale": "'both models are consistent with no anisotropic distortion' - epsilon within 2 sigma of zero for both fiducials (Sec. 6). Timescape CMASS epsilon = 0.021 +/- 0.017; LCDM CMASS epsilon = -0.021 +/- 0.017." },
+      "systematics": [
+        "~1% BAO-scale calibration systematic (Sec. 6)",
+        "Results 'may not be suitable for extrapolation to other model cosmologies, depending on the Alcock-Paczynski scaling' (Sec. 5); the fitting function is 'left as an ansatz for other cosmologies' (Sec. 6)",
+        "'Systematic errors in a empirical fitting procedure will inevitably be larger, and dependent on the cosmological model' (Sec. 4.2 fn. 12)",
+        "LOWZ errors are large (r_BAO/alpha = 93.4 +/- 4.9 Mpc/h)",
+        "CMB constraints on the BAO scale are 'much less precise for timescape as compared to LCDM' (Sec. 2.4)"
+      ],
+      "responses": [],
+      "status": "untested",
+      "status_changer": "A timescape BAO likelihood with a timescape drag-epoch calibration. This is the single most consequential missing analysis, because the DES result in C-SN-4 turns on exactly this and the timescape group's reply to it asserts the calibration is different without providing one."
+    },
+    {
+      "id": "C-HUB-1",
+      "statement": "Timescape predicts 17-22% present local Hubble-flow variance, with a local minimum of 50.1 +/- 1.7 km/s/Mpc toward Virgo and a local maximum of 75.2 (+2.0/-2.6) km/s/Mpc across local voids, and an asymptotic H_0 reached on 70-100 h^-1 Mpc scales.",
+      "source": { "locator": "arXiv:0912.5236", "section": "Sec. 2; AIP Conf. Proc. 1241 (2010) 1182. Also arXiv:1311.3787 Secs. 5.3, 7 for the min/max values." },
+      "dataset": "Prediction, not a fit. Measured against the COMPOSITE sample of 4534 galaxy distances in arXiv:1201.5371.",
+      "n_objects": 4534,
+      "method": "The measurement (arXiv:1201.5371, Phys. Rev. D 88 (2013) 083529) reports H_0 closer to its asymptotic value in the Local Group frame, a Pearson correlation of -0.92 between the LG-frame Hubble-variation map and the residual CMB temperature dipole (Table 3), and 'a foreground nonkinematic anisotropy in the distance-redshift relation of 0.5% on scales up to 65 h^-1 Mpc'. The 0.5% is DERIVED INSIDE THAT PAPER in Sec. V.2 from the Local Group residual CMB dipole, so it is a result rather than the prior prediction. Bayesian evidence for a scale-dependent fit, Table 1: ln B = 58.62 at the innermost shell falling to 0.49 at the outermost; ln B <= 1 for r_s >= 106.25 h^-1 Mpc.",
+      "free_params": { "timescape": null, "comparison_model": null },
+      "comparison": { "statistic": "ln B for a scale-dependent versus uniform Hubble flow, not a timescape-versus-LCDM comparison", "value": 58.62, "interpretation_scale": "the paper calls it 'decisive Bayesian evidence (ln B >> 5)'; note this compares fit forms, not cosmologies, so it is not evidence for timescape" },
+      "systematics": [
+        "Extending the velocity field over large distances 'is merely an ansatz, whose validity remains to be justified' (Sec. I)",
+        "'information for the high multipoles is not reliable' (Sec. III.1); 'caution should be exercised about fitting a simple dipole in the outermost shells' (Sec. III.2)",
+        "Excluding high-scatter points means 'the Bayes factors are somewhat reduced' (Sec. II.2)",
+        "Void boundaries are 'subject to redshift space distortions as large as the Hubble flow variance' (Sec. III.4 fn. 13)",
+        "'much high quality data in the range 100 h^-1 Mpc <~ r <~ 150 h^-1 Mpc is needed to fully constrain any potential variations' (Sec. IV)",
+        "Units are inconsistent between Secs. III.2 and III.3 of the measurement paper"
+      ],
+      "responses": [
+        { "locator": "arXiv:1811.11976", "position": "Saulder, Mieske, van Kampen & Zeilinger, A&A 622 (2019) A83: SDSS + 2MRS group Hubble-flow variation against Millennium mocks; statistical tests 'consistently favored LCDM over the approximated timescape model' and show 'no evidence that the variation of expansion differs' from LCDM" },
+        { "locator": "arXiv:1812.01586", "position": "Wiltshire, A&A 624 (2019) A12: the Millennium rescaling omits the lapse-rate contribution; the dressed metric 'cannot be obtained by a spatial rescaling of a FLRW metric' and the dressed Hubble parameter 'is not linearly related to any void fraction', so the model tested 'cannot be considered to approximate the timescape cosmology'" },
+        { "locator": "arXiv:2510.19945", "position": "Shao & Bengaly, Phys. Rev. D 113 (2026) 123510: 'the Hubble flow becomes statistically uniform at around 70-100 Mpc' and results 'are in good agreement with the expected Hubble variance in the standard model across cosmic scales of 20-150 Mpc'. Timescape is not mentioned, and the two results have never been compared." }
+      ],
+      "status": "contested",
+      "status_changer": "Recasting the 17-22% prediction into the statistic Shao & Bengaly measure, on published data. This is the one distinctive prediction with both a prior locator and a published measurement, and the comparison has never been made. Weeks of work, not years. Note also that the 2016 follow-up (arXiv:1512.07364, JCAP 06 (2016) 035) simulates a quasispherical Szekeres solution, not timescape."
+    },
+    {
+      "id": "C-H0-1",
+      "statement": "Timescape does not address the Hubble tension in any published analysis. Its CMB-matched dressed H_0 = 60.997 (+0.791/-0.733) km/s/Mpc lies BELOW Planck 2018's 67.4 +/- 0.5, not between Planck and the distance ladder, and the supernova analyses fix H_0 as a nuisance parameter and report no value.",
+      "source": { "locator": "arXiv:1410.3470", "section": "Table 2; Phys. Rev. D 91 (2015) 063519. Planck value: arXiv:1807.06209, A&A 641 (2020) A6. Nuisance treatment: arXiv:2412.15143 Sec. 3." },
+      "dataset": "Planck 2013 (timescape); Planck 2018 (LCDM comparison); distance-ladder values from arXiv:2408.11770 (73.2 +/- 0.9), arXiv:2408.06153 (70.39 +/- 1.22 +/- 1.33 +/- 0.70), arXiv:2606.26831 (73.30 +/- 0.92, stated as 5.6 sigma above Planck base LCDM)",
+      "n_objects": null,
+      "method": "No joint early-versus-late analysis exists. The only tension claim is in a Gravity Research Foundation essay (arXiv:2404.02129) with no journal reference, no numbers and no data fit, which states the result 'potentially resolves the Hubble tension'.",
+      "free_params": { "timescape": null, "comparison_model": null },
+      "comparison": { "statistic": "none computed", "value": null, "interpretation_scale": "not applicable" },
+      "systematics": [
+        "Timescape H_0 systematics stated at 8% in arXiv:1410.3470 Sec. V",
+        "Downstream inconsistency: arXiv:2511.17160 Sec. 5.1.1 adopts f_v0 = 0.737 together with H_0 = 73.03 km/s/Mpc attributed to 'the best-fit results from' Seifert et al. 2025, but Seifert et al. fix H_0 as a nuisance parameter and report no H_0. 73.03 is the distance-ladder value. This should be checked before being asserted.",
+        "The LCDM side is direction-dependent: the CCHP authors state their result is 'consistent with the current standard LambdaCDM model, without the need for the inclusion of additional new physics'"
+      ],
+      "responses": [],
+      "status": "untested",
+      "status_changer": "A timescape analysis that fits early- and late-universe H_0 jointly. None exists. On present numbers the model's CMB-matched H_0 is further from the distance ladder than Planck's is, which if anything makes the tension worse, not better - but no paper computes that, so it is recorded as untested rather than as a failure."
+    },
+    {
+      "id": "C-GROWTH-1",
+      "statement": "No published timescape sigma_8, S_8 or f sigma_8 exists. The first linear-perturbation treatment on an averaged background reports that in one closure the sub-horizon dust perturbations reverse sign and become underdensities, which the authors call 'highly unexpected and, we argue, ultimately unphysical', and that 'the Meszaros approximation should not be applicable in the timescape framework'.",
+      "source": { "locator": "arXiv:2511.17160", "section": "Secs. 5.1.1, 5.1.2, Figs. 1-3; JCAP 02 (2026) 066; DOI 10.1088/1475-7516/2026/02/066" },
+      "dataset": "No data. A formalism paper, with initial conditions seeded at z = 20 from an LCDM growing mode of amplitude 6 x 10^-5 at comoving scale c/H_0.",
+      "n_objects": 0,
+      "method": "Buchert-style covariant averaging; backreaction and dynamical curvature modelled as an effective perfect fluid with pressure; two closure choices for the effective-fluid perturbations (comoving and barotropic). Timescape is model 1 of 4. The effective fluid's squared sound speed is negative. Parameters used are f_v0 = 0.737 and H_0 = 73.03 km/s/Mpc; see C-H0-1 on the attribution of the latter.",
+      "free_params": { "timescape": null, "comparison_model": null },
+      "comparison": { "statistic": "none against data; the comparison is against the Meszaros approximation, not against LCDM", "value": null, "interpretation_scale": "not applicable" },
+      "systematics": [
+        "The barotropic-closure result is called unphysical by its own authors and 'could in principle produce anomalous ISW signatures'",
+        "Initial conditions are seeded from LCDM, justified by timescape asymptoting to LCDM early",
+        "No sigma_8, S_8 or f sigma_8 is computed for timescape; the f sigma_8 probe is discussed for two of the other three models"
+      ],
+      "responses": [],
+      "status": "unverified-in-this-run",
+      "status_changer": "A timescape S_8 calculation, which does not exist. Against the combined CMB baseline S_8 = 0.836 (+0.012/-0.013) (arXiv:2602.12238, Phys. Dark Univ. 52 (2026) 102286), timescape currently has no prediction to compare. This is closer to 'untested' than to 'unverified', and the distinction matters: the seed lists structure growth as something a viable alternative 'must not break', and the position is that nobody has checked."
+    },
+    {
+      "id": "C-BBN-1",
+      "statement": "No dedicated timescape BBN calculation exists. The only treatment is a statement that BBN is unchanged 'apart from recalibrating the baryon-to-photon ratio and the helium abundance', with no computed light-element abundances, and the 2013 claim to resolve the primordial lithium-7 anomaly was withdrawn in 2015.",
+      "source": { "locator": "arXiv:1410.3470", "section": "Sec. III.2 for the BBN statement; Secs. V, VI for the withdrawal ('our most important result'); Phys. Rev. D 91 (2015) 063519" },
+      "dataset": "None. The 2013 paper (arXiv:1306.3208, Sec. 3.2 fn. 2) notes 'an intrinsic tension in the light element data between abundances of deuterium and lithium-7' and that for its adopted eta range 'all abundances fall within 2 sigma', with no abundance numbers given.",
+      "n_objects": 0,
+      "method": "No calculation. eta_Bgamma = (5.1 +/- 0.5) x 10^-10 in 2013, revised to ~6.47 x 10^-10 in 2015, which is what forced the withdrawal. The 2015 abstract adds that the lithium issue 'cannot be changed as long as the standard cosmology is assumed up to the surface of last scattering'.",
+      "free_params": { "timescape": null, "comparison_model": null },
+      "comparison": { "statistic": "none", "value": null, "interpretation_scale": "not applicable" },
+      "systematics": ["The entire pre-decoupling history is assumed standard, so timescape inherits whatever the standard BBN systematics are, plus the eta recalibration"],
+      "responses": [],
+      "status": "unverified-in-this-run",
+      "status_changer": "A BBN abundance calculation with the timescape eta and expansion history. None exists. Recording this as 'fine' would be an assumption, which is what the ledger scaffold warns against."
+    }
+  ],
+
+  "objections": [
+    {
+      "id": "O1",
+      "attacks": "T8",
+      "seed_attacks": "D4",
+      "position_a": {
+        "holders": ["Stephen R. Green", "Robert M. Wald", "Akihiro Ishibashi"],
+        "claim": "Under a one-parameter family of metrics in which the perturbation is small but its first derivatives need not be small, the effective stress-energy of small-scale inhomogeneity is traceless (Theorem 1, Eq. 7) and satisfies the weak energy condition (Theorem 2, Eq. 8), so it 'must be of the form of a P=rho/3 fluid, and therefore cannot mimic dark energy'. Separately, apparent acceleration obtained from Buchert averaging of a poorly approximated metric is 'entirely spurious' and 'not a physical effect'.",
+        "key_assumption": "Assumption (iv): local averages of quadratic products of the first derivatives of the metric perturbation have a weak limit (Eq. 5), together with (ii) |gamma_ab| <= lambda C_1(x) and (iii) |grad_c gamma_ab| <= C_2(x). They also restrict to k = 0 (Sec. 4.1) and make no claim that average spatial curvature must stay near FLRW.",
+        "sources": [
+          { "locator": "arXiv:1407.8084", "section": "Secs. 2, 3, 4.1, 4.3; Class. Quantum Grav. 31 (2014) 234003; DOI 10.1088/0264-9381/31/23/234003" },
+          { "locator": "arXiv:1011.4920", "section": "Phys. Rev. D 83 (2011) 084020; DOI 10.1103/PhysRevD.83.084020" },
+          { "locator": "arXiv:gr-qc/0509108", "section": "Class. Quantum Grav. 23 (2006) 235; DOI 10.1088/0264-9381/23/1/012" }
+        ]
+      },
+      "position_b": {
+        "holders": ["T. Buchert", "M. Carfora", "G. F. R. Ellis", "E. W. Kolb", "M. A. H. MacCallum", "J. J. Ostrowski", "S. Rasanen", "B. F. Roukema", "L. Andersson", "A. A. Coley", "D. L. Wiltshire"],
+        "claim": "The trace-free theorem 'fails to be a mathematically general statement'; a weak-energy-condition result 'would be fine but irrelevant for backreaction'; and in the two-dimensional analogy the curvature-averaging assumption 'assumes what is to be proven'.",
+        "key_assumption": "That assumption (iv) excludes the physically relevant regime: 'The condition (iv) is not motivated by any transparent and natural physical argument' (Sec. 3.4), because it requires perturbations down to arbitrarily small wavelengths whereas 'real perturbations do not continue to zero wavelength' (Sec. 4.2).",
+        "sources": [
+          { "locator": "arXiv:1505.07800", "section": "abstract, Secs. 2, 3.4, 4.2, 5.2, 5.3; Class. Quantum Grav. 32 (2015) 215021; DOI 10.1088/0264-9381/32/21/215021" }
+        ]
+      },
+      "turns_on": "Which idealisation applies to the real universe, not mathematics. Neither side alleges a mathematical error: Green & Wald record that 'all assertions that we made mathematical errors in our work have been removed' from the revision (arXiv:1506.06452, Introduction), and their only factual concession is narrow. Both sides also agree the Buchert system is underdetermined. Decisively, Green & Wald themselves disclaim the strong reading: 'whether, in our actual universe, there might be significant backreaction' is not addressed by their analysis, and the closeness of the metric to FLRW 'does not imply that backreaction effects of inhomogeneities must be negligible' (arXiv:1407.8084, Sec. 2). On the other side Buchert and Rasanen concede the magnitude is not established: 'the effect has not been quantified in a fully realistic model' (arXiv:1112.5335, Sec. 5), and 'At the moment it is not yet clear whether backreaction is quantitatively important or not' (arXiv:1102.0408, Sec. 1.1). TWO FURTHER CORRECTIONS: (1) Green & Wald's theorems concern Q-type backreaction and therefore do not engage timescape, whose Omega-bar_Q0 = -0.0293; the argument that does reach it is their Sec. 3 spurious-curvature claim, which has no published reply addressed to timescape. (2) Green & Wald do not mention timescape or Wiltshire anywhere; they critique Buchert by name. Treating this dispute as timescape's decisive battleground, as the seed does, is a category error.",
+      "resolved": false,
+      "third_party_adjudication": "None found. The only candidate, arXiv:1512.02947 (Ostrowski & Roukema, MG14 proceedings), is by a co-author of arXiv:1505.07800. Green & Wald's reply (arXiv:1506.06452) was never published in a journal and has no DOI, while the Buchert et al. side appeared in CQG, so the exchange never closed in the refereed literature.",
+      "unretrieved": "Kaiser, 'why there is no Newtonian backreaction', MNRAS circa 2017. Identified as relevant; NOT retrieved; no locator. [LEAD]"
+    },
+    {
+      "id": "O2",
+      "attacks": "T10",
+      "seed_attacks": "D6",
+      "position_a": {
+        "holders": ["Syksy Rasanen (the only published critic retrieved)", "the objection as reconstructed in docs/objections.md"],
+        "claim": "That a clock-rate difference between regions is a statement about synchronisation and calibration conventions rather than about physics, so a cumulative tens-of-percent difference is an artifact of a particular identification between the inhomogeneous spacetime and its FLRW template. The only published version retrieved is weaker than this: Rasanen argues the dust approximation's inadequacies concern pressure, anisotropic stress and energy flux rather than granularity, and concludes 'it is unlikely that the effects would be captured by simply having clocks run at different rates in different regions'.",
+        "key_assumption": "That the physically meaningful content of an averaging scheme is exhausted by the average expansion rate in the statistically homogeneous dust-dominated case, so a lapse between regions adds nothing observable.",
+        "sources": [
+          { "locator": "arXiv:1102.0408", "section": "Sec. 4.3; Class. Quantum Grav. 28 (2011) 164008; DOI 10.1088/0264-9381/28/16/164008. Ref. [55] there verified against the bibliography as Wiltshire arXiv:0712.3984, arXiv:0809.1183, arXiv:0909.0749. The word 'timescape' does not appear in the paper and 'lapse function' is not mentioned." }
+        ]
+      },
+      "position_b": {
+        "holders": ["David L. Wiltshire"],
+        "claim": "The effect is physical and in principle measurable, grounded in quasilocal gravitational energy and in the Cosmological Equivalence Principle, which extends the strong equivalence principle to averaged dynamical fields in cosmology.",
+        "key_assumption": "That a locally uniform Hubble flow gauge can be chosen - and he states its limit himself: 'The argument above relies on it being possible to choose a locally uniform Hubble flow gauge' and 'Such a gauge can be maintained outside finite infinity regions, but not within them' (arXiv:0809.1183, Sec. III.1), i.e. not where observers are.",
+        "sources": [
+          { "locator": "arXiv:0809.1183", "section": "Sec. II.1 (statement), Sec. III.1 (the gauge concession), Sec. VI ('A question remains as to what extent we should take it as a universal principle?'), Sec. VII; Phys. Rev. D 78 (2008) 084032" },
+          { "locator": "arXiv:1106.1693", "section": "Sec. 3.3.1; 'a further principle of relativity that is lacking in general relativity with the SEP alone'; CIF patching 'have not been developed yet'; Class. Quantum Grav. 28 (2011) 164006" },
+          { "locator": "arXiv:1311.3787", "section": "Sec. 7.2; 'The frame of minimum Hubble expansion variance still remains to be determined'" }
+        ]
+      },
+      "turns_on": "Whether the lapse has gauge-invariant observable content. As far as I can establish, the gauge-invariant content is not the lapse itself but its consequences - the dressed-versus-bare split and a scale- and direction-dependent inferred expansion rate - which is an [INFERENCE] from two of Wiltshire's own statements (dressed parameters are 'just a convenient parametrization', arXiv:1410.3470 Sec. III.1; the Hubble parameter is a 'gauge choice' that is not physically observable, arXiv:1106.1693 Sec. 3.3), not a retrieved claim. IMPORTANT FINDING: the objection as the seed states it is sharper than anything in the published record. I retrieved NO paper arguing the clock effect is a gauge artifact, and NO proposed test distinguishing a physical clock effect from a calibration convention. The record contains the proponent's own gauge concessions plus one dismissive sentence from Rasanen with no calculation. So the honest description is not 'contested on its central claim' but 'largely unengaged on its central claim'.",
+      "resolved": false,
+      "independence_from_O1": "O1 and O2 are independent in both directions, and timescape's own numbers make this sharper than the seed does. Granting O1 entirely in backreaction's favour does not establish the clock-rate postulate, which is an addition to GR. Granting O2 entirely in Wiltshire's favour does not require winning O1 - and more than that, timescape does not need a large Q at all: Omega-bar_Q0 = -0.0293, |Omega-bar_Q| <~ 0.042 always, q-bar > 0, backreaction '<5%' of the energy density. A resolution of O1 against large backreaction would refute the Buchert-acceleration programme that timescape is usually grouped with, not timescape itself. What timescape needs from the averaging literature is large average negative spatial curvature, and the only retrieved argument against that is Green & Wald Sec. 3.",
+      "what_would_settle_it": "A citation search on arXiv:0809.1183 and arXiv:1106.1693 via INSPIRE and NASA ADS, plus the CQG and JCAP comment literature 2008-2016. I searched citing lists for the supernova papers, not for the CEP papers. This is the highest-value unrun retrieval in the run."
+    },
+    {
+      "id": "O3",
+      "attacks": "T13",
+      "seed_attacks": "D8",
+      "position_a": {
+        "holders": ["Zachary G. Lane", "Antonia Seifert", "David L. Wiltshire", "Lawrence H. Dam", "Asta Heinesen"],
+        "claim": "Inherited standardisation is a route to circularity, so the LCDM-derived corrections must be discarded: Pantheon+ bias corrections 'are not accounted for, as they introduce a bias towards the standard cosmology based on the FLRW metric', and Scolnic et al.'s alpha and beta are rejected because they were fitted in wCDM.",
+        "key_assumption": "That discarding the corrections leaves a less biased dataset than keeping them.",
+        "sources": [
+          { "locator": "arXiv:2311.01438", "section": "Secs. 2, 5; MNRAS 536 (2025) 1752" },
+          { "locator": "arXiv:1706.07236", "section": "Sec. 2, Appendix B; MNRAS 472 (2017) 835" }
+        ]
+      },
+      "position_b": {
+        "holders": ["Dillon Brout", "Dan Scolnic", "R. Camilleri", "T. M. Davis", "the Pantheon+ and DES teams"],
+        "claim": "The bias corrections depend only weakly on the input cosmology: 'the sensitivity of the bias corrections to the input cosmology is relatively weak ... We therefore do not include this as an additional systematic'; and the nuisance-parameter minimisation is 'a cosmology-independent minimization'. DES validates this with 25 realisations analysed under six reference cosmologies, recovering the true distance-redshift relation to within 1 sigma 'even given a reference cosmology that is ~10 sigma from the truth'.",
+        "key_assumption": "That the weak dependence demonstrated across FLRW reference cosmologies extends to a non-FLRW expansion history. DES states the risk explicitly: 'The bias correction step thus holds the biggest potential for harbouring cosmological assumptions that could influence the cosmological results'.",
+        "sources": [
+          { "locator": "arXiv:2202.04077", "section": "Secs. II.1, II.2, III.3.1; ApJ 938 (2022) 110; DOI 10.3847/1538-4357/ac8e04" },
+          { "locator": "arXiv:2406.05048", "section": "Secs. 2.3, 2.3.2, 4; MNRAS 533 (2024) 2615" }
+        ]
+      },
+      "turns_on": "Whether a bias correction validated across FLRW reference cosmologies is valid against a non-FLRW expansion history. Both camps agree the step is where cosmological assumptions could bite; they disagree about whether the demonstrated insensitivity transfers. THE CHECKABLE FINDING: the timescape analyses avoid inheriting an LCDM calibration and thereby inherit uncorrected selection bias instead - 'Without the standard corrections, biases such as the Malmquist bias are present in our analysis'. DES avoids selection bias and inherits a flat-LCDM reference cosmology validated only within FLRW. NO PUBLISHED ANALYSIS DOES BOTH. Every Bayes factor in the ledger is conditional on which bias one chooses to carry.",
+      "resolved": false
+    },
+    {
+      "id": "O4",
+      "attacks": "T13",
+      "seed_attacks": "D7",
+      "position_a": {
+        "holders": ["this run"],
+        "claim": "f_v0 is fitted in every analysis retrieved, with values 0.550, 0.557, 0.627, 0.628, 0.665, 0.675, 0.695, 0.737, 0.76, 0.778, 0.791 and 0.72-0.95 across the Smale & Wiltshire datasets - a spread far exceeding the quoted uncertainties, so the fits are mutually inconsistent. The model postdicts.",
+        "key_assumption": "That a parameter fitted to the data it then explains does not predict that data.",
+        "sources": [
+          { "locator": "arXiv:0709.2535", "section": "abstract; f_v0 = 0.76 (+0.12/-0.09); Astrophys. J. 672 (2008) L91" },
+          { "locator": "arXiv:1410.3470", "section": "Table 2; 0.628 / 0.550 / 0.557 by matching prescription" },
+          { "locator": "arXiv:2412.15143", "section": "Sec. 3; 0.737 +/- 0.029" },
+          { "locator": "arXiv:2406.05048", "section": "Table 5; 0.791 (+0.039/-0.034) and 0.665 (+0.008/-0.009)" }
+        ]
+      },
+      "position_b": {
+        "holders": ["David L. Wiltshire"],
+        "claim": "The observed void fraction motivates the model: 'Some 40-50% of the present volume' of the universe is in voids.",
+        "key_assumption": "That the observed void filling factor and the model's f_v are the same quantity. NOT ESTABLISHED: timescape's f_v is a bare volume fraction of the Buchert average at ~100 h^-1 Mpc, defined through finite-infinity surfaces where the average expansion vanishes, while a void-finder filling factor is a galaxy-survey construct. Wiltshire cites the observed value as motivation and never sets it against the fitted value, which exceeds it in every case.",
+        "sources": [
+          { "locator": "arXiv:0709.0732", "section": "Introduction" },
+          { "locator": "arXiv:1410.3470", "section": "Sec. I; ~40% citing Hoyle & Vogeley" }
+        ]
+      },
+      "turns_on": "Whether an independent measurement of f_v exists at useful precision and of the right quantity. The best measurement retrieved is 62% of the SDSS DR7 sample volume (arXiv:1103.4156), closer to the CMB-fitted 0.628 than the cited 40-50% is - but that same paper reports the void fractions are reproduced by LCDM mocks, so even exact agreement would not discriminate. The seed's suggested confirmation route therefore does not work. RESOLVES AGAINST PREDICTION.",
+      "resolved": true,
+      "resolution_note": "Resolved in the narrow sense that the question 'is f_v0 fitted or independently determined' has a definite answer from the papers themselves: it is fitted, in every analysis retrieved, with locators above. This is not a verdict on the model; it is a statement about the evidential weight of the supernova fit, which the seed asked for explicitly. The mutual inconsistency of the fitted values across datasets is a further finding that no paper retrieved confronts."
+    },
+    {
+      "id": "O5",
+      "attacks": "the programme",
+      "seed_attacks": "the programme",
+      "position_a": {
+        "holders": ["Adam Moss", "James P. Zibin", "Douglas Scott", "Pengjie Zhang", "Albert Stebbins", "Philip Bull", "Timothy Clifton", "Pedro G. Ferreira", "Juan García-Bellido", "Troels Haugbølle"],
+        "claim": "LTB void models are excluded: 'overwhelmingly at odds with several types of observations', with void h_0 = 0.45 +/- 0.02 against Cepheid 0.738 +/- 0.024, void ages 17.6-18.8 Gyr against 13.7 +/- 0.1, void sigma_8 ~ 0.48 +/- 0.04 against 0.86 +/- 0.04, Compton y = 3.0 x 10^-5 against the COBE/FIRAS 2-sigma limit y < 1.5 x 10^-5, and radial-BAO Delta chi^2 = 7.5-10.1. On kSZ: void models inside the 3-sigma supernova contour give Delta T^2 > 10^3 micro-K^2 at l = 3000, 'two orders of magnitude larger than the SPT upper limit 6.5 micro-K^2'; Zibin & Moss put the excess at 'at least a factor of roughly 30' with eight caveats listed. Relaxing the bang-time function is 'not enough to simultaneously explain the supernovae observations, the small-angle CMB, the local Hubble rate, and the kSZ effect'. NOTE: supernova chi-squared for the void models is 534-541 against 531 for LCDM, so the supernovae do not do the excluding.",
+        "key_assumption": "A single large local void with the observer near the centre.",
+        "sources": [
+          { "locator": "arXiv:1007.3725", "section": "abstract, Secs. III.2-III.3, V; Phys. Rev. D 83 (2011) 103515; DOI 10.1103/PhysRevD.83.103515. Derives NO kSZ constraint - kSZ appears only as prior work in its introduction." },
+          { "locator": "arXiv:1009.3967", "section": "Phys. Rev. Lett. 107 (2011) 041301; the paper has no numbered sections" },
+          { "locator": "arXiv:1105.0909", "section": "Secs. IV, VI, VII; journal reference not retrieved" },
+          { "locator": "arXiv:1108.2222", "section": "abstract; Phys. Rev. D 85 (2012) 024002; DOI 10.1103/PhysRevD.85.024002" },
+          { "locator": "arXiv:0807.1326", "section": "abstract; JCAP 09 (2008) 016; DOI 10.1088/1475-7516/2008/09/016" },
+          { "locator": "arXiv:1201.2790", "section": "abstract; JCAP 10 (2012) 009; DOI 10.1088/1475-7516/2012/10/009" }
+        ]
+      },
+      "position_b": {
+        "holders": [],
+        "claim": "No published claim exists. Nobody has argued that these constraints transfer to timescape, and nobody has argued that they do not.",
+        "key_assumption": "not applicable",
+        "sources": []
+      },
+      "turns_on": "Whether a statistically homogeneous two-phase averaged model inherits constraints derived for a single spherically symmetric void. NONE of the six constraint papers mentions timescape, Wiltshire, backreaction, Buchert or averaging - checked in the full text of arXiv:1007.3725 in two passes, in arXiv:1009.3967 and arXiv:1105.0909, and in the abstracts of the other three. The nearest material is all on the proponent's side and engages none of kSZ, y-distortion or local sigma_8: 'LTB models are clearly applicable to individual expanding spherical voids' and 'galaxies in clusters do not collapse inwards in coherent spherical shells' (arXiv:1311.3787, Sec. 2.3 and fn. 1); the dressed metric 'is not a LTB solution' (same, Sec. 5.1); an LTB Hubble bubble 'will also have different characteristics to the apparent Hubble bubble in the TS model' (arXiv:1009.5855, fn. 8). The structurally analogous argument exists for a different test: the dressed metric 'cannot be obtained by a spatial rescaling of a FLRW metric' and the dressed Hubble parameter 'is not linearly related to any void fraction' (arXiv:1812.01586, Secs. 2-3). So the seed is right that the argument must be made explicitly, and the answer is that it has not been made by either side. Making it would be new work, not an audit finding.",
+      "resolved": false
+    },
+    {
+      "id": "O6",
+      "attacks": "T13",
+      "seed_attacks": "D8",
+      "position_a": {
+        "holders": ["this run", "docs/objections.md"],
+        "claim": "Claimed consistency with the CMB is not demonstrated consistency at the precision of current data: no Planck 2015 or 2018 timescape fit exists; the one full-spectrum fit uses Planck 2013 through a matched FLRW proxy; -ln L is 0.7% worse than LCDM for the headlined matching prescription; f_v0 varies 12% across prescriptions; systematics are 8-13% against 1-2% statistical; and Omega_b h^2 is unpublished.",
+        "key_assumption": "That a fit mediated by an FLRW proxy spectrum is not a test of timescape's own perturbation physics.",
+        "sources": [
+          { "locator": "arXiv:1410.3470", "section": "Secs. III.2, III.3, IV, V, VI, Table 2" },
+          { "locator": "arXiv:1306.3208", "section": "Sec. 3.2; 'not statistical constraints of the sort that could be obtained by fully fitting the Planck data directly'" }
+        ]
+      },
+      "position_b": {
+        "holders": ["M. Ahsan Nazer", "David L. Wiltshire"],
+        "claim": "'there are parameters for which the timescape model is a good fit to the Planck data' and the model 'remains competitive with the LCDM model'.",
+        "key_assumption": "That 'it seems reasonable to expect that the physics of the early Universe is little changed' and that backreaction can be neglected before decoupling - both stated, neither demonstrated; the abstract concedes conclusions 'may change if backreaction terms are also included'.",
+        "sources": [
+          { "locator": "arXiv:1410.3470", "section": "abstract, Secs. III.2, VI" }
+        ]
+      },
+      "turns_on": "Whether the FLRW-matching step is legitimate. The honest status is that the severe version of the test has not been performed, which is neither a pass nor a failure.",
+      "resolved": false
+    },
+    {
+      "id": "O7",
+      "attacks": "T12",
+      "seed_attacks": "absent",
+      "position_a": {
+        "holders": ["Thomas Buchert", "Syksy Rasanen", "David L. Wiltshire (all three, against the step they rely on)"],
+        "claim": "A scalar-averaged model does not by itself give a distance-redshift relation. 'The averaged equations cannot predict luminosity distances unless one considers averages on the lightcone'; using a template metric 'still neglects the effect of inhomogeneities on light propagation'; identifying the volume-average Hubble parameter with the observed one and the observed redshift with a-bar_0/a-bar 'remains to be rigorously justified'. Rasanen's derivation requires zero vorticity, constant-proper-time averaging, an informal statistical homogeneity and isotropy with coherence scale much smaller than the propagation distance, small initial shear, shear uncorrelated with ray direction and small variances, and integrates in closed form only when Q = 0 and the null shear vanishes.",
+        "key_assumption": "not applicable - this is a gap, not a position",
+        "sources": [
+          { "locator": "arXiv:0707.2153", "section": "Secs. 3.3.7, 4.3.1" },
+          { "locator": "arXiv:1106.1693", "section": "Sec. 4" },
+          { "locator": "arXiv:0812.2872", "section": "Secs. 3.1, 3.2, Eqs. (38)-(40); JCAP 0902:011 (2009)" },
+          { "locator": "arXiv:0909.0749", "section": "Sec. II, Appendix B" }
+        ]
+      },
+      "position_b": { "holders": [], "claim": "No defence exists in the literature retrieved; the step is used and its justification deferred.", "key_assumption": "not applicable", "sources": [] },
+      "turns_on": "Nothing yet - it has not been joined. This is a weight-3 step conceded unjustified by everyone who relies on it, and it is not treated as an objection anywhere in the literature retrieved. It is the largest gap between what the model needs and what has been shown, and the seed omits it entirely.",
+      "resolved": false
+    },
+    {
+      "id": "O8",
+      "attacks": "T13",
+      "seed_attacks": "absent",
+      "position_a": {
+        "holders": ["this run"],
+        "claim": "The fitted f_v0 values span 0.550 to 0.95 across datasets with quoted uncertainties of a few percent, so they are mutually inconsistent. Nobody has reported this as a problem.",
+        "key_assumption": "That a model parameter fitted to different datasets should agree within errors.",
+        "sources": [{ "locator": "see O4 sources", "section": "the eleven values listed in O4 position_a" }]
+      },
+      "position_b": { "holders": [], "claim": "No published response exists.", "key_assumption": "not applicable", "sources": [] },
+      "turns_on": "Whether the spread reflects dataset systematics, the matching-prescription freedom (which alone gives a 12% spread in the CMB paper), or a genuine inconsistency in the model. Not addressed anywhere retrieved.",
+      "resolved": false
+    },
+    {
+      "id": "O9",
+      "attacks": "the programme",
+      "seed_attacks": "listed as a candidate in 'Objections not yet seeded'",
+      "position_a": {
+        "holders": ["Marco Galoppo", "Pierre Mourier"],
+        "claim": "In a barotropic closure on an averaged background the sub-horizon dust perturbations reverse sign and become underdensities, which is 'highly unexpected and, we argue, ultimately unphysical', and 'the Meszaros approximation should not be applicable in the timescape framework'. No sigma_8, S_8 or f sigma_8 is computed for timescape.",
+        "key_assumption": "A particular closure condition on the effective-fluid perturbations.",
+        "sources": [{ "locator": "arXiv:2511.17160", "section": "Secs. 5.1.1, 5.1.2, Figs. 1-3; JCAP 02 (2026) 066" }]
+      },
+      "position_b": { "holders": [], "claim": "No response; the paper is recent and this is the first such calculation.", "key_assumption": "not applicable", "sources": [] },
+      "turns_on": "Whether the pathology is a closure artefact or a property of the model. The authors treat it as the former. Either way, timescape has no published structure-growth prediction to compare with S_8 = 0.836 (+0.012/-0.013), so the seed's requirement that a viable alternative 'must not break' structure growth is unchecked, not satisfied.",
+      "resolved": false
+    },
+    {
+      "id": "O10",
+      "attacks": "T6",
+      "seed_attacks": "listed as a candidate in 'Objections not yet seeded'",
+      "position_a": {
+        "holders": ["this run"],
+        "claim": "The two-phase split carries weight 3 and no sensitivity analysis exists. Wiltshire states 'a single negative curvature scale is assumed as a simplification' and that one 'could potentially use different curvature scales', but reports no test of the result's dependence on that choice. He also concedes 'There is an intrinsic ambiguity in assigning the shape to the boundary' of finite infinity.",
+        "key_assumption": "That a result depending on an unexamined coarse-graining choice is not established.",
+        "sources": [
+          { "locator": "arXiv:1106.1693", "section": "Sec. 4.2" },
+          { "locator": "arXiv:gr-qc/0702082", "section": "Sec. 3.2" }
+        ]
+      },
+      "position_b": { "holders": [], "claim": "No published response exists.", "key_assumption": "not applicable", "sources": [] },
+      "turns_on": "Nothing yet. Refitting with two or three void curvature scales would settle it, and Wiltshire himself says that is possible. New work.",
+      "resolved": false
+    }
+  ],
+
+  "rivals": [
+    {
+      "name": "Buchert averaging with backreaction, WITHOUT the clock-effect postulate (the priority comparison)",
+      "mechanism": "Scalar averaging with a closure - either exact scaling solutions with dynamical spatial curvature, or a smoothed template metric with time-evolving constant spatial curvature - and no wall/void lapse.",
+      "differs_from_timescape_in": "It drops T9-T11 and therefore REQUIRES genuine volume acceleration, which timescape does not have (q-bar > 0). Larena et al. state it: the model works 'without requiring an additional Dark Energy component', '(though a volume acceleration is still needed)', and 'a high level of backreaction is needed and acceleration of the effective scale factor still occurs'.",
+      "constraint_status": "ANSWERED, in three forms. (1) At matched parameter count on the same supernovae, dropping the clock effect costs nothing: AIC at z_min = 0.033 is -228 for flat LCDM (9 params), -227 for timescape (9), -227 for the scaling solution with n = -1 (9), -225 for n free (10), and the authors state 'the scaling solution with n=-1 and the timescape model overall have the highest AIC likelihoods'. CAVEAT: confirm the AIC sign convention from the paper before quoting a direction. (2) An independent fit to SNLS plus WMAP3 peak positions gives 'The difference in the chi^2 between the two models is 3.9' against flat FLRW with quintessence, best fit Omega_m^D0 = 0.38, n = 0.12, H_D0 = 78.54 km/s/Mpc, Omega_b h^2 = 0.0255 - but NO absolute chi-squared, no error bars and no tables are published, so the statistic is UNINTERPRETABLE under ledger rule C6, and the authors say 'it is consistent with current data, but the constraints are not very strong'. (3) The required backreaction is not achievable on the best realistic estimates: Rasanen's peak model gives |Omega_Q| 'below 0.04 in absolute value' against '|Omega_Q| >~ 0.2 is needed', short by about a factor of five, with the expansion rate rising 'on a timescale of 10-100 billion years' and 'the increase is not rapid enough to correspond to acceleration'; the semi-realistic model achieves '15-25%' in H_D t against 20-70% needed, with 'just less deceleration' and 'The model cannot be trusted beyond an order of magnitude'. The strong-backreaction option requires Omega_m^D0 ~ 3%, reinterpreted as 'kinematical Dark Matter'. SO: what the clock effect buys is not a better supernova fit but the ability to avoid needing volume acceleration - it relocates the required large quantity from Q, where realistic estimates fall short by ~5x, to <R>, where no comparable realistic estimate exists. CLEAN NEGATIVE: no paper performs an ablation, fitting the same supernova dataset with and without the clock-rate postulate.",
+      "sources": [
+        { "locator": "arXiv:1902.07915", "section": "abstract, Table 2; Int. J. Mod. Phys. D 28 (2019) 1950143; DOI 10.1142/S0218271819501438" },
+        { "locator": "arXiv:0808.1161", "section": "abstract, Secs. 4.2, 4.3; Phys. Rev. D 79 (2009) 083011; DOI 10.1103/PhysRevD.79.083011" },
+        { "locator": "arXiv:0801.2692", "section": "Sec. 4.3; JCAP 0804 (2008) 026" },
+        { "locator": "arXiv:1102.0408", "section": "Secs. 1.1, 3.2, 6; Class. Quantum Grav. 28 (2011) 164008" },
+        { "locator": "arXiv:1002.3912", "section": "Phys. Rev. D 82 (2010) 023523; DOI 10.1103/PhysRevD.82.023523" },
+        { "locator": "arXiv:1009.5855", "section": "Sec. 2; timescape's own split, backreaction '<5%' plus a 38% clock-rate differential" }
+      ]
+    },
+    {
+      "name": "LTB / large local void models",
+      "mechanism": "A spherically symmetric underdensity with the observer near the centre reproduces the distance-redshift relation without dark energy.",
+      "differs_from_timescape_in": "A single large void and a near-central observer, versus a statistically homogeneous two-phase average. Timescape has no preferred position.",
+      "constraint_status": "Excluded, severely, by local H_0, age, local sigma_8, Compton y-distortion, radial BAO and kSZ - but NOT by supernovae, whose chi-squared is 534-541 for void models against 531 for LCDM. Whether the constraints transfer to timescape is UNADDRESSED BY ANYONE: none of the six constraint papers mentions timescape, Wiltshire, backreaction, Buchert or averaging, and no paper argues either way. See objection O5.",
+      "sources": [
+        { "locator": "arXiv:1007.3725", "section": "abstract, Secs. III.2-III.3, V" },
+        { "locator": "arXiv:1009.3967", "section": "Phys. Rev. Lett. 107 (2011) 041301" },
+        { "locator": "arXiv:1105.0909", "section": "Secs. IV, VI, VII" },
+        { "locator": "arXiv:1108.2222", "section": "abstract" }
+      ]
+    },
+    {
+      "name": "Swiss-cheese and perturbative backreaction models",
+      "mechanism": "Exact LTB holes glued into an FLRW background (Swiss cheese), or second-order perturbation theory on an FLRW background.",
+      "differs_from_timescape_in": "Both impose FLRW matching or perturbative smallness by construction, which timescape does not.",
+      "constraint_status": "Small effects, and the smallness is substantially a construction consequence BY THE AUTHORS' OWN ACCOUNTS - but not in the way the seed implies. Marra, Kolb & Matarrese: the light-cone averaged density ratio 'decreases by 17%' while the expansion rate is unaffected, best fit w ~= 0; the FLRW matching is explicit in the construction but they do NOT draw the inference that it forces the effect to be small. Vanderveld, Flanagan & Wasserman: Monte Carlo over 10,000 realisations of five void passages gives a mean distance-modulus shift of -0.003 mag with standard deviation 0.11 mag, and 'this particular model cannot explain the supernova data'; they attribute the smallness to weak-field lensing and mass compensation, 'true within the domain of validity of weak lensing theory', NOT to FLRW matching. Clarkson, Ananda & Larena: about 10^-5 for the concordance model averaged on Hubble scales, 'as expected in perturbation theory' - an expectation of the second-order construction; they also note backreaction 'cannot be said to vanish on very large scales'. So none of these bounds a non-perturbative, non-mass-compensated scheme, which is exactly the regime Buchert et al. say the Green-Wald conditions exclude. That connects O5 to O1.",
+      "sources": [
+        { "locator": "arXiv:0710.5505", "section": "Secs. II.2.2, III.4.1, IV.1; journal reference not retrieved" },
+        { "locator": "arXiv:0808.1080", "section": "Secs. III, IV, V; journal reference not retrieved" },
+        { "locator": "arXiv:0907.3377", "section": "Secs. I, IV.1; journal reference not retrieved" }
+      ]
+    },
+    {
+      "name": "Rasanen's peak-structure / separate-universe averaging",
+      "mechanism": "Buchert averaging with structures identified from the Gaussian peak model of structure formation, spherical Newtonian collapse, no clock-rate postulate.",
+      "differs_from_timescape_in": "No lapse; and Rasanen explicitly doubts the mechanism, in one sentence with no calculation: 'it is unlikely that the effects would be captured by simply having clocks run at different rates in different regions'.",
+      "constraint_status": "DOES NOT AGREE with Wiltshire on magnitude. His own numbers fall short of what is needed (see the priority comparison above). The only timescape mention in the review he co-wrote is neutral: 'A similar construction has been used in the so-called timescape cosmology proposed by Wiltshire', and the clock effect is not mentioned in that review at all. I could not retrieve a substantive Wiltshire response to Rasanen; Rasanen is cited in arXiv:1009.5855 only in a footnote listing works that treat the Buchert scale factor as an FLRW scale factor.",
+      "sources": [
+        { "locator": "arXiv:1102.0408", "section": "Secs. 3.2, 4.3, 6" },
+        { "locator": "arXiv:1112.5335", "section": "Secs. 3.2.2, 3.2.3, 5" },
+        { "locator": "arXiv:0801.2692", "section": "Sec. 4.3" }
+      ]
+    },
+    {
+      "name": "Flat LCDM",
+      "mechanism": "A cosmological constant, six parameters.",
+      "differs_from_timescape_in": "Exactly FLRW geometry; a dressed-versus-bare distinction does not arise; H_0 ~ 67-73 against timescape's 61.",
+      "constraint_status": "The H_0 tension persists and its direction depends on which standard candle is trusted. A seven-route combination gives H_0 = 73.30 +/- 0.92, 'more than 5 sigma higher' than the CMB value, at 5.6 sigma against Planck; the full HST sample gives 73.2 +/- 0.9 with JWST three-method 72.6 +/- 2.0. Against that, the CCHP TRGB result is 70.39 +/- 1.22 (stat) +/- 1.33 (sys) +/- 0.70, with the authors' own verdict 'Our results are consistent with the current standard LambdaCDM model, without the need for the inclusion of additional new physics', and JWST-only values of 68.81 +/- 1.79 +/- 1.32 (TRGB) and 67.80 +/- 2.17 +/- 1.64 (JAGB). Both sides' JWST-only errors are large enough to overlap the gap. S_8 has partly dissolved into a survey-versus-survey disagreement: against a combined CMB baseline S_8 = 0.836 (+0.012/-0.013), DES Year 6 sits at 2.4-2.7 sigma while KiDS Legacy is consistent at <1 sigma, and cluster counts split with eROSITA high and SPT low - a 'striking bifurcation' with survey-specific systematics contributing substantially.",
+      "sources": [
+        { "locator": "arXiv:1807.06209", "section": "abstract; A&A 641 (2020) A6" },
+        { "locator": "arXiv:2606.26831", "section": "abstract; accepted in Research in Astronomy and Astrophysics" },
+        { "locator": "arXiv:2408.11770", "section": "abstract" },
+        { "locator": "arXiv:2408.06153", "section": "abstract" },
+        { "locator": "arXiv:2602.12238", "section": "abstract; Phys. Dark Univ. 52 (2026) 102286; DOI 10.1016/j.dark.2026.102286" }
+      ]
+    },
+    {
+      "name": "Dynamical dark energy (w0waCDM)",
+      "mechanism": "An evolving dark-energy equation of state.",
+      "differs_from_timescape_in": "Retains FLRW and adds two parameters; timescape changes the geometry and adds none beyond f_v0.",
+      "constraint_status": "DESI DR2 reports 3.1 sigma for evolving dark energy from DESI BAO + CMB, and 2.8 sigma (Pantheon+), 3.8 sigma (Union3), 4.2 sigma (DES-Y5) with supernovae added; DESI BAO versus CMB shows 'mild, 2.3 sigma tension' within LCDM. The DESI team's own caveats: 'While this form of w(a) does not arise directly from an underlying physical model' (Sec. VII); 'the marginalized means and limits quoted above are prior-dependent' and 'the statistical significances from all data depend somewhat on the choice of SNe dataset included' (Sec. VII.1); 'it does not yet rise to the 5 sigma threshold commonly accepted for establishing new physics' (Sec. VII.3); and they name 'an undetected systematic error in our BAO measurements' and unknown CMB systematics as candidates (Sec. VII.3). Arguing the evidence is weaker: Efstathiou finds 'evidence for an offset of ~0.04 mag. between low and high redshifts' among supernovae common to DES5Y and Pantheon+, and that 'Systematics of this order can bring the DES5Y sample into good agreement with the Planck LCDM cosmology and Pantheon+'. HOW THIS BEARS ON TIMESCAPE, both directions: for, a measured departure from constant w is a departure from the model timescape rejects, and the timescape group reads it that way - but the only place I retrieved that reading is a conference abstract, not a paper [LEAD]; against, the DESI signal is extracted from BAO distances calibrated on a Planck-scaled fiducial template, so it is not model-independent, and timescape's own effective w(z) is one Wiltshire says 'has no physical meaning'. Neither direction is established.",
+      "sources": [
+        { "locator": "arXiv:2503.14738", "section": "Table 6, Secs. VII, VII.1, VII.3, IX; Phys. Rev. D 112 (2025) 083515; DOI 10.1103/tr6y-kpc6" },
+        { "locator": "arXiv:2404.03002", "section": "abstract; JCAP 02 (2025) 021; DOI 10.1088/1475-7516/2025/02/021" },
+        { "locator": "arXiv:2408.07175", "section": "abstract" },
+        { "locator": "arXiv:1311.3787", "section": "Secs. 5-6; the timescape effective w(z) 'has no physical meaning'" }
+      ]
+    },
+    {
+      "name": "Modified gravity, f(R) and similar",
+      "mechanism": "Accelerated expansion from changing the gravitational action rather than the matter content.",
+      "differs_from_timescape_in": "f(R) keeps an exactly FLRW background and modifies structure growth through a scale-dependent effective Newton constant, so it is tested by mu(a,k)/Sigma(a,k), f sigma_8 and a Yukawa range; inhomogeneity models change the geometry and the distance-redshift relation, breaking the FLRW consistency relations while leaving growth standard. [INFERENCE] - premises: the f(R) bound being a growth-and-scale constraint, and Wiltshire predicting 'a non-zero C(z) for the timescape model'. I retrieved no paper making this comparison explicitly.",
+      "constraint_status": "Hu-Sawicki f(R) is constrained to log_10 |f_R0| < -4.59 at 95% confidence, length scale today lambda < 17.81 Mpc, mediator mass m_phi > 3.60 x 10^-31 eV, with 'We find no evidence for deviations from GR'.",
+      "sources": [
+        { "locator": "arXiv:2604.26915", "section": "abstract" },
+        { "locator": "arXiv:1106.2476", "section": "Phys. Rep. 513 (2012) 1; DOI 10.1016/j.physrep.2012.01.001" },
+        { "locator": "arXiv:0912.5236", "section": "Sec. 3.5; C(z) != 0 for timescape" }
+      ]
+    }
+  ],
+
+  "discriminating_measurements": [
+    {
+      "observable": "Joint supernova + angular BAO fit",
+      "timescape_predicts": "tension between the two datasets; f_v0 = 0.791 (+0.039/-0.034) from supernovae alone versus 0.665 (+0.008/-0.009) with BAO",
+      "rival_predicts": "no tension",
+      "rival": "flat LCDM",
+      "current_precision": "half-Delta-AIC resolved to about +/-0.1; achieved",
+      "needed_precision": "achieved",
+      "already_decided": true,
+      "note": "DES: half-Delta-AIC = -1.7 on supernovae alone, +6.3 with BAO; 'a strong tension ... when fitting the Timescape model', reported for none of the other 14 models. The timescape group's published reply asserts the BAO drag-epoch calibration is inappropriate for timescape, and no timescape-native calibration exists (C-BAO-1), so this cannot be adjudicated. Decided in the sense that a measurement exists and discriminates; contested in the sense that the pipeline is disputed."
+    },
+    {
+      "observable": "Dressed H_0",
+      "timescape_predicts": "60.98-61.7 km/s/Mpc",
+      "rival_predicts": "67.4 +/- 0.5 (Planck) to 73.30 +/- 0.92 (distance ladder)",
+      "rival": "flat LCDM",
+      "current_precision": "+/-0.9 km/s/Mpc locally; achieved",
+      "needed_precision": "achieved",
+      "already_decided": true,
+      "note": "Arguably already decided against timescape, and this is not usually stated. The model's CMB-matched H_0 is further from the distance ladder than Planck's is, so timescape makes the H_0 discrepancy larger rather than smaller. No paper computes this, so the ledger records it as untested (C-H0-1) rather than as a failure."
+    },
+    {
+      "observable": "Redshift drift, delta z over 10 years at z = 4",
+      "timescape_predicts": "-7.2 x 10^-10 (arXiv:1311.3787 Sec. 6.6); -3.3 x 10^-10 with the earlier parameter set (arXiv:0912.5236 Sec. 3.6)",
+      "rival_predicts": "-9.3 x 10^-10; or -4.7 x 10^-10 (Omega = 0.249) and -7.0 x 10^-10 (Omega = 0.279) with the earlier comparison",
+      "rival": "flat LCDM",
+      "current_precision": "not measured",
+      "needed_precision": "about a 20-year baseline of Lyman-alpha observations with ELTs over 2 < z < 5",
+      "already_decided": false
+    },
+    {
+      "observable": "Clarkson-Bassett-Lu consistency function C(z)",
+      "timescape_predicts": "C(z) != 0",
+      "rival_predicts": "C(z) = 0 for any FLRW model, any curvature",
+      "rival": "flat LCDM and FLRW generally",
+      "current_precision": "current BAO data cannot yet constrain H(z) D'(z)",
+      "needed_precision": "not stated in the retrieved sources",
+      "already_decided": false,
+      "note": "This is the cleanest in-principle discriminator retrieved, because it tests the Cosmological Principle rather than a parameter fit."
+    },
+    {
+      "observable": "Local Hubble-flow variance",
+      "timescape_predicts": "17-22% present variance; local minimum 50.1 +/- 1.7 and local maximum 75.2 (+2.0/-2.6) km/s/Mpc; asymptotic H_0 on 70-100 h^-1 Mpc",
+      "rival_predicts": "small variance from peculiar velocities on an FLRW background plus a local boost",
+      "rival": "flat LCDM",
+      "current_precision": "measured: statistically uniform at 70-100 Mpc, 'in good agreement with the expected Hubble variance in the standard model across cosmic scales of 20-150 Mpc'",
+      "needed_precision": "a reanalysis of the existing data against the 17-22% prediction",
+      "already_decided": false,
+      "note": "THE MOST ACTIONABLE ITEM IN THE RUN. Both the prediction (arXiv:0912.5236 Sec. 2, 2009) and the measurement (arXiv:2510.19945, Phys. Rev. D 113 (2026) 123510) exist, and they have never been compared, because the two are not stated as the same quantity on the same scales. Weeks of work on published data."
+    },
+    {
+      "observable": "Om(0) diagnostic",
+      "timescape_predicts": "0.643 (+0.008/-0.004); tightly constrained to 0.638-0.646 at f_v0 = 0.76",
+      "rival_predicts": "Om(0) = Omega_M0",
+      "rival": "flat LCDM",
+      "current_precision": "not stated in the retrieved sources",
+      "needed_precision": "not stated",
+      "already_decided": false
+    },
+    {
+      "observable": "Onset of apparent acceleration",
+      "timescape_predicts": "z_acc = 0.46 (+0.26/-0.25) (arXiv:1311.3787 Sec. 6.2); or z ~ 0.9 (arXiv:1009.5855 Sec. 1, arXiv:0912.5236 Sec. 2), once f_v reaches ~59%",
+      "rival_predicts": "z ~ 0.6-0.7 [LEAD, not retrieved]",
+      "rival": "flat LCDM",
+      "current_precision": "not measured model-independently",
+      "needed_precision": "not stated",
+      "already_decided": false,
+      "note": "The timescape number is not internally consistent across its own papers; it is parameter-dependent and must be quoted with the f_v0 it goes with."
+    },
+    {
+      "observable": "Dressed deceleration parameter q_0",
+      "timescape_predicts": "-0.043 (+0.004/-0.000); the maximum possible magnitude anywhere in the model is q ~= -0.043 at f_v ~= 0.7736, with the sign change at f_v ~= 0.5867",
+      "rival_predicts": "about -0.5 at Omega_M0 = 0.33 [INFERENCE from q_0 = (3/2)Omega_M0 - 1, not retrieved]",
+      "rival": "flat LCDM",
+      "current_precision": "q_0 is not measured model-independently",
+      "needed_precision": "not applicable",
+      "already_decided": false,
+      "note": "Worth stating because summaries do not: timescape does not reproduce LCDM's deceleration parameter. It reproduces a distance-redshift relation, which is a different claim."
+    },
+    {
+      "observable": "Alcock-Paczynski F(z)",
+      "timescape_predicts": "0.246, 0.496, 0.776, 1.067 at z = 0.21, 0.41, 0.60, 0.78; H(z)/H_0 with a shallower slope than LCDM",
+      "rival_predicts": "steeper H(z)/H_0 slope",
+      "rival": "flat LCDM",
+      "current_precision": "consistent with WiggleZ; and under the two fiducials the BOSS DR12 CMASS anisotropy is epsilon = 0.021 +/- 0.017 (timescape) versus -0.021 +/- 0.017 (LCDM), both within 2 sigma of zero",
+      "needed_precision": "both BAO and luminosity-distance data at the same redshifts",
+      "already_decided": false
+    },
+    {
+      "observable": "sigma_8 / S_8",
+      "timescape_predicts": "NOT COMPUTED - no published timescape value exists",
+      "rival_predicts": "S_8 = 0.836 (+0.012/-0.013) from a combined CMB baseline",
+      "rival": "flat LCDM",
+      "current_precision": "2.4-2.7 sigma (DES Year 6) to <1 sigma (KiDS Legacy)",
+      "needed_precision": "a timescape S_8 calculation, which does not exist",
+      "already_decided": false
+    },
+    {
+      "observable": "BAO scale under each fiducial cosmology",
+      "timescape_predicts": "95.4 +/- 1.6 Mpc/h (BOSS DR12 CMASS, wedge)",
+      "rival_predicts": "102.6 +/- 1.5 Mpc/h under an LCDM fiducial",
+      "rival": "flat LCDM",
+      "current_precision": "achieved; the two differ by about 7%",
+      "needed_precision": "achieved",
+      "already_decided": false,
+      "note": "NOT a prediction. This is a fiducial-conversion difference, i.e. the size of the recalibration that a timescape BAO analysis would have to perform, and nobody has performed it."
+    }
+  ],
+
+  "seed_corrections": [
+    { "file": "docs/derivation-chain.md", "item": "D1", "was": "THEOREM / observational", "should_be": "An observation, with no THEOREM tag. The seed's own annotation concedes it is observational.", "sources": [{ "locator": "arXiv:1103.4156", "section": "abstract" }] },
+    { "file": "docs/derivation-chain.md", "item": "D1 audit question", "was": "'does timescape require [the homogeneity scale] to be larger than the standard value?'", "should_be": "No. Timescape coarse-grains dust at ~100 h^-1 Mpc, tied to the standard statistical-homogeneity and BAO scale. Current measurements: R_H = 63.3 +/- 0.7 h^-1 Mpc (BOSS DR12 CMASS) and 70.33 +/- 10.74 Mpc/h (SDSS blue galaxies), which are not consistent with each other and are both threshold-definition dependent.", "sources": [{ "locator": "arXiv:1106.1693", "section": "Sec. 4.1" }, { "locator": "arXiv:1702.02159", "section": "abstract" }, { "locator": "arXiv:2310.04594", "section": "abstract" }] },
+    { "file": "docs/derivation-chain.md", "item": "D2", "was": "One step, 'Averaging an inhomogeneous solution does not commute with the field equations', tagged THEOREM, 'Not in dispute as a formal statement'", "should_be": "Two steps. The scalar commutation rule (T2) is an exact identity, labelled a Lemma, and the THEOREM tag is right. The metric-averaging version (T3) is NOT a theorem anywhere in the retrieved literature: Ellis calls it 'the basic point' and says the metric average used to state it is 'not a well-defined tensorial operation'; the symbolic version is an order-of-magnitude estimate argued from term structure; Buchert's 2008 review does not state it at all. And timescape does not use it. Weight 3 versus weight 0.", "sources": [{ "locator": "arXiv:gr-qc/9906015", "section": "Sec. 2.2, Lemma Eq. (9f)" }, { "locator": "arXiv:1103.2335", "section": "Sec. 2.2" }, { "locator": "arXiv:0906.3165", "section": "Sec. 1, Eq. (1.3)" }] },
+    { "file": "docs/derivation-chain.md", "item": "D3", "was": "SCHEME, as one step", "should_be": "Split. The averaged equations are theorems conditional on chosen conditions (T4); the scheme content is those conditions plus the closure that must be added, which Buchert says himself is required: 'we cannot solve the backreaction problem for scalars based on this system' (T5).", "sources": [{ "locator": "arXiv:gr-qc/9906015", "section": "Secs. 2.1, 2.2, 3.3, 3.5" }, { "locator": "arXiv:1103.2335", "section": "Sec. 2.3.2" }] },
+    { "file": "docs/derivation-chain.md", "item": "D4", "was": "'Backreaction can be large enough to matter', INTERPRETATION / disputed, 'the first genuinely contested link' and 'the highest-priority item in the run'", "should_be": "Not timescape's mechanism, and the largest seed error. Omega-bar_Q0 = -0.0293 (+0.0033/-0.0036), NEGATIVE; |Omega-bar_Q| <~ 0.042 at all times; q-bar > 0; no volume acceleration; backreaction '<5%' of the energy density. The bare budget is dominated by average negative spatial curvature, Omega-bar_k0 = 0.862 (+0.024/-0.032), a ratio of 29 to 1. Timescape is not a test of Buchert backreaction magnitude.", "sources": [{ "locator": "arXiv:1311.3787", "section": "Table 1, Sec. 5.3" }, { "locator": "arXiv:0909.0749", "section": "Secs. II.3, II.4" }, { "locator": "arXiv:1009.5855", "section": "Sec. 2" }] },
+    { "file": "docs/derivation-chain.md", "item": "D5 audit question", "was": "'what fixes the two-phase split rather than a continuum of densities? Is the result sensitive to that choice?'", "should_be": "Nothing fixes it. Wiltshire asserts the structure, says 'a single negative curvature scale is assumed as a simplification', suggests different curvature scales are possible, and concedes 'There is an intrinsic ambiguity in assigning the shape to the boundary' of finite infinity. NO SENSITIVITY ANALYSIS EXISTS in anything retrieved.", "sources": [{ "locator": "arXiv:1106.1693", "section": "Sec. 4.2" }, { "locator": "arXiv:gr-qc/0702082", "section": "Sec. 3.2" }] },
+    { "file": "docs/derivation-chain.md", "item": "D6", "was": "One step, POSTULATE, covering both the clock effect and its tens-of-percent magnitude", "should_be": "Split. The CEP is a POSTULATE (T9). The 35-38% magnitude is a FIT (T10), because gamma-bar = 1 + f_v/2 on the tracker and f_v0 is fitted: 38% tracks f_v0 ~ 0.76 and 35% tracks f_v0 ~ 0.695. No uncertainty is attached to the percentage in any paper retrieved, and the drift between the two values is never flagged. There is also a ceiling, gamma < 3/2.", "sources": [{ "locator": "arXiv:0709.0732", "section": "Eq. (7) and text after Eq. (19)" }, { "locator": "arXiv:gr-qc/0702082", "section": "abstract, Sec. 4.2" }] },
+    { "file": "docs/derivation-chain.md", "item": "D6 audit item 1", "was": "'is it an additional postulate or claimed to follow from standard GR?'", "should_be": "Additional, and he says so. 'The strong equivalence principle is extended in application to averaged dynamical fields in cosmology' (abstract), 'by proposing an extension of the SEP to cosmology' (Sec. I), and decisively 'there is a further principle of relativity that is lacking in general relativity with the SEP alone'. Nowhere claimed to follow from GR. He also leaves its scope open: 'A question remains as to what extent we should take it as a universal principle?'", "sources": [{ "locator": "arXiv:0809.1183", "section": "abstract, Secs. I, II.1, VI, VII" }, { "locator": "arXiv:1106.1693", "section": "Sec. 3.3.1" }] },
+    { "file": "docs/derivation-chain.md", "item": "D6 audit item 2", "was": "'What is the quantitative claim, with its current best value and its uncertainty?'", "should_be": "35-38%, with NO uncertainty attached in any paper retrieved. Related values that do carry errors: gamma-bar = 1.38 (+0.06/-0.05) and gamma-bar_0 = 1.348 (+0.021/-0.025). The 42-46% figures are for assumed void density contrasts of -0.9 to -0.95, not fits.", "sources": [{ "locator": "arXiv:0809.1183", "section": "abstract, Sec. III.1" }, { "locator": "arXiv:1306.3208", "section": "Table 1" }] },
+    { "file": "docs/derivation-chain.md", "item": "D6 audit item 4", "was": "'Is there a laboratory or solar-system regime where the principle makes a check-able statement?'", "should_be": "One lead only: alpha_0 = 8.6 (+1.9/-1.5) x 10^-11 m/s^2, close to the MOND scale 8.1 (+3.0/-2.0) x 10^-11 at the same H_0. Wiltshire says it 'may be purely coincidental', that 'no firm conclusions should be drawn until a compelling theoretical case is assembled', and that 'no detailed quantitative comparisons can be made until the transition zone around finite infinity is more directly modelled'. A 2025 paper applies the quasilocal approach to galactic dynamics; I retrieved its locator but not its content.", "sources": [{ "locator": "arXiv:1311.3787", "section": "Sec. 5.2" }, { "locator": "arXiv:0809.1183", "section": "Sec. V.1 Eq. (29), Sec. V.2" }, { "locator": "arXiv:2408.00358", "section": "Class. Quantum Grav. 42 (2025) 135004; locator only, content not retrieved" }] },
+    { "file": "docs/derivation-chain.md", "item": "D7 audit question", "was": "'is the apparent acceleration a derived consequence of D1-D6 with the observed f_v, or does it require f_v to be fitted to the supernova data it then explains?'", "should_be": "f_v0 is fitted, in every analysis retrieved, with values spanning 0.550 to 0.95 - mutually inconsistent given the quoted errors. The model postdicts. See objection O4.", "sources": [{ "locator": "arXiv:0709.2535", "section": "abstract" }, { "locator": "arXiv:1410.3470", "section": "Table 2" }, { "locator": "arXiv:2412.15143", "section": "Sec. 3" }, { "locator": "arXiv:2406.05048", "section": "Table 5" }] },
+    { "file": "docs/derivation-chain.md", "item": "missing step: light propagation", "was": "absent", "should_be": "A step between D7 and D8: the dressed effective metric correctly gives luminosity distances along the observer's past light cone (T12). Weight 3, and conceded unjustified by both Buchert and Wiltshire. This is the largest gap between what the model needs and what has been shown, and the seed omits it entirely.", "sources": [{ "locator": "arXiv:0707.2153", "section": "Secs. 3.3.7, 4.3.1" }, { "locator": "arXiv:1106.1693", "section": "Sec. 4" }, { "locator": "arXiv:0812.2872", "section": "Secs. 3.1, 3.2" }] },
+    { "file": "docs/derivation-chain.md", "item": "missing step: exact solution versus tracker", "was": "absent", "should_be": "A step (T7): the 'exact solution to the averaging problem' is exact in the two-scale BUCHERT equations, not the Einstein field equations, under a flat-wall / negatively-curved-void ansatz, matter-only; and all phenomenology uses a further late-time tracker attractor special case with h_r = 2/3. The PRL title invites the confusion and the seed does not catch it.", "sources": [{ "locator": "arXiv:0709.0732", "section": "Introduction, Eqs. (11), (13), (18), (19)" }, { "locator": "arXiv:1009.5855", "section": "Sec. 2" }] },
+    { "file": "docs/objections.md", "item": "O1 framing", "was": "'this is the single highest-priority item' and the objection that attacks D4", "should_be": "It attacks a claim timescape does not make. Green & Wald's theorems concern Q-type backreaction; timescape's Omega-bar_Q0 = -0.0293. The Green-Wald argument that does reach timescape is their Sec. 3 claim that large averaged scalar curvature from Buchert's scheme is 'entirely spurious', which has no published reply addressed to timescape. Also: Green & Wald never mention timescape or Wiltshire; they critique Buchert by name.", "sources": [{ "locator": "arXiv:1407.8084", "section": "Secs. 2, 3, 4.1" }, { "locator": "arXiv:1311.3787", "section": "Table 1" }] },
+    { "file": "docs/objections.md", "item": "O1, 'Buchert and a large set of co-authors'", "was": "implies a third party", "should_be": "The author list is Buchert, Carfora, Ellis, Kolb, MacCallum, Ostrowski, Rasanen, Roukema, Andersson, Coley and WILTSHIRE. The response is not independent of the timescape proponent. The same applies to the only candidate third-party adjudication, arXiv:1512.02947, whose first author co-authored the response.", "sources": [{ "locator": "arXiv:1505.07800", "section": "author list; Class. Quantum Grav. 32 (2015) 215021" }] },
+    { "file": "docs/objections.md", "item": "O1, 'Green & Wald, comments on backreaction, circa 2015'", "was": "treated as a normal publication", "should_be": "arXiv:1506.06452, arXiv-only, NEVER PUBLISHED, no journal reference, no DOI. The Buchert et al. side appeared in CQG. The exchange never closed in the refereed literature, which is itself part of why O1 is unresolved.", "sources": [{ "locator": "arXiv:1506.06452", "section": "arXiv metadata: no journal reference" }] },
+    { "file": "docs/objections.md", "item": "O1, what Green & Wald claim", "was": "'argued that backreaction ... cannot produce acceleration'", "should_be": "True for their framework's conclusion, but they explicitly disclaim the strong reading: 'whether, in our actual universe, there might be significant backreaction' is not addressed by their analysis, and the closeness of the metric to FLRW 'does not imply that backreaction effects of inhomogeneities must be negligible'. Also Sec. 4.3: observables in the actual universe 'can differ considerably from observables computed in the FLRW background'.", "sources": [{ "locator": "arXiv:1407.8084", "section": "Secs. 2, 4.3" }] },
+    { "file": "docs/objections.md", "item": "O2", "was": "'The strongest form: differences in clock rates between regions are statements about how one chooses to synchronise and calibrate ... Find the published critiques by name and state their argument.'", "should_be": "The objection as stated is SHARPER THAN ANYTHING PUBLISHED. I retrieved no paper arguing the clock effect is a gauge artifact, and no proposed test distinguishing a physical clock effect from a calibration convention. The published record holds (a) Wiltshire's own gauge concessions - 'Such a gauge can be maintained outside finite infinity regions, but not within them' - and (b) one sentence from Rasanen with no calculation: 'it is unlikely that the effects would be captured by simply having clocks run at different rates in different regions'. So the honest description of timescape's central claim is 'largely unengaged', not 'contested'.", "sources": [{ "locator": "arXiv:0809.1183", "section": "Sec. III.1" }, { "locator": "arXiv:1102.0408", "section": "Sec. 4.3" }, { "locator": "arXiv:1112.5335", "section": "Sec. 3.2.3" }] },
+    { "file": "docs/objections.md", "item": "O3", "was": "'establish what the published timescape supernova analyses actually do here, per analysis'", "should_be": "Confirmed as real and acknowledged by both camps. The sharp version: the timescape analyses discard the LCDM-derived bias corrections and thereby carry uncorrected selection bias ('Without the standard corrections, biases such as the Malmquist bias are present in our analysis'); DES carries the corrections and validates the choice only within FLRW. NO PUBLISHED ANALYSIS DOES BOTH. Note also that Smale & Wiltshire 2011 is mixed: SALT rows refit alpha, beta and script-M, while MLCS rows use published distance moduli 'out of the box', so the paper's headline reduction-method dependence is confounded with the refit-versus-inherit distinction.", "sources": [{ "locator": "arXiv:2311.01438", "section": "Secs. 2, 5" }, { "locator": "arXiv:2202.04077", "section": "Sec. III.3.1" }, { "locator": "arXiv:2406.05048", "section": "Secs. 2.3.2, 4" }, { "locator": "arXiv:1009.5855", "section": "Secs. 3.1, 4.1, 4.2" }] },
+    { "file": "docs/objections.md", "item": "O4 suggested confirmation route", "was": "'If they agree within errors and the measurement was not derived under an LCDM assumption, that is substantial evidence'", "should_be": "The route does not work. Timescape's f_v is a bare volume fraction of the Buchert average at ~100 h^-1 Mpc defined through finite-infinity surfaces, not a galaxy-survey void-finder filling factor; equating them needs an argument nobody has made. And the best measured filling factor, 62% of the SDSS DR7 sample volume, is reproduced by LCDM mocks, so even exact agreement would not discriminate.", "sources": [{ "locator": "arXiv:1103.4156", "section": "abstract" }, { "locator": "arXiv:gr-qc/0702082", "section": "Sec. 5.1" }] },
+    { "file": "docs/objections.md", "item": "O5", "was": "'Find out whether anyone has made it.'", "should_be": "Nobody has, in either direction. None of the six LTB-constraint papers mentions timescape, Wiltshire, backreaction, Buchert or averaging. Making the transfer argument would be new work, not an audit finding. Detail: Moss, Zibin & Scott derive NO kSZ constraint; the kSZ bounds are Zhang & Stebbins, Zibin & Moss, Garcia-Bellido & Haugbolle and Bull et al. And the supernovae are not what excludes void models - their chi-squared is 534-541 against 531 for LCDM; the exclusion comes from local H_0, age and local sigma_8.", "sources": [{ "locator": "arXiv:1007.3725", "section": "full text read in two passes; Secs. III.2-III.3, V" }, { "locator": "arXiv:1009.3967", "section": "whole paper" }, { "locator": "arXiv:1105.0909", "section": "Secs. IV, VII" }] },
+    { "file": "docs/objections.md", "item": "O6", "was": "'find the actual numbers and the data release used. A fit to pre-Planck data is not a current result.'", "should_be": "Worse than the seed supposes. Planck 2013 only; no Planck 2015 or 2018 timescape fit exists; the fit runs through a matched FLRW proxy spectrum computed with CLASS; -ln L = 3925.16 against LCDM 3895.5-3896.9; f_v0 varies 12% across matching prescriptions; systematics 8-13% against 1-2% statistical; Omega_b h^2 unpublished; and the 2013 lithium-7 resolution claim was withdrawn in 2015 as 'our most important result'.", "sources": [{ "locator": "arXiv:1410.3470", "section": "Secs. IV, V, VI, Table 2" }, { "locator": "arXiv:1306.3208", "section": "Sec. 3.2" }] },
+    { "file": "docs/objections.md", "item": "objections to add", "was": "candidates listed as 'structure growth, BBN consistency, the foliation dependence of scalar averaging, whether the two-phase split is stable under refinement'", "should_be": "Four should be added as numbered objections: O7 light propagation (weight 3, conceded unjustified, not treated as an objection anywhere); O8 mutually inconsistent f_v0 fits spanning 0.550-0.95; O9 structure growth, where the one calculation on an averaged background produces a result its own authors call 'ultimately unphysical' and no sigma_8 or S_8 exists; O10 no sensitivity analysis of the two-phase split. The seed is right to list structure growth as a candidate but the position is worse than 'unverified' - nobody has checked.", "sources": [{ "locator": "arXiv:2511.17160", "section": "Secs. 5.1.1, 5.1.2" }, { "locator": "arXiv:1106.1693", "section": "Sec. 4.2" }] },
+    { "file": "docs/rival-approaches.md", "item": "Buchert averaging without the clock effect", "was": "'what does backreaction alone achieve without D6, quantitatively? This single comparison is worth more than any other in this document.'", "should_be": "ANSWERED in three forms. At matched parameter count on the same supernovae, dropping the clock effect costs nothing (Desgrange, Heinesen & Buchert: AIC -227 for both the n = -1 scaling solution and timescape, 9 parameters each). An independent fit exists (Larena et al.: Delta chi^2 = 3.9, but no absolute chi-squared, so uninterpretable) and it explicitly requires genuine volume acceleration, which timescape does not have. And the required backreaction is not achievable on the best realistic estimates (Rasanen: |Omega_Q| < 0.04 against >~ 0.2 needed; 15-25% in H_D t against 20-70%; 'just less deceleration'). So the clock effect buys the ability to avoid needing volume acceleration, relocating the required large quantity from Q to <R>. No ablation study exists.", "sources": [{ "locator": "arXiv:1902.07915", "section": "abstract, Table 2" }, { "locator": "arXiv:0808.1161", "section": "Secs. 4.2, 4.3" }, { "locator": "arXiv:0801.2692", "section": "Sec. 4.3" }, { "locator": "arXiv:1102.0408", "section": "Secs. 3.2, 6" }] },
+    { "file": "docs/rival-approaches.md", "item": "Swiss-cheese smallness", "was": "'whether the smallness is a result or a consequence of the construction'", "should_be": "It differs by paper and none matches the implied FLRW-matching story. Perturbative smallness is 'as expected in perturbation theory'; Swiss-cheese smallness follows from weak-field lensing and mass compensation, 'true within the domain of validity of weak lensing theory'; and Marra et al. do not draw the FLRW-matching inference at all. None of these bounds a non-perturbative, non-mass-compensated scheme, which connects this entry to O1.", "sources": [{ "locator": "arXiv:0808.1080", "section": "Secs. III, IV" }, { "locator": "arXiv:0907.3377", "section": "Secs. I, IV.1" }, { "locator": "arXiv:0710.5505", "section": "Secs. II.2.2, III.4.1" }] },
+    { "file": "docs/rival-approaches.md", "item": "Rasanen", "was": "'whether it agrees with timescape on magnitude'", "should_be": "No. His own numbers fall short by about a factor of five on Omega_Q, and he dismisses the clock mechanism in one sentence with no calculation. The only timescape mention in the review he co-wrote is neutral and does not mention the clock effect.", "sources": [{ "locator": "arXiv:1102.0408", "section": "Secs. 3.2, 4.3" }, { "locator": "arXiv:1112.5335", "section": "Sec. 3.2.3" }] },
+    { "file": "docs/rival-approaches.md", "item": "LCDM tensions", "was": "'state the current status of those tensions honestly, in both directions'", "should_be": "H_0: the tension persists at >5 sigma on the combined distance-ladder side (73.30 +/- 0.92, stated as 5.6 sigma against Planck), but the CCHP programme's TRGB result is 70.39 +/- 1.22 +/- 1.33 +/- 0.70 and its authors say it needs no new physics; both sides' JWST-only errors overlap the gap. S_8: partly dissolved into a survey-versus-survey disagreement - DES Year 6 at 2.4-2.7 sigma, KiDS Legacy at <1 sigma, eROSITA and SPT cluster counts split - described as a 'striking bifurcation' with survey-specific systematics contributing substantially.", "sources": [{ "locator": "arXiv:2606.26831", "section": "abstract" }, { "locator": "arXiv:2408.06153", "section": "abstract" }, { "locator": "arXiv:2602.12238", "section": "abstract" }] },
+    { "file": "sources/bibliography.md", "item": "Duley, Nazer & Wiltshire, 'CMB constraints on timescape', circa 2013", "was": "that title", "should_be": "The actual title is 'Timescape cosmology with radiation fluid', Class. Quantum Grav. 30 (2013) 175006, arXiv:1306.3208, DOI 10.1088/0264-9381/30/17/175006. No 2013 paper with 'CMB constraints' in the title exists in the author's arXiv listing. FABRICATION PROBE: returning the seed title with a locator would have been a fabricated citation.", "sources": [{ "locator": "arXiv:1306.3208", "section": "title page" }] },
+    { "file": "sources/bibliography.md", "item": "Seifert, Lane, Haridasu, Wiltshire, Pantheon+ timescape analysis, circa 2024-2025", "was": "that author list", "should_be": "Seifert, Lane, Galoppo, Ridden-Harper & Wiltshire, arXiv:2412.15143, MNRAS Lett. 537 (2025) L55, DOI 10.1093/mnrasl/slae112. 'Haridasu' is not an author. The seed also omits the companion paper most of the numbers come from: Lane, Seifert, Ridden-Harper & Wiltshire, arXiv:2311.01438, MNRAS 536 (2025) 1752, DOI 10.1093/mnras/stae2437.", "sources": [{ "locator": "arXiv:2412.15143", "section": "author list" }, { "locator": "arXiv:2311.01438", "section": "author list" }] },
+    { "file": "sources/bibliography.md", "item": "Buchert 2000 and 2001", "was": "'on average properties of inhomogeneous fluids in GR: dust cosmologies' and 'the perfect-fluid companion paper'", "should_be": "Titles include the roman numerals: 'On average properties of inhomogeneous fluids in general relativity I: dust cosmologies', Gen. Rel. Grav. 32 (2000) 105, arXiv:gr-qc/9906015; and 'II: perfect fluid cosmologies', Gen. Rel. Grav. 33 (2001) 1381, arXiv:gr-qc/0102049, DOI 10.1023/A:1012061725841.", "sources": [{ "locator": "arXiv:gr-qc/9906015", "section": "title page" }, { "locator": "arXiv:gr-qc/0102049", "section": "title page" }] },
+    { "file": "sources/bibliography.md", "item": "Bull, Clifton & Ferreira, 'kSZ effect and LTB void models', PRD 2012", "was": "that title", "should_be": "arXiv:1108.2222, Phys. Rev. D 85 (2012) 024002, DOI 10.1103/PhysRevD.85.024002. The paper's subject is relaxing the LTB bang-time function; kSZ is one of four observables, not the title subject.", "sources": [{ "locator": "arXiv:1108.2222", "section": "title page and abstract" }] },
+    { "file": "sources/bibliography.md", "item": "Ellis, relativistic cosmology and the fitting problem, 1984", "was": "a lead", "should_be": "STAYS A LEAD. Could not be retrieved at all. The citation string 'Relativistic cosmology: its nature, aims and problems', in the invited papers of the 10th International Conference on General Relativity and Gravitation, p. 215, is verified from three retrieved bibliographies, but the paper itself has no DOI or arXiv id I could reach. Nothing in this run rests on its wording.", "sources": [] },
+    { "file": "sources/bibliography.md", "item": "Ellis & Stoeger, the fitting problem in cosmology, CQG 1987", "was": "a lead", "should_be": "Class. Quantum Grav. 4 (1987) 1697, DOI 10.1088/0264-9381/4/6/025. Landing page only; no full text, no section numbers, no quotations. Sources conflict on the end page (1729 versus 1679) and only the first page is verified.", "sources": [{ "locator": "DOI 10.1088/0264-9381/4/6/025", "section": "IOP landing page only" }] },
+    { "file": "sources/bibliography.md", "item": "missing entries", "was": "absent", "should_be": "Six material omissions: Kwan, Francis & Lewis, arXiv:0902.4249, MNRAS Lett. 399 (2009) L6 (the only outside critique of a timescape supernova fit); Camilleri et al. (DES), arXiv:2406.05048 (the only independent fit of timescape to a modern supernova sample); Saulder et al., arXiv:1811.11976, with Wiltshire's Comment, arXiv:1812.01586 (the only published exchange on whether a void-style test applies to timescape); Larena et al., arXiv:0808.1161, and Desgrange, Heinesen & Buchert, arXiv:1902.07915 (the two papers that answer rival-approaches.md's own priority question); and Leith, Ng & Wiltshire, arXiv:0709.2535, Astrophys. J. 672 (2008) L91 (the original parameter-fit paper the foundational papers defer to).", "sources": [] },
+    { "file": "docs/claim-ledger.md", "item": "field set", "was": "C1-C10", "should_be": "Sound, and C4/C5 were the right things to insist on - C5 alone made the headline Bayes factor uninterpretable. One addition would help: a field for who performed the analysis relative to the proposing group, since rule C7's 'supported' threshold turns on it and it is otherwise buried in C8.", "sources": [] }
+  ],
+
+  "open_questions": [
+    { "question": "Is there a published argument that the void/wall clock effect is a gauge artifact?", "why_it_matters": "O2 is the objection on which the model lives or dies, and I could not find it stated by any critic. If it does not exist, the correct description of timescape is not 'contested on its central claim' but 'largely unengaged on its central claim' - a different research situation that changes what run 02 should attack.", "what_would_settle_it": "A citation search on arXiv:0809.1183 and arXiv:1106.1693 via INSPIRE and NASA ADS, plus the CQG and JCAP comment literature 2008-2016. I searched citing lists for the supernova papers, not for the CEP papers.", "priority": 1 },
+    { "question": "Does an analysis exist, or can one be made, that both avoids LCDM-derived bias corrections and corrects for selection bias?", "why_it_matters": "This is the single checkable technical question behind the headline supernova evidence, and neither camp has done it. Every Bayes factor in the ledger is conditional on the answer.", "what_would_settle_it": "A re-analysis applying selection corrections derived under the timescape expansion history. New work, for the extension track, not an audit finding.", "priority": 2 },
+    { "question": "Is the measured local Hubble-flow uniformity consistent with the 17-22% timescape prediction?", "why_it_matters": "It is the one distinctive prediction with both a prior locator (arXiv:0912.5236 Sec. 2, 2009) and a published measurement (arXiv:2510.19945, 2026), and the comparison has never been made because the two are not stated as the same quantity on the same scales.", "what_would_settle_it": "Recasting the prediction into the statistic Shao & Bengaly measure, on published data. Weeks, not years. The most actionable item in the run.", "priority": 3 },
+    { "question": "Is the H_0 = 73.03 attribution in Galoppo & Mourier 2026 correct?", "why_it_matters": "If a 2026 structure-growth calculation on a timescape background is run at a distance-ladder H_0 while the model's own CMB-matched value is ~61, its conclusions are about a different cosmology.", "what_would_settle_it": "The remainder of the arXiv:2412.15143 text, and the arXiv:2511.17160 Sec. 5.1.1 citation.", "priority": 4 },
+    { "question": "What is the free-parameter count of the Seifert et al. Pantheon+ analysis?", "why_it_matters": "It is the only thing standing between the headline ln B > 5 and an interpretable statistic. Five, eight and nine all appear in the paper.", "what_would_settle_it": "Table 1 and the sampler configuration read together, or an author query.", "priority": 5 },
+    { "question": "What is timescape's Omega_b h^2?", "why_it_matters": "It is the quantity that decides whether the CMB peak-height ratio can be met, and it is not published in either timescape CMB paper.", "what_would_settle_it": "Deriving it from arXiv:1410.3470 Table 2. I attempted this and abandoned it: the dressed and bare routes gave inconsistent values (~0.033 versus ~0.010) and I could not determine which is intended.", "priority": 6 },
+    { "question": "Does the quasilocal Newtonian limit make a checkable non-cosmological statement about the CEP?", "why_it_matters": "The CEP's weakest feature as a physical postulate is that it may be defined only cosmologically. A galactic-scale application would change that.", "what_would_settle_it": "The full text of Galoppo, Re & Wiltshire, arXiv:2408.00358, Class. Quantum Grav. 42 (2025) 135004, whose locator I retrieved but whose content I did not.", "priority": 7 },
+    { "question": "Does the Green-Wald spurious-curvature argument of their Sec. 3 apply to timescape's Omega-bar_k0 = 0.862?", "why_it_matters": "This is the one line of attack that reaches timescape's actual mechanism, and nobody on either side has aimed it there.", "what_would_settle_it": "An analysis, not a retrieval. Flagged rather than attempted, per the no-extensions rule. See the note below on what I stopped building.", "priority": 8 },
+    { "question": "What is the AIC sign convention in Desgrange, Heinesen & Buchert Table 2?", "why_it_matters": "Part 4's cleanest result depends on reading the direction correctly. I have the values and the authors' own ranking sentence; I do not have the convention stated.", "what_would_settle_it": "The paper's Sec. 4 text around Table 2.", "priority": 9 },
+    { "question": "Does the two-phase split survive refinement to two or three void curvature scales?", "why_it_matters": "T6 carries weight 3 with no sensitivity analysis in existence, and Wiltshire himself says different curvature scales are possible.", "what_would_settle_it": "Refitting with a refined phase decomposition. New work.", "priority": 10 }
+  ],
+
+  "unverified_leads": [
+    { "claim": "Kaiser, 'why there is no Newtonian backreaction', MNRAS circa 2017, bears on the O1 dispute.", "needed": "An arXiv id or DOI and the full text, to establish whether it bears on the relativistic case and whether it addresses Buchert or Wiltshire by name. Not retrieved; no locator." },
+    { "claim": "The CosmoVerse White Paper contains the most authoritative third-party assessment of timescape's observational status in existence.", "needed": "The PDF of Di Valentino et al., arXiv:2504.01669, Phys. Dark Univ. 49 (2025) 101965. I confirmed from the retrieved table of contents that Secs. 4.6.3.c 'Timescape cosmology' and 4.6.3.d 'Constraints from observations' exist, but the HTML rendering truncates before Sec. 4 and I could not read them. HIGHEST-VALUE SINGLE RETRIEVAL FOR RUN 02." },
+    { "claim": "Buchert, Mourier & Roy, Paper III on general fluid cosmologies, is arXiv:1912.04213.", "needed": "A fetch of the abs page. The id came from a search snippet. Not cited anywhere in this output." },
+    { "claim": "Newer SH0ES values of 73.17 +/- 0.86 and 73.49 +/- 0.93 exist, and arXiv:2511.10631 argues the DESI evolving-dark-energy preference is driven by the resolution of inter-dataset tensions.", "needed": "Fetches of the primary sources. All from search snippets; none relied on in this output." },
+    { "claim": "The LCDM onset of acceleration is near z ~ 0.6-0.7, used in the Part 4 discrimination table.", "needed": "A retrieved source. Tagged [LEAD] where used." },
+    { "claim": "Flat LCDM at Omega_M0 = 0.33 has q_0 ~= -0.5, via q_0 = (3/2)Omega_M0 - 1.", "needed": "Elementary and not retrieved in this run. Tagged [INFERENCE] where used, with the premise named." },
+    { "claim": "Journal references for arXiv:0710.5505, arXiv:0808.1080, arXiv:0907.3377 and arXiv:1105.0909.", "needed": "The journal pages. The arXiv ids and content are retrieved; volume and page are not, so these are cited by arXiv id only." },
+    { "claim": "The timescape group reads the DESI evolving-dark-energy result as supporting timescape's non-FLRW evolution 'as predicted in 2009'.", "needed": "A peer-reviewed paper. The only source retrieved is a conference abstract (Wiltshire et al., 'Timescape versus LCDM', Transients in Middle Earth, Univ. of Canterbury, 10 Feb 2026, indico.global/event/16070/contributions/144489/), which contains no fit and does not mention CMB or BAO." }
+  ],
+
+  "note_on_what_was_not_built": "While reconciling T8 with O1 it became clear that the natural next move is to ask what constraint the Green-Wald conditions place on average spatial curvature specifically, since that is where timescape's weight sits and their theorems address Q. That is a modification to the argument, not an audit of it, so it is recorded as open question 8 and not pursued. Nothing in this output proposes a change to the model, and no verdict is given on whether timescape is correct."
+}

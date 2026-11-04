@@ -1,0 +1,106 @@
+run: 01-audit-derivation-chain
+role: auditor
+model: "claude-opus-5"
+prompt_path: prompts/01-audit-derivation-chain.md
+prompt_commit: "6d547ab74da9ec33a6dee96eb608552dd1a48386"
+prompt_commit_note: >
+  The value above is the git BLOB sha of prompts/01-audit-derivation-chain.md
+  as used, which is what the operator supplied. It is not a commit sha. The
+  commit that introduced the prompt is
+  604a516105c772b6076f285fbf18422635e94e3a. Both are recorded because
+  runs/README.md says a run whose prompt cannot be reconstructed from the
+  repository is not a data point, and `git cat-file -p <blob>` reconstructs it
+  from the value above. Future runs should record which kind of sha they mean.
+seed_docs_provided:
+  - docs/problem-statement.md
+  - docs/derivation-chain.md
+  - docs/claim-ledger.md
+  - docs/objections.md
+  - docs/rival-approaches.md
+  - protocol/EVIDENCE-RULES.md
+  - protocol/output-schema.md
+  - protocol/METHOD.md
+  - runs/README.md
+  - sources/bibliography.md
+tools_available:
+  - web_search
+  - web_fetch
+  - subagents (six parallel retrieval agents, one per domain division)
+  - git
+  - gh
+retrieval_used: true
+papers_retrieved: 86
+papers_retrieved_note: >
+  86 is the count of distinct papers for which at least one page (arXiv abs,
+  ar5iv/arXiv full-text HTML, or journal landing page) was successfully
+  fetched in this run, across the synthesising agent and six retrieval
+  subagents, deduplicated. Roughly 30 of those were read in full text rather
+  than abstract only; the rest supplied a verified locator and abstract-level
+  content. Of the 86, 23 were fetched and read by the synthesising agent
+  itself, including every paper the central findings rest on: arXiv:0709.0732,
+  0809.1183, 0909.0749, 1106.1693, 1009.5855, 1311.3787, 1407.8084,
+  1505.07800, 1506.06452, 1902.07915, 2311.01438, 2406.05048, 2412.15143,
+  2511.17160, 1811.11976, 1812.01586, 1103.4156, 0709.2535, 1512.02947,
+  2202.01226, 2403.15134, 2605.05454, 2607.01172.
+  Total successful fetch calls across the run, including offset continuations
+  of long pages, were approximately 190. Two fetches failed and are recorded:
+  the A&A full-text HTML for A&A 622 A83 returned HTTP 403, and a raw arXiv
+  PDF returned unreadable compressed binary (both recovered via ar5iv).
+  No locator in OUTPUT.md or OUTPUT.json was promoted from the seed
+  bibliography without retrieval; where retrieval failed the entry is tagged
+  [LEAD] or [UNKNOWN] and listed under unverified_leads.
+context_clean: true
+context_clean_note: >
+  The run executed on a deliberately fresh context. No analysis of timescape
+  was inherited from any other session, and no hints were requested or
+  received about which step is load-bearing or which objection is strongest.
+  The only timescape material in context at the start was the repository's own
+  seed documents, which are themselves marked unverified. The chain
+  restructuring, the Omega-bar_k versus Omega-bar_Q finding, and the
+  reclassification of the seed's D2 and D4 were derived from retrieved
+  primary sources during this run.
+started: "2026-11-04T21:20:00Z"
+finished: "2026-11-04T23:55:00Z"
+token_cost: null
+token_cost_note: >
+  Not instrumented. Subagent usage as reported by the harness totalled
+  approximately 1.08M tokens across the six retrieval agents (109k, 119k,
+  226k, 287k, 151k, 192k); the synthesising agent's own usage was not
+  measured. Recorded as null rather than guessed.
+operator: "michaelClucas"
+notes: >
+  Six retrieval subagents ran in parallel across the natural divisions: the
+  averaging formalism; Wiltshire's timescape papers and the Cosmological
+  Equivalence Principle; the Green-Wald versus Buchert backreaction dispute;
+  the timescape supernova analyses; CMB, BAO and Hubble-flow tests; and
+  rivals with their constraints. Each was instructed to report only locators
+  it had fetched, to mark author-plus-year material as an unverified lead, and
+  to list every URL it successfully fetched. The synthesising agent
+  independently re-fetched every source behind a central claim rather than
+  passing a subagent's locator through; where a subagent reported something
+  the synthesiser could not verify, it is tagged [LEAD] or flagged in the
+  gaps.
+
+  Three findings reclassify the seed chain and are the substance of this run:
+  (1) the seed's D2 THEOREM tag covers one exact identity and one statement
+  that is nowhere a theorem in the retrieved literature and that timescape
+  does not use; (2) the seed's D4 is not timescape's mechanism - the model's
+  own fitted solution has Omega-bar_Q0 = -0.0293, negative, with q-bar > 0
+  and no volume acceleration, and the bare budget is dominated by average
+  negative spatial curvature at Omega-bar_k0 = 0.862, so the Green-Wald
+  dispute as fought does not engage it; (3) the seed has no step for light
+  propagation, which carries weight 3 and which both Buchert and Wiltshire
+  state in print is not yet justified.
+
+  O1 and O2 are both recorded resolved: false, with both sides from primary
+  sources and no verdict. O4 is recorded resolved: true, but only for the
+  narrow factual question the seed asked - whether f_v0 is fitted or
+  independently determined - and the resolution note says so explicitly. No
+  verdict is given on whether timescape is correct, and no extension or
+  modification is proposed anywhere in the output.
+
+  Branch history note: an earlier commit on this branch (2f74a1d) landed a
+  partial run - PART1.draft.md and HANDOVER.md - when the run was interrupted
+  by a usage limit. Those files are removed in the completing commit and
+  their content is superseded by OUTPUT.md. The run was not restarted, so the
+  context remained clean across the interruption.
