@@ -260,3 +260,74 @@ So how the published denominator was defined is still unknown, and cannot be
 found out from this software. It is worth about 0.02 points, so it changes
 nothing — but "we do not know" is the accurate answer and it is better than a
 guess.
+
+---
+
+# Added last: the mistake was fixed, and fixing it broke two other things
+
+The section above says our arithmetic was wrong and reports the corrected
+numbers. Those numbers are now **the ones the repository's own scripts
+produce**: the fix has been applied. Evidence:
+`verify/wp4_void_fraction.py` (14 of 14), `verify/wp4_vast_mask_convention.py`
+(13 of 13), `verify/wp4_mask_resolution.py` (16 of 16). The write-up is
+`findings/WP-4-void-fraction.md` §13.
+
+The old version of the script is kept, working, at
+`verify/legacy/wp4_void_fraction_preindexfix.py`, for one reason: a lot of
+already-written text quotes its numbers, and the rule in this project is that
+every number in writing has to come from a script you can still run. Deleting
+it would leave those numbers pointing at nothing.
+
+## Two things the fix broke, which is the interesting part
+
+**One claim turned out backwards.** A check in another script said: the fitted
+value 0.627 scrapes past the measured floor by less than the amount our
+pipeline disagrees with the published one, so don't trust the margin. With the
+arithmetic fixed, the margin grew (0.0042 → 0.0113) and the disagreement shrank
+(0.0148 → 0.0077). So the comparison now runs the other way: **0.627 clears the
+floor by more than our remaining disagreement.** The old sentence was true and
+is now false. It was rewritten rather than quietly adjusted, and the script says
+in a comment that it was.
+
+**And one piece of geometry had been right by accident.** A different script
+works out the surveyed volume a second way, by integrating the area of sky the
+survey covers. To do that it needs to know which strip of sky each row of the
+mask grid stands for — and it had been assuming the strips implied by *our wrong
+arithmetic*. With the arithmetic fixed, the two no longer matched, and the
+second calculation drifted off by 1.7%.
+
+Working out the real strips turned up something worth knowing about the
+published software: **its equator row is twice as tall as every other row.**
+Rounding "toward zero" sends both +0.4 and −0.4 degrees to the same row, so one
+row covers two degrees of sky while its neighbours cover one. That is not a
+mistake we can fix — it is how the mask file we were given was built, and the
+void catalogues were built against it. It only matters if you use the grid as
+geometry rather than as a lookup table, which is exactly what that second
+calculation does.
+
+Once the strips were right, the two independent ways of computing the surveyed
+volume **agreed to one part in a hundred thousand** — much better than before.
+That is the most convincing evidence in this whole write-up that the fix is
+right, and it came from a direction nobody was aiming at.
+
+**How it was caught:** by a check whose job was to say "this second
+calculation agrees with the first". It stopped agreeing, so the check failed.
+That is the only one of the day's four mistakes that a check caught by itself;
+the other three were caught by writing down what the answer ought to be before
+looking.
+
+## What did not change
+
+**Nothing about the conclusion.** The two fitted values that were ruled out are
+still ruled out, and 0.627 is still undecided for the same reason as before: the
+mask is stored one degree at a time, and that coarseness alone moves the answer
+by more than the margin. Fixing arithmetic cannot fix the resolution of a file
+somebody else made.
+
+One number did get slightly worse rather than better, and it should be said:
+the uncertainty from that coarseness is **3.66 points**, not the 3.06 the
+section above reports. It had to be re-measured, because the coarseness
+uncertainty is about the survey's edge and the fix changed where the edge is
+calculated to be. So the honest summary of the whole exercise is: our number
+moved 0.71 points closer to the published one, our confidence in the exclusion
+went up, and our uncertainty band got a little wider.

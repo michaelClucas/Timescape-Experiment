@@ -246,9 +246,11 @@ not change any conclusion: `f_v0 = 0.550` and `0.557` stay excluded and `0.627`
 stays undecided, for the reasons in §12.4.
 
 The difficulty is reach. Those numbers are quoted in §3, §5, §6, §10.3, §10.4
-and §11 of the finding, in `explain/004-is-the-void-fraction-measured.md` and
+and §11 of the finding, in
 `explain/004c-how-much-does-the-survey-edge-move-the-answer.md`, and in two day
-logs and three status files. `verify/wp4_fv0_comparison.py` and
+logs and three status files. (`explain/004-is-the-void-fraction-measured.md`
+was checked when the answer was applied and quotes no measured fraction, only
+fitted values, so the reach is one write-up rather than two.) `verify/wp4_fv0_comparison.py` and
 `verify/wp4_critical_threshold.py` both hard-code 0.6228 as the bound and would
 have to change with it, which means re-running and re-expecting 25 checks
 across two scripts.
@@ -303,7 +305,57 @@ survives the bound by less than the pipeline's own error" needs rewording,
 since §12 reduces that error. Rule 6 applies to that edit as much as to a new
 one.
 
-**Answer:** (overseer, pending)
+**Answer:** (overseer, 2026-11-05) **Option 3.** Correct
+`verify/wp4_void_fraction.py` in place and keep a frozen copy. Instructed
+directly, in the same session that raised the question.
+
+**Applied, same session, cycle 7.** What was done:
+
+- `verify/legacy/wp4_void_fraction_preindexfix.py` is the pre-fix script frozen
+  exactly as it stood at `db47115`, still runnable and still passing its own
+  14 checks, so every number quoted in `findings/WP-4-void-fraction.md` §3, §5,
+  §6, §10 and §11, in `explain/004c-...`, and in the three 2026-11-05 status files stays resolvable
+  to the script that produced it. `explain/004-...` was checked and quotes no
+  measured fraction, only fitted values. Only its `RAW` data path changed, by one directory level, because it
+  moved into `verify/legacy/`.
+- `verify/wp4_void_fraction.py` now uses [VAST]'s index,
+  `int(res*dec) - res*DEC_OFFSET` with `DEC_OFFSET = -90`. Its own
+  void-centre convention check now prints what the superseded index would have
+  given, so it states its own blind spot instead of implying it has none.
+- `verify/wp4_fv0_comparison.py` and `verify/wp4_critical_threshold.py` have
+  their measured values corrected, with the sequencing note's warning
+  observed: **the expectations were corrected, never loosened.** One check in
+  `wp4_critical_threshold.py` had to be **rewritten rather than retuned**,
+  because the correction reversed the ordering it asserted - see below.
+- `verify/wp4_mask_resolution.py`'s baseline is corrected and its mask
+  variants re-measured rather than rescaled.
+- `verify/wp4_vast_mask_convention.py` is repurposed from proposing the
+  correction to being its **regression test**: it asserts that the live script
+  implements the sourced expression and that the frozen copy reproduces the
+  superseded numbers, so the 0.71-point difference stays demonstrable and a
+  later "simplification" back to the old form fails a check.
+- `findings/WP-4-void-fraction.md` §13 carries the corrected canonical numbers
+  and the header points at it. §3, §5, §6, §10 and §11 are **left standing**
+  with their superseded figures, per the append-and-date convention, and §13
+  says plainly that they are superseded and by how much.
+
+**The one substantive consequence, which was not anticipated when Q-4 was
+raised.** The correction **reversed** an ordering that `wp4_critical_threshold.py`
+asserted. Before it, `f_v0 = 0.627` cleared the edge-included bound by `0.0042`
+while this pipeline disagreed with [DVB23] Table 6 by `0.0148`, so the check
+read "0.627 survives the bound by less than the pipeline's own error". After
+it, the margin is `0.0113` and the residual is `0.0077`: **0.627 now clears the
+bound by more than the pipeline's residual.** The old claim is false and the
+check was rewritten to assert the true one. It changes no verdict - 0.627 is
+still undecided, because the +-1-pixel pixelation bracket still straddles it -
+but it does mean the specific worry §10.3 raised about that margin is answered,
+and answered in the direction that makes the margin more trustworthy rather
+than less.
+
+**No exclusion verdict changed**, which is asserted as a check in
+`verify/wp4_vast_mask_convention.py` rather than claimed here: every [NW15]
+prescription falls on the same side of the superseded bound and the corrected
+one.
 
 ### Second note appended 2026-11-05 by the third session (day 3), cycle 6
 

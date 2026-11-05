@@ -18,6 +18,15 @@ measured fraction in §3, §5, §6, §10 and §11 is high by that amount, and §
 carries the corrected values. The script was deliberately left unaltered; see
 §12.6 and `OPEN-QUESTIONS.md` Q-4. **The corrected bound does not change which
 fitted values §6 and §10.3 exclude**, which §12.4 checks.
+
+**§13 is the section to quote measured numbers from.** The overseer answered
+Q-4 with option 3, so the correction has been **applied**: the live
+`verify/wp4_void_fraction.py` now uses VAST's index and the pre-fix script is
+frozen at `verify/legacy/wp4_void_fraction_preindexfix.py`, which still
+reproduces every superseded figure in §3, §5, §6, §10 and §11. §13.1 carries
+the canonical fractions, §13.3 the error budget, §13.4 the bound and the one
+claim the correction reversed, and §13.5 a property of VAST's mask found while
+repairing a downstream consequence.
 **Provisional on WP-0.** Run 02 has not run.
 **Evidence:** `verify/wp4_inspect_inputs.py`, `verify/wp4_void_fraction.py`
 (14/14), `verify/wp4_fv0_comparison.py` (13/13, two checks added by the
@@ -900,3 +909,190 @@ correction notice was appended to its docstring, and this section carries the
 corrected numbers. Whether the script should instead be corrected in place, and
 every dependent number updated, is **`OPEN-QUESTIONS.md` Q-4**, with the
 reversible default being what was done here.
+
+---
+
+# Addendum, 2026-11-05 (third session, day 3, cycle 7): the correction applied, and the canonical numbers
+
+**The overseer answered `OPEN-QUESTIONS.md` Q-4 with option 3: correct
+`verify/wp4_void_fraction.py` in place and keep a frozen copy.** This section
+is what that produced. §12 diagnosed the defect; this one applies it and says
+what the measured numbers now are.
+
+**Evidence:** `verify/wp4_void_fraction.py` (14/14, corrected),
+`verify/wp4_vast_mask_convention.py` (13/13, now the regression test),
+`verify/wp4_mask_resolution.py`, `verify/wp4_fv0_comparison.py` (13/13),
+`verify/wp4_critical_threshold.py` (14/14),
+`verify/legacy/wp4_void_fraction_preindexfix.py` (14/14, frozen).
+**Still provisional on WP-0.**
+
+**§3, §5, §6, §10 and §11 are left standing with their superseded figures**, per
+the append-and-date convention this finding has used throughout. Every one of
+those figures is high by about 0.71 points and the frozen script still
+reproduces them on demand. **This section is the one to quote from.**
+
+## 13.1 The canonical measured void volume fraction
+
+VoidFinder, rasterised union of ~40,000 hole spheres on a 1 h⁻¹ Mpc grid
+against the masked survey volume, read with VAST's own index. **Every number
+LCDM-conditioned, per cut 8.**
+
+| | Planck2018 | WMAP5 | superseded (§3) |
+|---|---|---|---|
+| **edge voids included** | **61.57%** | **61.92%** | 62.28 / 62.63 |
+| edge flag 0 only | 44.06% | 44.11% | 44.82 / 44.86 |
+| edge flag ≠ 1 | 45.10% | 44.96% | 45.86 / 45.72 |
+| published, arXiv:2202.01226 Table 6 | 60.8% | 61.1% | — |
+| **residual against published** | **+0.77** | **+0.82** | +1.48 / +1.53 |
+
+V2, which §3 established is not reproducible from the published files and
+remains so: VIDE 72.43% / 73.07% against published 68.1% / 63.0%, REVOLVER
+79.31% / 79.29% against 90.8% / 86.5%. The discrepancy still runs opposite ways
+for the two pruning methods, so it is still **unexplained** rather than
+reconciled, and the index correction did not change that.
+
+The edge treatment still moves VoidFinder's answer by **17.5 points** and is
+still the dominant systematic.
+
+## 13.2 What the correction corroborates, from a direction it was not derived from
+
+The correction was derived entirely from reading VAST's source. Two independent
+things then came out in its favour:
+
+1. **The residual against the published value roughly halves**, from +1.48/+1.53
+   to +0.77/+0.82. A wrong index could in principle have moved either way.
+2. **The plain cell-centre baseline is now the mask variant closest to the
+   published value.** Before the correction the *dilated* mask was closest and
+   the baseline was 1.48 points high; `verify/wp4_mask_resolution.py` now
+   asserts that the baseline is closest, in both cosmologies. The simplest
+   reading of the mask is the best match once the index is right.
+
+Neither is proof. Both are checks the correction was not fitted to.
+
+## 13.3 The error budget, superseding §5 and §11.4
+
+| term | size |
+|---|---|
+| survey-edge treatment (cut 4) | 17.5 points |
+| **mask footprint pixelation, ±1 px (§11.2, re-measured)** | **3.66 points** |
+| FLRW conditioning, estimated | ~2.0 points |
+| **mask index, before and after the Q-4 correction** | **0.71 points** |
+| WMAP5's radial-limit choice | 0.485 points |
+| cosmology within FLRW (cut 3) | 0.35 points |
+| denominator definition, rasterised against analytic | 0.000 points |
+| spatial grid, 1 → 2 h⁻¹ Mpc | 0.01 points |
+| residual against the published value | 0.77 points, unexplained |
+
+The pixelation bracket is **3.66 points, not §11.2's 3.07**. It had to be
+re-measured rather than carried over: the bracket moves the footprint's
+boundary layer, and the index correction changed where that layer is evaluated.
+Re-measured, not rescaled.
+
+**One term grew in relative importance.** §11.4 could say the three
+non-mask candidates were "under half the gap". They are not any more, because
+the gap halved and they did not. At 0.485 points the **WMAP5 radial-limit choice
+is now the second-largest term and 59% of the residual gap**, where before it
+was a third; the three together come to 0.497 points, which is 60% of the gap.
+No single other term reaches the gap, which is what
+`verify/wp4_mask_resolution.py` now asserts, but "negligible" is no longer the
+right word for them.
+
+## 13.4 The exclusion, and the one claim that reversed
+
+The bound, with the ±1-pixel pixelation bracket applied about the corrected
+centre:
+
+| Planck2018 edge-included bound on `f_v0` | value |
+|---|---|
+| superseded (§10.3, §11.5) | 0.6228 |
+| **corrected, canonical** | **0.6157** |
+| corrected, less half the bracket | 0.5974 ← conservative |
+| corrected, plus half the bracket | 0.6389 ← aggressive |
+
+| arXiv:1410.3470 Table 2 | `f_v0` | vs corrected | vs conservative | vs aggressive |
+|---|---|---|---|---|
+| `A(H̄_dec)` | 0.627 | +0.0113 | +0.0296 | **excluded** |
+| `W(k ≠ 0)` | 0.557 | **excluded** | **excluded** | **excluded** |
+| `W(k = 0)` | 0.550 | **excluded** | **excluded** | **excluded** |
+
+**No exclusion verdict changed.** `verify/wp4_vast_mask_convention.py` asserts
+that as a check rather than this section claiming it: every prescription falls
+on the same side of the superseded bound and the corrected one. So §6, §10.3,
+§10.4 and §11.5 keep their conclusions verbatim while their numbers are
+superseded. K5 still does not fire and §8's second limb is untouched.
+
+**What did reverse is a claim §10.3 made about the margin.**
+`verify/wp4_critical_threshold.py` carried a check reading "0.627 survives the
+bound by less than the pipeline's own error": `0.627 − 0.6228 = 0.0042` against
+a `0.0148` disagreement with the published fraction. After the correction the
+margin is `0.0113` and the residual is `0.0077`, so **0.627 now clears the
+bound by more than the pipeline's residual** — the ordering is the other way
+round. That check was **rewritten to assert the true ordering, not retuned to
+keep the old one alive**, and it records that it was. The worry §10.3 raised
+about that margin is answered, and answered in the direction that makes the
+margin more trustworthy.
+
+**It still does not settle `0.627`.** The term straddling it is the pixelation
+bracket, which is a property of a mask stored at one-degree resolution and
+which the index correction does not touch — it is now wider, at 3.66 points, not
+narrower. So §12.4's conclusion stands unchanged: between one and zero of
+arXiv:1410.3470's three prescriptions survive, and which is set by a one-pixel
+footprint convention.
+
+The minivoid volume §10.5 requires moves with the bound: `f_v0 = 0.695` now
+needs **+0.079** of the horizon volume in voids the catalogue cannot see rather
+than +0.072, and `f_v0 = 0.791` needs **+0.175** rather than +0.168.
+
+## 13.5 A property of VAST's mask found while fixing the solid angle, and worth knowing
+
+Correcting the index broke something downstream that had been silently correct
+for the wrong reason, and the repair is `[SOURCED]` and slightly surprising.
+
+`verify/wp4_mask_resolution.py` computes an analytic survey volume from the
+mask's solid angle, which needs to know what declination band each pixel row
+covers. It had assumed row `j` covers `[j/res − 90, (j+1)/res − 90)`. That is
+the band an offset-before index implies. VAST's index is
+`int(res·dec) + 90·res`, and with `m = j − 90·res` the declinations landing in
+row `j` are those with `int(res·dec) = m`:
+
+| | band |
+|---|---|
+| `m > 0` | `dec ∈ [m/res, (m+1)/res)` |
+| `m < 0` | `dec ∈ ((m−1)/res, m/res]` |
+| **`m = 0`** | **`dec ∈ (−1/res, 1/res)`** |
+
+**VAST's equatorial pixel is twice as wide as every other one.** Truncation
+toward zero sends both `dec = −0.4` and `dec = +0.4` to `int(dec) = 0`, so row
+`90·res` covers two degrees of declination while its neighbours cover one, and
+every southern row is shifted one place relative to the naive formula.
+`[SOURCED]`, from the same two lines §12.1 cites.
+
+This does **not** make reading the array with VAST's expression wrong: the
+array was written with it, so the round trip is self-consistent, and the
+catalogues were built against that mask. It means any *geometric* use of the
+grid has to honour the real bands. Left uncorrected, the analytic denominator
+disagreed with the rasterised one by **1.68%**, which promoted a negligible
+budget term to 1.06 points and made it look like the second-largest item in
+§13.3's budget. **Caught because the check asserting that term was negligible
+failed**, which is what that check was for.
+
+**With the right bands the two volumes agree to 0.001%** — 2.77135e+07 against
+2.77135e+07 under Planck2018 — against 0.035% under the superseded index with
+the naive bands. The analytic integral and the rasterised cell count are
+independent computations of the same volume, so agreeing to a part in 10⁵ is a
+stronger check on the band derivation than the derivation's own algebra, and it
+is a third piece of corroboration the correction was not fitted to.
+
+## 13.6 What this closes and what it does not
+
+**Closed:** the pipeline-vs-published gap is a quantified footprint-convention
+systematic (§11), the index defect behind 0.71 points of it is sourced and
+fixed (§12, §13), and the exclusion of `f_v0 = 0.550` and `0.557` has survived
+the edge treatment, the pixelation bracket and the index correction.
+
+**Open, unchanged:** whether `0.627` is excluded, which needs the mask at finer
+than one-degree resolution rather than any further code-reading; the denominator
+convention arXiv:2202.01226 used, which §12.5 shows cannot be recovered from
+VAST's repository; the V2 non-reproducibility of §3; and the 0.77-point residual
+itself, which is now small enough that the WMAP5 radial-limit choice is a
+material fraction of it.

@@ -87,11 +87,19 @@ SW11_ADMISSIBLE = (57.0, 68.0)   # [SW11] Sec. 2
 # Part B. The measured void fraction, from verify/wp4_void_fraction.py
 # ---------------------------------------------------------------------------
 
+# CORRECTED 2026-11-05 per OPEN-QUESTIONS.md Q-4. These were 62.28, 62.63,
+# 44.82 and 44.86 until commit db47115, from a mask declination index that
+# applied the +90 offset before the truncation rather than after. [VAST] builds
+# and reads that array the other way round (multizmask.py 15/166/192,
+# voidfinder_functions.py 249), so the old values were wrong by about 0.71
+# points. verify/wp4_vast_mask_convention.py sources it;
+# verify/legacy/wp4_void_fraction_preindexfix.py still reproduces the old
+# numbers for the prose that quotes them.
 MEASURED = {
-    ("VoidFinder", "Planck2018", "edge included"): 62.28,
-    ("VoidFinder", "WMAP5", "edge included"): 62.63,
-    ("VoidFinder", "Planck2018", "edge excluded"): 44.82,
-    ("VoidFinder", "WMAP5", "edge excluded"): 44.86,
+    ("VoidFinder", "Planck2018", "edge included"): 61.57,
+    ("VoidFinder", "WMAP5", "edge included"): 61.92,
+    ("VoidFinder", "Planck2018", "edge excluded"): 44.06,
+    ("VoidFinder", "WMAP5", "edge excluded"): 44.11,
 }
 PUBLISHED_VF = {"Planck2018": 60.8, "WMAP5": 61.1}   # [DVB23] Table 6
 

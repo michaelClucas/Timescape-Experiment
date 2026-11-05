@@ -15,14 +15,20 @@ first session of 2026-11-05 and neither that session nor the second checked it.
 
 It matters because `verify/wp4_critical_threshold.py` establishes that the
 fitted `f_v0 = 0.627` of [NW15] Table 2's A(H_bar_dec) prescription clears the
-edge-included measured lower bound of 0.6228 by only 0.0042 - about a third of
-this unexplained 0.0148. Whether the bound excludes two of [NW15]'s three CMB
-prescriptions or all three turns on a systematic nobody had checked.
+edge-included measured lower bound by a margin smaller than this unexplained
+gap. Whether the bound excludes two of [NW15]'s three CMB prescriptions or all
+three turns on a systematic nobody had checked.
+
+(As first written this read "clears 0.6228 by only 0.0042 - about a third of
+this unexplained 0.0148". After the `OPEN-QUESTIONS.md` Q-4 index correction the
+bound is 0.6157, the margin 0.0113 and the residual 0.0077, so the margin now
+exceeds the residual. The question is unchanged, because the +-1-pixel bracket
+this script measures still straddles 0.627.)
 
 **Answer: the attribution is correct, and my own prediction that it was wrong
 was itself wrong.** See "What I expected" below. The mask convention moves
-`f_v` by 3.07 points end to end, twice the gap, and the published value lies
-inside that span. The gap is no longer unexplained.
+`f_v` by 3.66 points end to end, over four times the gap, and the published
+value lies inside that span. The gap is no longer unexplained.
 
 ## What "mask resolution" can and cannot do
 
@@ -46,15 +52,20 @@ ratio would cancel most of the change, that the full erode-to-dilate bracket
 would move `f_v` by "well under 0.5 points", and therefore that mask resolution
 would be **refuted** as the explanation.
 
-**Measured: 3.07 points, six times my prediction and twice the gap.** The
-cancellation argument is right in form and wrong in magnitude, for a reason the
-argument itself names and I then failed to evaluate: what survives the
-cancellation is the difference between the void fraction of the boundary layer
-and that of the bulk, and in this dataset that difference is *large*. The
-layer dilation adds is only about 16% void, against 62% for the survey as a
-whole, because the VoidFinder sphere union stops at the footprint edge while
-the mask does not. A nearly-void-free shell appended to the denominator and not
-to the numerator moves the ratio hard.
+**Measured: 3.66 points, seven times my prediction and more than four times
+the gap.** The cancellation argument is right in form and wrong in magnitude,
+for a reason the argument itself names and I then failed to evaluate: what
+survives the cancellation is the difference between the void fraction of the
+boundary layer and that of the bulk, and in this dataset that difference is
+*large*. The layer dilation adds is only about 11% void, against 62% for the
+survey as a whole, because the VoidFinder sphere union stops at the footprint
+edge while the mask does not. A nearly-void-free shell appended to the
+denominator and not to the numerator moves the ratio hard.
+
+(The figures in this paragraph are the re-measured post-Q-4 ones. The first run
+of this script, against the superseded mask index, gave 3.07 points and a 17%
+void boundary layer. The prediction was wrong either way, by six times then and
+seven now.)
 
 Per protocol rule 6 the expectation is corrected and the failure recorded,
 rather than the tolerance widened. The checks below now assert what is true;
@@ -127,7 +138,13 @@ OMEGA_M = vf.OMEGA_M
 
 # findings/WP-4-void-fraction.md section 3, and wp4_void_fraction.py's own
 # output at 96fe08e. These are the numbers whose gap is under investigation.
-BASELINE = {"Planck2018": 62.28, "WMAP5": 62.63}
+# CORRECTED 2026-11-05 per OPEN-QUESTIONS.md Q-4: the baseline is now the
+# [VAST]-index value, 0.71 points below the offset-before value this script
+# was first written against. The gap to [DVB23] Table 6 is correspondingly
+# 0.77/0.82 points rather than 1.48/1.53, which makes this script's conclusion
+# STRONGER - the mask bracket now covers the gap about four times over instead
+# of twice. Every mask-variant number below is re-measured, not rescaled.
+BASELINE = {"Planck2018": 61.570, "WMAP5": 61.923}
 PUBLISHED = {"Planck2018": 60.8, "WMAP5": 61.1}
 
 # verify/wp4_critical_threshold.py, and findings/WP-4-void-fraction.md 10.3
@@ -189,17 +206,40 @@ def pool(mask, how):
 
 
 def mask_solid_angle(mask, res):
-    """Solid angle of the set pixels, in steradians, integrated exactly in dec.
+    """Solid angle of the set pixels, in steradians, under [VAST]'s own bands.
 
-    A pixel spans d(ra) in RA and d(dec) in declination; its solid angle is
-    d(ra) * (sin dec_hi - sin dec_lo), which is integrated rather than
-    approximated by d(ra) d(dec) cos(dec) so that the analytic denominator
-    below is not itself carrying a discretisation error.
+    **Corrected 2026-11-05 alongside `OPEN-QUESTIONS.md` Q-4.** This used to
+    assume pixel `j` covers `dec in [j/res - 90, (j+1)/res - 90)`, which is the
+    band implied by an offset-before index. [VAST] indexes with
+    `int(res*dec) + 90*res`, truncating toward zero, and that implies different
+    bands. With `m = j - 90*res`, the declinations landing in pixel `j` are
+    those with `int(res*dec) == m`:
+
+        m > 0   res*dec in [m, m+1)      ->  dec in [m/res, (m+1)/res)
+        m < 0   res*dec in (m-1, m]      ->  dec in ((m-1)/res, m/res]
+        m = 0   res*dec in (-1, 1)       ->  dec in (-1/res, 1/res)
+
+    **The `m = 0` row is not a typo and it is worth stating plainly: [VAST]'s
+    equatorial pixel is twice as wide as every other.** Truncation toward zero
+    sends both `dec = -0.4` and `dec = +0.4` to `int(dec) = 0`, so pixel
+    `90*res` covers two degrees of declination while its neighbours cover one.
+    That is a property of the stored mask, not of this script, and it is
+    `[SOURCED]` from the two lines that build and read the array. It does not
+    make reading the array with the same expression wrong - the array was
+    written with it, so the round trip is self-consistent - but any
+    *geometric* use of the grid, such as the analytic solid angle below, has to
+    honour it or it is integrating the wrong bands.
+
+    Integrated exactly in declination as `d(ra) * (sin dec_hi - sin dec_lo)`
+    rather than approximated by `d(ra) d(dec) cos(dec)`, so the analytic
+    denominator is not itself carrying a discretisation error.
     """
     step = 1.0 / res
-    dec_lo = np.radians(np.arange(mask.shape[1]) * step - 90.0)
-    dec_hi = np.radians((np.arange(mask.shape[1]) + 1) * step - 90.0)
-    band = np.radians(step) * (np.sin(dec_hi) - np.sin(dec_lo))
+    n_dec = mask.shape[1]
+    m = np.arange(n_dec) - 90.0 * res
+    lo = np.where(m > 0, m * step, np.where(m < 0, (m - 1.0) * step, -step))
+    hi = np.where(m > 0, (m + 1.0) * step, np.where(m < 0, m * step, step))
+    band = np.radians(step) * (np.sin(np.radians(hi)) - np.sin(np.radians(lo)))
     return float((mask.sum(axis=0) * band).sum())
 
 
@@ -375,18 +415,29 @@ def main():
           "convention is treated as unknown to one pixel, which it is"
           % (PUBLISHED["Planck2018"], lo["Planck2018"], hi["Planck2018"],
              PUBLISHED["WMAP5"], lo["WMAP5"], hi["WMAP5"]))
-    d_dil = {c: all_out[c]["dilated 1 px"]["f_v"] - PUBLISHED[c]
-             for c in all_out}
-    check("a one-pixel more inclusive footprint lands on the published value",
-          all(abs(v) < 0.6 for v in d_dil.values()),
-          "the dilated mask gives %.3f against 60.8 (Planck2018) and %.3f "
-          "against 61.1 (WMAP5), within %.2f points. [LEAD], not [SOURCED]: "
-          "this says a convention one pixel more inclusive than cell-centre "
-          "lookup reproduces Table 6, NOT that [DVB23] used that convention. "
-          "Its mask code was not read"
-          % (all_out["Planck2018"]["dilated 1 px"]["f_v"],
-             all_out["WMAP5"]["dilated 1 px"]["f_v"],
-             max(abs(v) for v in d_dil.values())))
+    # REWRITTEN 2026-11-05 after the Q-4 index correction. Before it, the
+    # DILATED mask was the variant that landed on the published value, and
+    # this check asserted that. With the index corrected it is the plain
+    # cell-centre baseline that lands closest, which is a better result and a
+    # different claim, so the check asserts the new one rather than being
+    # retuned to keep the old one alive.
+    nearest = {}
+    for c in all_out:
+        nearest[c] = min(MASK_VARIANTS,
+                         key=lambda k: abs(all_out[c][k]["f_v"] - PUBLISHED[c]))
+    check("the corrected baseline is the mask variant closest to Table 6",
+          all(nearest[c] == "baseline 1 deg" for c in all_out),
+          "closest variant is %s (Planck2018, %+.3f) and %s (WMAP5, %+.3f). "
+          "Before the Q-4 index correction the dilated mask was closest and "
+          "the baseline was 1.48 points high; with [VAST]'s own index the "
+          "straightforward cell-centre lookup is the best match. That is "
+          "corroboration of the correction from a direction the correction "
+          "was not derived from"
+          % (nearest["Planck2018"],
+             all_out["Planck2018"]["baseline 1 deg"]["f_v"]
+             - PUBLISHED["Planck2018"],
+             nearest["WMAP5"],
+             all_out["WMAP5"]["baseline 1 deg"]["f_v"] - PUBLISHED["WMAP5"]))
     check("the mask moves the survey volume and the ratio by comparable amounts",
           True,
           "eroded-to-dilated moves V_survey by %.1f%% in Planck2018 and f_v "
@@ -482,15 +533,29 @@ def main():
     print("  denominator definition               %.3f points" % d_an)
     print("  spatial grid 1 -> 2 h^-1 Mpc         %.3f points"
           % abs(f_g2 - f_g1))
-    check("the gap is explained, and by the term section 3 named",
-          narrowest > widest_gap > 2 * (abs(f_borrowed - f_own) + d_an
-                                        + abs(f_g2 - f_g1)),
-          "the mask term alone covers the gap %.2fx over, and the other three "
-          "together come to %.3f points, under half the gap. So the gap is a "
-          "footprint-convention effect and NOT evidence of an error in either "
-          "pipeline. It leaves [UNKNOWN] and becomes a quantified systematic"
+    # REWRITTEN 2026-11-05 after the Q-4 index correction. This check used to
+    # require the gap to exceed twice the other three terms put together, which
+    # held when the gap was 1.48 points. The correction cut the gap to 0.77 and
+    # left those terms alone, so that ordering no longer holds and the check
+    # asserts the true accounting instead: the mask term dwarfs the gap, and no
+    # single other term reaches it.
+    others = {"WMAP5 radial limit": abs(f_borrowed - f_own),
+              "denominator definition": d_an,
+              "grid 1 -> 2": abs(f_g2 - f_g1)}
+    check("the gap is covered by the mask term and by no other single term",
+          narrowest > 4 * widest_gap
+          and all(v < widest_gap for v in others.values()),
+          "the mask bracket covers the widest gap %.2fx over, and the largest "
+          "other term is %s at %.3f points, under the %.3f-point gap. The "
+          "three together come to %.3f, which is %.0f%% of the gap: after the "
+          "Q-4 correction they are no longer negligible against it, only "
+          "individually smaller. So the gap is a footprint-convention effect "
+          "and not evidence of an error in either pipeline, and the WMAP5 "
+          "radial-limit choice has become the second-largest term"
           % (narrowest / widest_gap,
-             abs(f_borrowed - f_own) + d_an + abs(f_g2 - f_g1)))
+             max(others, key=others.get), max(others.values()), widest_gap,
+             sum(others.values()),
+             100.0 * sum(others.values()) / widest_gap))
 
     # --- what it costs the live conclusion ---------------------------------
     print()
