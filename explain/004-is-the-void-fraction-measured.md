@@ -80,17 +80,32 @@ is a stronger claim available that the evidence does **not** support.
 
 The stronger claim would be: *the measurement contradicts the model*. It does
 not. The research plan had written down in advance that if the measured void
-fraction ruled out every fitted value, that would stop this line of work. It
-does not rule them out. Two of the fitted values, 0.550 and 0.557, sit inside
-the measured range, and the rest sit above it in a way the measurement cannot
-object to, for a reason explained next.
+fraction ruled out **every** fitted value, that would stop this line of work.
+Eight of the ten fitted values survive the measurement, so that condition is
+not met.
 
-**Why the measurement cannot object.** The model and the void catalogues are
-not counting the same thing.
+The measurement does rule out two of them, the 0.550 and 0.557 from the
+microwave-background fits. That exclusion is worth less than it sounds, for two
+reasons. It depends entirely on how you handle voids clipped by the survey
+edge: with those voids included the two are excluded, and with them thrown away
+nothing is excluded at all. And it can only ever reach the *low* fitted values,
+never the high ones, for the reason explained next.
 
-Timescape divides space by **density**. A region is "wall" if its density is
-above a particular critical value, and "void" if below. That is the definition
-in the model's own papers.
+*(A first version of this write-up said those two values "sit inside the
+measured range" and were therefore not excluded. That was wrong, and a
+parallel session caught it. The measurement gives a floor, not a range, and a
+value below a floor is excluded by it. The overall answer does not change.)*
+
+**Why the measurement can only push from below.** The model and the void
+catalogues are not counting the same thing.
+
+Timescape divides space by **density**: a region is "wall" if it is denser than
+a particular critical value and "void" if it is not. One caution about that
+word. The critical value is not the familiar one from standard cosmology, and
+it has no single published number. The model defines it locally, by where the
+average expansion rate falls to zero, so it varies from place to place. We went
+looking for a number and found a paper saying explicitly that there cannot be
+one.
 
 A void-finding algorithm divides space by **where the galaxies are**. The
 algorithm we reproduced grows spheres outward from empty patches until each
@@ -103,10 +118,17 @@ critical density. But the reverse is not true: plenty of below-critical space
 has galaxies in it. So the regions the algorithm finds are a **subset** of the
 regions the model calls void.
 
-That makes the 62% figure a **floor**, not an estimate. The true fraction of
-space below critical density is at least 62%, and could be considerably more.
-A floor of 62% has nothing to say against a fitted value of 0.791. It is
-consistent with it, and with 0.9, and with 0.95.
+That assumption was initially the weakest link in our argument, and it has
+since been checked. For a galaxy-free region to be dense enough to count as
+wall, it would have to hold about 74% more matter than average, which would
+require galaxies to actively avoid matter on these scales. They do not.
+
+So the 62% figure is a **floor**, not an estimate. The true fraction of space
+below the critical density is at least 62% and could be considerably more. A
+floor works in one direction only: it can exclude a fitted value that falls
+below it, which is what happens to 0.550 and 0.557, and it can say nothing
+whatever against 0.791, or 0.9, or 0.95. The upper half of the fitted range is
+beyond this measurement's reach by construction, not by accident.
 
 **Two things we found by doing the arithmetic rather than reading the tables.**
 
@@ -150,12 +172,24 @@ So the circularity is real, is quantified, and is not what limits this answer.
 
 ## 5. What would change the answer
 
+**Measuring the small voids.** This is the sharpest one, and the model names it
+itself. Wiltshire writes that voids of about 30 megaparsecs across fill 40-50%
+of space, and attributes the rest of what the model needs to "numerous
+minivoids" — small voids the galaxy surveys used here cannot resolve. That
+turns the gap into an arithmetic requirement rather than a mystery: the fit to
+the microwave background needs 7.2% of all space to be in voids this catalogue
+cannot see, and the fit to the supernova data needs 16.8%, which is more than a
+quarter of the large-void volume over again. Nobody has measured a minivoid
+volume fraction. If someone did, `f_v0` would stop being a free parameter, in
+whichever direction the number fell.
+
 **A measurement that counts the same thing the model counts.** Someone would
 have to measure the fraction of volume below the critical density, rather than
 the fraction occupied by algorithmically identified voids. That needs a density
-field, not a void catalogue. If that fraction came out at, say, 0.62 ± 0.02, it
-would exclude most of the fitted range and this would become a very different
-result.
+field, not a void catalogue, and it also needs the model's threshold made
+concrete, which is awkward given that the threshold is local and has no single
+value. If that fraction came out at, say, 0.62 ± 0.02, it would exclude most of
+the fitted range and this would become a very different result.
 
 **Re-running the void finders under timescape's own distance relation.** We
 did not do this, and the reason is worth stating because it is not laziness.
