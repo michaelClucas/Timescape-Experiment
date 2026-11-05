@@ -42,3 +42,8 @@ cobaya==3.6.2
 #
 #           Do not add classy to this file without first installing it
 #           successfully and recording how.
+
+# Re-verified 2026-11-05: venv rebuilt from this file on a clean
+# .venv, every pin installed at the stated version, camb re-run to the
+# same rdrag = 146.989 and thetastar = 1.04465, and
+# verify/tracker_relations.py passed 11 of 11.
