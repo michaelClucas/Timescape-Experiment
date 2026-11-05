@@ -2,7 +2,11 @@
 
 **Status:** complete for what this dataset can settle. One part deliberately
 not done and named in §7.
-**Read §10 before §4 and §6.** A later session of 2026-11-05 settled the
+**Read §11 before §3, and §10 before §4 and §6.** A third session of
+2026-11-05 checked §3's attribution of the 1.5-point gap to the mask, which had
+never been checked, and §11 confirms it and turns it into a ±1.5-point
+systematic that §3 and §5 do not carry.
+A later session of 2026-11-05 settled the
 threshold question §4 has to argue around, and **corrected §6**: the measured
 fraction is a lower bound, so it excludes fitted values *below* it, which §6
 does not test. §6's conclusion (K5 does not fire) survives; its reasoning does
@@ -10,7 +14,8 @@ not.
 **Provisional on WP-0.** Run 02 has not run.
 **Evidence:** `verify/wp4_inspect_inputs.py`, `verify/wp4_void_fraction.py`
 (14/14), `verify/wp4_fv0_comparison.py` (11/11),
-`verify/wp4_critical_threshold.py` (14/14, for §10).
+`verify/wp4_critical_threshold.py` (14/14, for §10),
+`verify/wp4_mask_resolution.py` (16/16, for §11).
 **Dataset:** VAST SDSS DR7 void catalogues v1.3.1,
 `doi:10.5281/zenodo.11043278`, provenance in `data/001-sdss-dr7-voids/`.
 **Kill criterion tested:** K5. **It does not fire, and it cannot fire on this
@@ -476,3 +481,170 @@ fraction, and there is no number for it anywhere in this dataset.** That is a
 sharper statement of what §9's "a new dataset would be needed" was reaching
 for: not merely a deeper survey, but a survey resolving voids below 10 h^-1 Mpc,
 with its own volume fraction computed the same way. It is a work package.
+
+---
+
+# Addendum, 2026-11-05 (third session, day 3): §3's attribution, checked at last
+
+**Added by a third session of the same calendar date, on branch
+`research/auto-2026-11-05-day3`.** Appended, like §10, rather than merged into
+the sections above. **§3's final sentence is corrected in substance here**: its
+claim turns out to be right, and it was never checked by the session that wrote
+it or by the one that followed.
+
+**Evidence:** `verify/wp4_mask_resolution.py` (16/16). The six earlier scripts
+were all re-run at `96fe08e` first and all pass unchanged.
+**Still provisional on WP-0.**
+
+## 11.1 The sentence under test, and why it was worth a cycle
+
+§3 reads: "Agreement with the published value to about 1.5 points, high in both
+cosmologies, attributable to the 1-degree mask resolution." The attribution was
+an assertion. `logs/2026-11-05-STATUS.md` records that the first session did
+not verify it, and the second session did not either.
+
+It mattered because of §10.3. `f_v0 = 0.627` clears the edge-included measured
+lower bound of 0.6228 by `+0.0042`, and this unverified 0.0148 is **three and a
+half times that margin**. Whether the bound excludes two of arXiv:1410.3470
+Table 2's three CMB matching prescriptions or all three rested on a systematic
+nobody had looked at.
+
+## 11.2 The mask convention moves the answer by 3.1 points, twice the gap
+
+The survey mask is a `(360, 180)` boolean sky grid at 1 degree. A spatial cell
+counts as inside the survey when the pixel containing its direction is set. At
+`r = 332 h⁻¹ Mpc` one degree subtends `5.80 h⁻¹ Mpc`, so the footprint has a
+boundary layer several cells thick whose position the mask fixes only to within
+a pixel. Eroding and dilating the mask by one pixel brackets that: any finer
+mask of the same footprint, and any convention differing from cell-centre
+lookup by under a pixel, lies between them.
+
+| variant | Planck2018 | WMAP5 |
+|---|---|---|
+| eroded 1 px | 63.52% | 63.85% |
+| coarse 2°, all-pixels-set | 63.24% | 63.58% |
+| **baseline 1°, as committed in §3** | **62.28%** | **62.63%** |
+| coarse 2°, any-pixel-set | 60.94% | 61.28% |
+| dilated 1 px | 60.45% | 60.79% |
+| **published, arXiv:2202.01226 Table 6** | **60.8%** | **61.1%** |
+
+**The span is 3.07 points (Planck2018) and 3.06 (WMAP5), against a gap of 1.48
+and 1.53.** The mask term covers the gap twice over, and **the published value
+falls inside the span in both cosmologies**. §3's attribution is confirmed in
+magnitude.
+
+`[LEAD]`, not `[SOURCED]`: a convention one pixel more inclusive than
+cell-centre lookup reproduces Table 6 to within 0.35 points, but
+arXiv:2202.01226's mask code was not read, so this does not establish that the
+published pipeline used such a convention. What is established is that the two
+pipelines are consistent once the footprint convention is treated as unknown to
+one pixel, which it is.
+
+## 11.3 Why the ratio does not cancel, which is a correction to this session
+
+`f_v` is `(void cells inside the survey) / (survey cells)`, so a mask change
+moves numerator and denominator together. **This session predicted, in writing
+and before running anything, that the ratio would cancel most of the change,
+that the whole bracket would come to "well under 0.5 points", and therefore
+that §3's attribution would be refuted. That was wrong by a factor of six.**
+Per protocol rule 6 the expectation is corrected and recorded, not the
+tolerance widened; the script's docstring carries the failed prediction and
+`logs/2026-11-05-day3.md` cycle 3 records it as a negative.
+
+The cancellation argument is right in form and wrong in magnitude, for a reason
+the argument names and this session then failed to evaluate. What survives the
+cancellation is the difference between the void fraction of the boundary layer
+and that of the bulk, and here that difference is enormous:
+
+| layer | cells | void fraction | survey as a whole |
+|---|---|---|---|
+| added by dilation | +1,149,733 | **17.0%** | 62.3% |
+| removed by erosion | −1,101,788 | **32.9%** | 62.3% |
+
+The VoidFinder sphere union stops at the footprint edge; the mask does not. So
+dilation appends a nearly void-free shell to the denominator and almost nothing
+to the numerator, and 57% of an 8.6% volume change survives into the ratio.
+
+## 11.4 Three other candidates, all negligible
+
+Tested in the same script so that the mask conclusion is not one hypothesis
+examined alone:
+
+| term | size |
+|---|---|
+| **mask footprint convention, ±1 px** | **3.06 points, two-sided** |
+| WMAP5's radial limit: its own 334.007 against the pickle's 332.386 | 0.490 points |
+| denominator: rasterised cell count against analytic cone volume | 0.022 points |
+| spatial grid, 1 → 2 h⁻¹ Mpc | 0.012 points |
+
+The three together come to 0.524 points, under half the gap. The denominator
+definition was this session's other pre-run favourite, on the argument that it
+touches only the denominator and so has no cancellation to rely on; the two
+volumes agree to 0.035% and it is the smaller lever by a factor of 140. Also
+recorded as a wrong expectation. The grid result confirms the 1 h⁻¹ Mpc
+rasterisation is converged, which arXiv:2202.01226 §4.2's stated grid size
+implied but nobody had checked. A 0.5 h⁻¹ Mpc run was not done: 8× the cells is
+about 1.2 GB of boolean grids and the 1→2 trend bounds it.
+
+## 11.5 What it costs §10.3 and §10.4, which is nothing
+
+§4 establishes the measured fraction as a **lower bound** on `f_v0`. The
+conservative reading of a newly quantified two-sided systematic on a lower
+bound is its **lowest** value, which is the dilated mask.
+
+| Planck2018 edge-included bound on `f_v0` | value |
+|---|---|
+| conservative (dilated) | **0.6045** |
+| as committed in §3 and §10.3 (baseline) | 0.6228 |
+| aggressive (eroded) | 0.6352 |
+
+| arXiv:1410.3470 Table 2 | `f_v0` | vs conservative | vs baseline | vs aggressive |
+|---|---|---|---|---|
+| `A(H̄_dec)` | 0.627 | +0.0225 | +0.0042 | **excluded** |
+| `W(k ≠ 0)` | 0.557 | **excluded** | **excluded** | **excluded** |
+| `W(k = 0)` | 0.550 | **excluded** | **excluded** | **excluded** |
+
+**§10.3's and §10.4's conclusion survives, and is better supported than when it
+rested on the baseline mask alone.** `0.550` and `0.557` are excluded under
+every mask variant, sitting `0.0545` and `0.0475` below even the conservative
+bound. Exactly two of three prescriptions are excluded, which is what §10.3 and
+§10.4 say.
+
+**What changes is the standing of the third.** §10.3 flagged `0.627`'s
+`+0.0042` margin as thinner than the pipeline's own disagreement with the
+published value and therefore not to be trusted. That is now sharp rather than
+vague: under the conservative bound the margin is `0.0225`, five times what
+§10.3 had, but under the aggressive bound `0.627` is itself excluded by
+`0.0082`. So **whether arXiv:1410.3470's `A(H̄_dec)` prescription survives the
+measured bound is set by a one-pixel footprint convention in a survey mask.**
+Not excluded on the conservative reading, which is the one §4's bound licenses;
+not safe either.
+
+K5 is unaffected and still does not fire. §8's second limb, which is what
+carries the package, is untouched.
+
+## 11.6 What this closes, and the one thing it does not
+
+`logs/2026-11-05-day2-STATUS.md` listed the unexplained 1.5-point gap as the
+weakest load-bearing joint in WP-4. **It is closed.** The gap is a
+footprint-convention effect of a size the convention can produce, in both
+cosmologies, in the right direction, and it is not evidence of an error in
+either pipeline. It leaves `[UNKNOWN]` and becomes a quantified systematic of
+±1.5 points which every future quotation of the measured fraction should carry.
+
+The error budget of §5 gains a row, larger than three of its four existing
+ones:
+
+| term | size |
+|---|---|
+| survey-edge treatment (cut 4) | 17.46 points |
+| **mask footprint convention (§11.2)** | **3.06 points** |
+| FLRW conditioning, estimated | ~2.01 points |
+| cosmology within FLRW (cut 3) | 0.35 points |
+| ~~this pipeline against the published value: 1.48 points~~ | now a consequence of the mask row, not an independent term |
+
+**What it does not close.** The footprint convention arXiv:2202.01226 actually
+used is still unread, so the measured fraction cannot be pinned inside the
+3.06-point band; it can only be bracketed. Reading VAST's mask code would do
+it, and that is a cycle rather than a package, but it needs a code repository
+rather than a paper and was not attempted today. `[LEAD]`.
