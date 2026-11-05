@@ -174,3 +174,259 @@ This should be read alongside the Maple access problem: that one stalls work,
 this one corrupts it.
 
 **Answer:** (overseer, pending)
+
+### Note appended 2026-11-05 by the third session (day 3), cycle 1
+
+**Not an answer. Evidence on this question from a session that did not choose
+it.** Q-3's text above stands unedited.
+
+**Option 2 is already in place, and it works.** This session was handed a
+`git worktree` at `.claude/worktrees/timescape-experiment-day-3-65745f` by the
+harness rather than the main checkout. Nobody asked for it. Across the whole
+session `git reflog` shows only this session's own operations: no stray
+`checkout: moving from ... to verify-check`, which the second session recorded
+three times in one day.
+
+Why it works: a worktree has its own `HEAD` file and its own working tree, so
+another process checking out branches in the main checkout cannot move this
+session's `HEAD` or overwrite its files. That is exactly the failure Q-3
+describes - a commit landing on local `main` with the previous session's files
+absent from its tree.
+
+**Two limits, so that option 2 is not oversold.**
+
+1. **The ref store is shared.** `.git/refs` is common to all worktrees, so
+   another process can still create, move or delete branches, `main` and this
+   session's day branch included. What it cannot do is move a checked-out
+   `HEAD` or write to another worktree's files.
+2. **The stash stack is shared**, so `git stash` is unsafe across worktrees and
+   can pop another session's work. No stash was used today. A temporary commit
+   is the route if one is ever needed, and that is worth a line in
+   `prompts/standing-loop.md`.
+
+**Two costs, both small and both paid today.** The worktree has no `.venv` and
+no `data/raw/`, since both are gitignored. The main checkout's interpreter was
+used by absolute path (a venv is not tied to a working directory, so it is the
+same interpreter the previous two sessions ran), and the 17 catalogue files
+were copied in and re-verified against the committed manifest: all 17 `OK`
+after stripping carriage returns. Nothing was moved or deleted and the manifest
+was not edited.
+
+**Recommendation, amending the second session's by one clause.** Still **3 plus
+4**, and additionally **2 written into `prompts/standing-loop.md` rather than
+left to the harness**, with the venv and data steps named so the next session
+does not have to work them out. Option 3's parent assertion is still wanted,
+because it catches the shared-ref-store case that a worktree does not.
+
+---
+
+## Q-4. Should `verify/wp4_void_fraction.py` be corrected in place, or left with a correction notice?
+
+**Raised:** 2026-11-05, third session, cycle 5, WP-4
+**Blocks:** nothing is unresolvable because of this. The corrected numbers
+exist and are committed in `verify/wp4_vast_mask_convention.py` and
+`findings/WP-4-void-fraction.md` §12.3. What it blocks is whether a reader who
+runs the repository's own scripts gets the right number or the wrong one with a
+pointer.
+
+**The argument.** `verify/wp4_void_fraction.py` indexes the survey mask's
+declination axis as `((dec + 90) * res)` truncated. [VAST], which wrote
+`NSA_main_mask.pickle`, builds and reads it as `int(res*dec) - res*dec_offset`
+with `dec_offset = -90` (`multizmask.py` lines 15, 166, 192;
+`voidfinder_functions.py` line 249; identical at commit `133cfcf` of 2022-02-10
+and at `24e66e1`). Truncation toward zero applied after scaling and before the
+offset differs by one pixel wherever `dec < 0`, which is 2.3% of this
+footprint. **An array must be read with the convention it was written with, so
+this is a defect and not a variant.** `[SOURCED]`.
+
+Correcting it moves the VoidFinder edge-included fraction from 62.280% to
+61.570% (Planck2018) and 62.628% to 61.923% (WMAP5), by **-0.710 and -0.705
+points**, and halves the residual against arXiv:2202.01226 Table 6. It does
+not change any conclusion: `f_v0 = 0.550` and `0.557` stay excluded and `0.627`
+stays undecided, for the reasons in §12.4.
+
+The difficulty is reach. Those numbers are quoted in §3, §5, §6, §10.3, §10.4
+and §11 of the finding, in
+`explain/004c-how-much-does-the-survey-edge-move-the-answer.md`, and in two day
+logs and three status files. (`explain/004-is-the-void-fraction-measured.md`
+was checked when the answer was applied and quotes no measured fraction, only
+fitted values, so the reach is one write-up rather than two.) `verify/wp4_fv0_comparison.py` and
+`verify/wp4_critical_threshold.py` both hard-code 0.6228 as the bound and would
+have to change with it, which means re-running and re-expecting 25 checks
+across two scripts.
+
+**Options:**
+
+1. **Leave the script, append the correction.** What was done. The docstring
+   carries a correction notice naming the corrected values and the script that
+   produces them; §12 carries them in the finding; the 14 checks and the
+   output stand exactly as committed, so every number quoted anywhere in the
+   repository stays resolvable to the script that produced it. Cost: a reader
+   who runs `verify/wp4_void_fraction.py` and does not read its docstring gets
+   62.280% with no warning in the output itself.
+2. **Correct the script in place, and every dependent number with it.** The
+   repository then reports the right number everywhere. Cost: it is a rewrite
+   of the evidence base for a conclusion, not an append, and it breaks the
+   repository's one strong convention - `SOURCE.md` §9, finding §10, §11 and
+   §12 all append-and-date rather than overwrite. Done carelessly it would also
+   leave three status files and two day logs quoting numbers no script
+   produces, which is the failure mode the convention exists to prevent.
+3. **Correct the script in place and leave a frozen copy** as
+   `verify/legacy/wp4_void_fraction_preindexfix.py`, so quoted numbers stay
+   resolvable while the live script is right. Costs a file and a line of
+   explanation; it is the option that satisfies both the append-only
+   convention and the "scripts are the evidence" rule, because nothing is
+   deleted and the live script is correct.
+4. **Add the correction as a second code path inside the script**, reporting
+   both conventions side by side with the VAST one marked correct. Cheapest to
+   verify, and the output then carries its own warning. Costs a slightly
+   confusing script and does not settle which number the finding quotes.
+
+**Default taken:** option 1, leave it and append. Reversible: nothing was
+deleted, the corrected numbers are committed in a second script and in §12.3,
+and options 2, 3 and 4 can all be done later from exactly this state. It was
+also the only option available without rewriting an evidence file an hour after
+the overseer had read the findings that rest on it, which is not a thing an
+unattended session should do on its own authority.
+
+**Recommendation: option 3.** The live script should produce the right number,
+because "every number in prose comes from a committed, runnable script" is
+weakened if running the script gives a different number from the prose; and a
+frozen copy keeps every already-quoted number resolvable, which is what the
+append-only convention is actually protecting. Option 1 is stable but leaves a
+known-wrong script as the repository's headline measurement. Option 2 should
+not be taken without option 3's frozen copy.
+
+**A note on sequencing, if option 2 or 3 is chosen.** `wp4_fv0_comparison.py`
+and `wp4_critical_threshold.py` hard-code the 0.6228 bound. Their expected
+values must be **corrected, not loosened** - the bound becomes 0.6157 and
+`0.627`'s margin becomes +0.0113 - and the check that currently reads "0.627
+survives the bound by less than the pipeline's own error" needs rewording,
+since §12 reduces that error. Rule 6 applies to that edit as much as to a new
+one.
+
+**Answer:** (overseer, 2026-11-05) **Option 3.** Correct
+`verify/wp4_void_fraction.py` in place and keep a frozen copy. Instructed
+directly, in the same session that raised the question.
+
+**Applied, same session, cycle 7.** What was done:
+
+- `verify/legacy/wp4_void_fraction_preindexfix.py` is the pre-fix script frozen
+  exactly as it stood at `db47115`, still runnable and still passing its own
+  14 checks, so every number quoted in `findings/WP-4-void-fraction.md` §3, §5,
+  §6, §10 and §11, in `explain/004c-...`, and in the three 2026-11-05 status files stays resolvable
+  to the script that produced it. `explain/004-...` was checked and quotes no
+  measured fraction, only fitted values. Only its `RAW` data path changed, by one directory level, because it
+  moved into `verify/legacy/`.
+- `verify/wp4_void_fraction.py` now uses [VAST]'s index,
+  `int(res*dec) - res*DEC_OFFSET` with `DEC_OFFSET = -90`. Its own
+  void-centre convention check now prints what the superseded index would have
+  given, so it states its own blind spot instead of implying it has none.
+- `verify/wp4_fv0_comparison.py` and `verify/wp4_critical_threshold.py` have
+  their measured values corrected, with the sequencing note's warning
+  observed: **the expectations were corrected, never loosened.** One check in
+  `wp4_critical_threshold.py` had to be **rewritten rather than retuned**,
+  because the correction reversed the ordering it asserted - see below.
+- `verify/wp4_mask_resolution.py`'s baseline is corrected and its mask
+  variants re-measured rather than rescaled.
+- `verify/wp4_vast_mask_convention.py` is repurposed from proposing the
+  correction to being its **regression test**: it asserts that the live script
+  implements the sourced expression and that the frozen copy reproduces the
+  superseded numbers, so the 0.71-point difference stays demonstrable and a
+  later "simplification" back to the old form fails a check.
+- `findings/WP-4-void-fraction.md` §13 carries the corrected canonical numbers
+  and the header points at it. §3, §5, §6, §10 and §11 are **left standing**
+  with their superseded figures, per the append-and-date convention, and §13
+  says plainly that they are superseded and by how much.
+
+**The one substantive consequence, which was not anticipated when Q-4 was
+raised.** The correction **reversed** an ordering that `wp4_critical_threshold.py`
+asserted. Before it, `f_v0 = 0.627` cleared the edge-included bound by `0.0042`
+while this pipeline disagreed with [DVB23] Table 6 by `0.0148`, so the check
+read "0.627 survives the bound by less than the pipeline's own error". After
+it, the margin is `0.0113` and the residual is `0.0077`: **0.627 now clears the
+bound by more than the pipeline's residual.** The old claim is false and the
+check was rewritten to assert the true one. It changes no verdict - 0.627 is
+still undecided, because the +-1-pixel pixelation bracket still straddles it -
+but it does mean the specific worry §10.3 raised about that margin is answered,
+and answered in the direction that makes the margin more trustworthy rather
+than less.
+
+**No exclusion verdict changed**, which is asserted as a check in
+`verify/wp4_vast_mask_convention.py` rather than claimed here: every [NW15]
+prescription falls on the same side of the superseded bound and the corrected
+one.
+
+### Second note appended 2026-11-05 by the third session (day 3), cycle 6
+
+**Q-3's option 4 — "find out what `verify-check` was" — now has an answer, and
+it was obtained by accident rather than by investigation.** Q-3's text and the
+first appended note both stand unedited.
+
+**What happened.** This session finished its work, wrote its status file and
+updated its PR body. On a final check of repository state, `main` had moved
+from `96fe08e` to `ce5fcaa` and this session's PR #14 had become
+`CONFLICTING`. The cause was not corruption: **PR #13, "WP-4: correct the K5
+test, which applied an interval test to a one-sided bound", had been merged
+into `main` at 2026-11-05T21:05:54Z**, two minutes after this session branched.
+Its own body says it was "Caught by the parallel session of 2026-11-05".
+
+So **a second session was running against this repository at the same time as
+this one**, legitimately, doing good work. `git worktree list` confirms the
+shape of it:
+
+```
+C:/Users/mluca/Documents/Timescape-Experiment            ce5fcaa [main]
+C:/.../.claude/worktrees/timescape-experiment-day-3-...  561444e [research/auto-2026-11-05-day3]
+C:/Users/mluca/Documents/Timescape-Experiment-run01      f4dfea0 [run-01-audit]  prunable
+```
+
+**This explains the day-2 reflog entries exactly.** The second session of
+2026-11-05 was working in the **main checkout**, and so was a concurrent
+session. One of them ran `git checkout verify-check` and then
+`git checkout main` in that shared tree, between two of the other's commits.
+Nothing was corrupting anything; two sessions were sharing one working tree,
+which is precisely what `prompts/standing-loop.md` forbids and what Q-3
+suspected without being able to confirm. The branch no longer exists anywhere
+(`git branch -a --list "*verify-check*"` is empty), which is consistent with a
+short-lived scratch branch in a shared tree.
+
+**So Q-3 resolves, and the answer is the unexciting one.** The second writer
+was another Claude session, not a stray process, not a hook, not a tool
+misfiring. The failure mode is real, the diagnosis is confirmed, and **option 2
+is the fix** — as this session's first note recorded from the other side, having
+been handed a worktree and finding its reflog clean.
+
+**What this changes in the recommendation.** The first note recommended "3 plus
+4, plus 2 written into `prompts/standing-loop.md`". That stands, with option 4
+struck as **answered**:
+
+- **Option 2 is now evidenced on both sides**: a session in the main checkout
+  gets its HEAD moved under it, and a session in a worktree does not. It should
+  be in the prompt.
+- **Option 3's parent assertion is still wanted**, and cycle 6 is a second
+  argument for it: the shared ref store let `main` advance under this session,
+  which a worktree does not prevent. It did no harm here because the session
+  never committed to `main` and checked its parent every cycle, but the
+  mechanism that bit day 2 is still live.
+- **Option 4 is closed.** No overseer hour is needed to find out what
+  `verify-check` was.
+
+**One thing this session cannot determine, stated rather than guessed.** Every
+commit, PR and merge in this repository is authored and merged by the single
+account `michaelClucas`, so `gh pr view --json mergedBy` cannot distinguish a
+merge the overseer performed from one a session performed. #12 and #13 are
+indistinguishable by that field, and the overseer's instruction to merge #12 is
+known only from this session's prompt. **Whether #13's merge was instructed is
+therefore `[UNKNOWN]` to this session**, and no inference is drawn from it.
+Recording it because `prompts/standing-loop.md`'s "do not merge your own PR"
+rule is unenforceable and unauditable while every actor shares one identity,
+which is a separate and smaller problem than Q-3 but has the same shape: the
+protocol depends on what a session will not do rather than on what it cannot.
+
+**What this session did about the conflict.** Merged `origin/main` into the day
+branch — which is `prompts/standing-loop.md` cycle step 1, not a deviation —
+resolved the single conflict (the finding's header block, where both sessions
+had added a reader's note), kept **both** sessions' text, and re-ran all eight
+`verify/` scripts on the merged tree. No force-push, no amend, no rebase.
+`main` was not pushed to and this session's PR was not merged.

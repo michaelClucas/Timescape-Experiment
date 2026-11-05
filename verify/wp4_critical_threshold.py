@@ -93,11 +93,16 @@ OMEGA_M_FLRW = {"Planck2018": 0.315, "WMAP5": 0.258}
 
 # Measured VoidFinder void volume fraction, from verify/wp4_void_fraction.py
 # (14/14 at 569ebb9, re-run clean this session). LCDM-conditioned per cut 8.
+# CORRECTED 2026-11-05 per OPEN-QUESTIONS.md Q-4. These were 0.6228, 0.6263,
+# 0.4482 and 0.4486 until commit db47115, from a mask declination index that
+# applied the +90 offset before the truncation rather than after; see
+# verify/wp4_vast_mask_convention.py. No exclusion verdict below changes, and
+# that is asserted there as a check rather than assumed here.
 MEASURED = {
-    ("Planck2018", "edge included"): 0.6228,
-    ("WMAP5", "edge included"): 0.6263,
-    ("Planck2018", "edge excluded"): 0.4482,
-    ("WMAP5", "edge excluded"): 0.4486,
+    ("Planck2018", "edge included"): 0.6157,
+    ("WMAP5", "edge included"): 0.6192,
+    ("Planck2018", "edge excluded"): 0.4406,
+    ("WMAP5", "edge excluded"): 0.4411,
 }
 
 # Fitted f_v0, as tabulated in verify/wp4_fv0_comparison.py.
@@ -243,13 +248,28 @@ def main():
           "inside the measured interval; that is the wrong test, and this "
           "check asserts the disagreement so it cannot silently vanish later. "
           "I expected 0.627 to be excluded too and it is not" % b_incl)
-    check("but 0.627 survives the bound by less than the pipeline's own error",
-          0 < 0.627 - b_incl < 0.0148,
-          "the A(H_bar_dec) prescription clears the bound by %+.4f, which is "
-          "smaller than the 0.0148 by which this pipeline disagrees with "
-          "[DVB23]'s own published fraction and far inside the 0.175 edge "
-          "systematic. So it is not excluded and it is not distinguished from "
-          "the bound either" % (0.627 - b_incl))
+    # REWRITTEN 2026-11-05 with the Q-4 index correction. This check used to
+    # read "0.627 survives the bound by less than the pipeline's own error",
+    # asserting 0 < 0.627 - b_incl < 0.0148. That ordering has REVERSED: the
+    # correction moved the bound from 0.6228 to 0.6157, so the margin went from
+    # 0.0042 to 0.0113, while the pipeline's residual against [DVB23] Table 6
+    # went from 0.0148 to 0.0077. The old claim is now false and the check
+    # asserts the true one instead. The expectation is corrected, not widened.
+    # The upper limit is half the +-1 px pixelation bracket of
+    # verify/wp4_mask_resolution.py, 0.03663 as that script re-measures it
+    # about the corrected baseline. It read 0.0307 for one run, from the
+    # bracket measured about the SUPERSEDED baseline; corrected here to the
+    # value the cited script actually reports. The check passed either way.
+    check("0.627 now clears the bound by MORE than the pipeline's own residual",
+          0.0077 < 0.627 - b_incl < 0.5 * 0.03663,
+          "the A(H_bar_dec) prescription clears the edge-included bound of "
+          "%.4f by %+.4f, against a residual of 0.0077 against [DVB23]'s own "
+          "published fraction. Before the Q-4 index correction the margin was "
+          "0.0042 against a 0.0148 residual and this check asserted the "
+          "opposite ordering. It is still inside half the 0.03663 one-pixel "
+          "pixelation bracket of verify/wp4_mask_resolution.py, which is why "
+          "0.627 remains undecided, and far inside the 0.175 edge systematic"
+          % (b_incl, 0.627 - b_incl))
     check("and the edge-excluded bound excludes nothing",
           excl_excl == [],
           "under the edge-excluded bound of %.4f no fitted value lies below "
@@ -281,7 +301,7 @@ def main():
           "below the edge-included measured lower bound. Two independent routes "
           "reject the same two of three prescriptions. Neither rejects "
           "A(H_bar_dec) on H_0, and the bound rejects it only marginally "
-          "(0.627 against 0.6228)")
+          "(0.627 against %.4f)" % b_incl)
 
     # -- D. K5, restated on the corrected logic -----------------------------
     print()
@@ -326,13 +346,13 @@ def main():
     for f, src, _w in sorted(FITTED):
         print("  %-8.3f %+-26.4f %s" % (f, f - b_incl, src))
     close("minivoid volume the Planck-acoustic fit requires, in volume fraction",
-          0.695 - b_incl, 0.0722, 5e-4,
-          "f_v0 = 0.695 against the edge-included measured 0.6228: 7.2 points "
+          0.695 - b_incl, 0.0793, 5e-4,
+          "f_v0 = 0.695 against the edge-included measured 0.6157: 7.9 points "
           "of the present horizon volume must be in voids this catalogue "
           "cannot see")
     close("and what the DES-SN5YR fit requires",
-          0.791 - b_incl, 0.1682, 5e-4,
-          "f_v0 = 0.791 needs 16.8 points, which is 27% of the measured "
+          0.791 - b_incl, 0.1753, 5e-4,
+          "f_v0 = 0.791 needs 17.5 points, which is 28% of the measured "
           "large-void volume over again in minivoids")
 
     print()

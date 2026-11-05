@@ -1,6 +1,40 @@
 #!/usr/bin/env python3
 """WP-4a: the measured void volume fraction in SDSS DR7, from the raw catalogues.
 
+**CORRECTED 2026-11-05. The mask index was wrong until commit `db47115`.**
+
+`in_mask` below now indexes the declination axis as [VAST] does, with
+`int(res*dec) - res*DEC_OFFSET` and `DEC_OFFSET = -90`: truncation toward zero
+applied **after** scaling and **before** the offset. [VAST], which wrote
+`NSA_main_mask.pickle`, both builds and reads that array with this expression
+(`multizmask.py` lines 15, 166, 192; `voidfinder_functions.py` line 249;
+identical at commit `133cfcf` of 2022-02-10 and at `24e66e1`), and an array
+must be read with the convention it was written with.
+
+**It previously read `((dec + 90.0) * res)`**, offsetting before truncating,
+which differs by one pixel wherever `dec < 0` because truncation toward zero
+rounds a negative number up. 2.3% of this survey's footprint is southern and
+SDSS DR7 reaches `dec ~ -11`, so the error was not confined to a corner.
+
+What the correction moved, for the VoidFinder edge-included fraction:
+
+    Planck2018   62.280%  ->  61.570%     published [DVB23] Table 6: 60.8%
+    WMAP5        62.628%  ->  61.923%     published [DVB23] Table 6: 61.1%
+
+i.e. by -0.710 and -0.705 points, which **halves** the residual against the
+published values. No conclusion changes: `f_v0 = 0.550` and `0.557` are still
+excluded by the measured lower bound and `0.627` is still undecided.
+`verify/wp4_vast_mask_convention.py` sources the convention and quantifies the
+difference; `findings/WP-4-void-fraction.md` §12 and §13 write it up.
+
+**The superseded numbers are still resolvable.** Every figure quoted in that
+finding's §3, §5, §6, §10 and §11, in two `explain/` write-ups and in the three
+2026-11-05 status files was produced by this file before the fix, and that
+version is frozen, runnable and unaltered at
+`verify/legacy/wp4_void_fraction_preindexfix.py`. Applying the fix here and
+keeping that copy is `OPEN-QUESTIONS.md` Q-4 option 3, answered by the overseer
+on 2026-11-05.
+
     .venv/Scripts/python verify/wp4_void_fraction.py
 
 Exits 0 if every check passes, 1 otherwise. Takes a few minutes: it rasterises
@@ -54,6 +88,7 @@ RAW = os.path.normpath(os.path.join(
 GRID = 1.0        # h^-1 Mpc. [DVB23] Sec. 4.2: "test particles placed on a 1 h-1 Mpc grid".
 Z_MAX = 0.114     # [DVB23] Table 6 note: volume-limited catalogue, z < 0.114.
 C_OVER_100 = 2997.92458  # c / (100 km/s/Mpc), in h^-1 Mpc.
+DEC_OFFSET = -90  # [VAST] multizmask.py line 15, voidfinder_functions.py line 21.
 
 # [DVB23] Sec. 2.1: two flat LCDM cosmologies, WMAP5 (Omega_M = 0.258) and
 # Planck 2018 (Omega_M = 0.315). Comoving distances in h^-1 Mpc do not depend
@@ -112,8 +147,25 @@ def load_mask():
 
 
 def in_mask(mask, res, ra, dec):
+    """[VAST]'s own index expression, which is the one this array was built with.
+
+    `int(res*dec) - res*DEC_OFFSET`, truncating toward zero **after** scaling
+    and **before** the offset. [VAST] `multizmask.py` line 166 builds the array
+    with `(mask_resolution*ang).astype(int)` and line 192 stores it at
+    `[row[0], row[1] - mask_resolution*dec_offset]`;
+    `voidfinder_functions.py` line 249 reads it at
+    `[int(n*ra), int(n*dec) - n*dec_offset]`. Identical at commit `133cfcf`
+    (2022-02-10) and `24e66e1`.
+
+    **Corrected 2026-11-05 per `OPEN-QUESTIONS.md` Q-4.** This previously read
+    `((dec + 90.0) * res)`, applying the offset before the truncation, which
+    differs by one pixel wherever `dec < 0` because truncation toward zero
+    rounds a negative number up. See the correction notice at the top of this
+    file.
+    """
     i = np.clip((ra * res).astype(np.int64), 0, mask.shape[0] - 1)
-    j = np.clip(((dec + 90.0) * res).astype(np.int64), 0, mask.shape[1] - 1)
+    j = np.clip((dec * res).astype(np.int64) - int(res * DEC_OFFSET),
+                0, mask.shape[1] - 1)
     return mask[i, j]
 
 
@@ -302,10 +354,24 @@ def main():
             i = np.clip((maximal["dec"] + 90).astype(np.int64) * res,
                         0, mask.shape[0] - 1)
             j = np.clip(maximal["ra"].astype(np.int64) * res, 0, mask.shape[1] - 1)
-            check("mask convention [ra, dec+90] validated on void centres",
+            # This check distinguishes the transposed convention from the
+            # right one. It does NOT distinguish a one-pixel declination
+            # shift: both the corrected index and the pre-db47115 one put
+            # essentially every centre inside a 9133-pixel footprint, which is
+            # why it passed for two days while the index was wrong. That
+            # distinction is made in verify/wp4_vast_mask_convention.py, by
+            # reading [VAST]'s source rather than by testing void centres.
+            j_off = np.clip(((maximal["dec"] + 90.0) * res).astype(np.int64),
+                            0, mask.shape[1] - 1)
+            i_ok = np.clip((maximal["ra"] * res).astype(np.int64),
+                           0, mask.shape[0] - 1)
+            check("mask convention validated on void centres, transpose ruled out",
                   frac_in > 0.97,
-                  "%.4f of %d centres inside; transposed convention gives %.4f"
-                  % (frac_in, nvoid, mask[i, j].mean()))
+                  "%.4f of %d centres inside; transposed convention gives "
+                  "%.4f. The superseded offset-before index gives %.4f, i.e. "
+                  "this test cannot tell the two apart and never could"
+                  % (frac_in, nvoid, mask[i, j].mean(),
+                     mask[i_ok, j_off].mean()))
             r_col = np.sqrt(maximal["x"] ** 2 + maximal["y"] ** 2 + maximal["z"] ** 2)
             check("Cartesian-to-sky convention reproduces the file's own columns",
                   np.abs(r_col - maximal["r"]).max() < 1e-6,
