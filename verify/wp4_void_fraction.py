@@ -1,6 +1,32 @@
 #!/usr/bin/env python3
 """WP-4a: the measured void volume fraction in SDSS DR7, from the raw catalogues.
 
+**CORRECTION NOTICE, appended 2026-11-05 by the third session of that date.
+Read this before quoting any number from this script.**
+
+`in_mask` below indexes the declination axis as `((dec + 90) * res)` truncated.
+**That is not the convention the mask file was written with.** [VAST], the
+software that produced `NSA_main_mask.pickle`, builds and reads the array as
+`int(res * dec) - res * dec_offset` with `dec_offset = -90`
+(`multizmask.py` lines 15, 166, 192; `voidfinder_functions.py` line 249;
+unchanged between commit `133cfcf` of 2022-02-10 and `24e66e1`). Truncation
+toward zero is applied *after* scaling and *before* the offset, so the two
+expressions differ by one pixel wherever `dec < 0`, which is 2.3% of this
+survey's footprint.
+
+Correcting it moves the VoidFinder edge-included fraction from 62.280% to
+**61.570%** (Planck2018) and from 62.628% to **61.923%** (WMAP5), i.e. by
+-0.710 and -0.705 points, and halves the residual against [DVB23] Table 6.
+`verify/wp4_vast_mask_convention.py` (10/10) sources the convention, computes
+the corrected numbers and checks what they do and do not change.
+
+**Nothing in this file has been altered.** Its numbers and its 14 checks stand
+as committed, so that every finding quoting them stays resolvable, and the
+correction is appended in `findings/WP-4-void-fraction.md` §12 rather than
+applied in place. Whether this script should instead be corrected is
+`OPEN-QUESTIONS.md` Q-4; the reversible default taken was to leave it and point
+here.
+
     .venv/Scripts/python verify/wp4_void_fraction.py
 
 Exits 0 if every check passes, 1 otherwise. Takes a few minutes: it rasterises

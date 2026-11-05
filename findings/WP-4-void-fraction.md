@@ -2,10 +2,14 @@
 
 **Status:** complete for what this dataset can settle. One part deliberately
 not done and named in §7.
-**Read §11 before §3, and §10 before §4 and §6.** A third session of
+**Read §11 and §12 before §3, and §10 before §4 and §6.** A third session of
 2026-11-05 checked §3's attribution of the 1.5-point gap to the mask, which had
 never been checked, and §11 confirms it and turns it into a ±1.5-point
-systematic that §3 and §5 do not carry.
+systematic that §3 and §5 do not carry. **§12 then found a sourced defect in
+`verify/wp4_void_fraction.py`'s own mask indexing**, worth −0.710 points: every
+measured fraction in §3, §5, §6, §10 and §11 is high by that amount, and §12.3
+carries the corrected values. The script was deliberately left unaltered; see
+§12.6 and `OPEN-QUESTIONS.md` Q-4.
 A later session of 2026-11-05 settled the
 threshold question §4 has to argue around, and **corrected §6**: the measured
 fraction is a lower bound, so it excludes fitted values *below* it, which §6
@@ -15,7 +19,8 @@ not.
 **Evidence:** `verify/wp4_inspect_inputs.py`, `verify/wp4_void_fraction.py`
 (14/14), `verify/wp4_fv0_comparison.py` (11/11),
 `verify/wp4_critical_threshold.py` (14/14, for §10),
-`verify/wp4_mask_resolution.py` (16/16, for §11).
+`verify/wp4_mask_resolution.py` (16/16, for §11),
+`verify/wp4_vast_mask_convention.py` (10/10, for §12).
 **Dataset:** VAST SDSS DR7 void catalogues v1.3.1,
 `doi:10.5281/zenodo.11043278`, provenance in `data/001-sdss-dr7-voids/`.
 **Kill criterion tested:** K5. **It does not fire, and it cannot fire on this
@@ -648,3 +653,188 @@ used is still unread, so the measured fraction cannot be pinned inside the
 3.06-point band; it can only be bracketed. Reading VAST's mask code would do
 it, and that is a cycle rather than a package, but it needs a code repository
 rather than a paper and was not attempted today. `[LEAD]`.
+
+---
+
+# Addendum, 2026-11-05 (third session, day 3, after the overseer's instruction): the convention, and a defect it exposed
+
+**Added by the same session as §11, after it had stopped and the overseer
+instructed it to read VAST's mask code.** §11.6 left that as the one `[LEAD]`
+worth a cycle and argued it was not worth opening a day for. The overseer said
+to do it.
+
+**Evidence:** `verify/wp4_vast_mask_convention.py` (10/10).
+**Still provisional on WP-0.**
+
+**The short version.** The convention is now `[SOURCED]`, and reading it found
+a **defect in this repository's own pipeline** rather than in the published one.
+`verify/wp4_void_fraction.py` indexes the mask's declination axis with an
+expression VAST does not use, which costs 0.710 points. Correcting it halves
+the residual against arXiv:2202.01226 Table 6. It does **not** settle whether
+`f_v0 = 0.627` is excluded, because the ±1-pixel pixelation systematic of §11 is
+independent of the index expression and survives it.
+
+## 12.1 The convention, sourced
+
+VAST (Void Analysis Software Toolkit), which produced both the catalogues and
+`NSA_main_mask.pickle`, is public at `github.com/DESI-UR/VAST`. Read at commit
+`24e66e1`, the repository head on 2026-11-05, and **every claim below
+re-checked at commit `133cfcf` of 2022-02-10**, contemporaneous with
+arXiv:2202.01226's submission. The relevant lines are identical at both.
+
+**The mask is built** in `python/vast/voidfinder/multizmask.py`, with
+`dec_offset = -90` at line 15. `generate_mask` scales the galaxy angles and
+truncates (line 166):
+
+```python
+scaled_converted_ang = (mask_resolution*ang).astype(int)
+```
+
+then sets each unique scaled pair (line 192):
+
+```python
+mask[row[0], row[1] - mask_resolution*dec_offset] = True
+```
+
+**The mask is read** in `python/vast/voidfinder/voidfinder_functions.py`, where
+`not_in_mask` ends (line 249):
+
+```python
+return not survey_mask_ra_dec[int(n*ra), int(n*dec) - n*dec_offset]
+```
+
+So the declination index is `int(n·dec) + 90n` in both places, with truncation
+**toward zero** applied after scaling and before the offset. VAST is internally
+consistent: the array is written and read with the same expression.
+`[SOURCED]`.
+
+## 12.2 This pipeline uses a different expression, and it is wrong for this file
+
+`verify/wp4_void_fraction.py`'s `in_mask` computes
+`((dec + 90.0) * res).astype(np.int64)`, applying the offset **before** the
+truncation. For `dec ≥ 0` the two agree, since `int(dec) + 90 = int(dec + 90)`.
+For `dec < 0` they differ by exactly one pixel, because truncating toward zero
+rounds a negative number **up**:
+
+| `dec` | this pipeline | VAST | |
+|---|---|---|---|
+| −11.0 | 79 | 79 | same |
+| −10.5 | 79 | **80** | differ |
+| −5.3 | 84 | **85** | differ |
+| −0.4 | 89 | **90** | differ |
+| 0.0 | 90 | 90 | same |
+| +5.3 | 95 | 95 | same |
+| +70.0 | 160 | 160 | same |
+
+VAST's pixel 85 covers `dec ∈ (−6, −5]`; this pipeline's covers
+`dec ∈ [−5, −4)`. **209 of the footprint's 9133 set pixels (2.3%) are
+southern**, and the SDSS DR7 main sample reaches to about `dec = −11`.
+
+**An array must be read with the convention it was written with.** The pickle
+was written by `generate_mask`, so VAST's expression is correct for this file
+and this pipeline's is a **defect, not a variant**. It is also a *shift* rather
+than an erosion or a dilation, so it is a different operation from anything
+§11 varied and is not bracketed by §11's erode-dilate pair.
+
+**Why nothing caught it.** `verify/wp4_void_fraction.py` validates its mask
+convention by confirming that 1.0000 of 1163 VoidFinder void centres fall
+inside the mask against 0.1660 under the transposed convention. That
+distinguishes transposed from not. It cannot distinguish a one-pixel
+declination shift, because both expressions put essentially every void centre
+inside a 9133-pixel footprint. The check was correct about what it tested and
+silent about this. **It is the third time in three days that a committed check
+passed while the thing it was taken to establish was wrong**, after §10.3's
+one-sided bound and §11.3's expectation.
+
+## 12.3 The corrected numbers
+
+| | Planck2018 | WMAP5 |
+|---|---|---|
+| as committed in §3 (offset-before index) | 62.280% | 62.628% |
+| **corrected (VAST index)** | **61.570%** | **61.923%** |
+| shift | −0.710 | −0.705 |
+| survey cells | +475,266 (+1.75%) | +478,563 (+1.73%) |
+| published, arXiv:2202.01226 Table 6 | 60.8% | 61.1% |
+| residual, as committed | +1.480 | +1.528 |
+| **residual, corrected** | **+0.770** | **+0.823** |
+
+The shift has the same sign and nearly the same size in both cosmologies, as a
+convention difference should and as noise would not. It is 0.71 points against
+§11's 3.07-point pixelation span, so the ordering §11 predicted holds: a
+partial-footprint shift is smaller than a whole-boundary bracket.
+
+**Correcting the index roughly halves the disagreement with the published
+value.** §11's conclusion is unaffected — the remaining +0.77 is still well
+inside the ±1.5-point pixelation systematic, and the published value still lies
+inside the bracket — but the two pipelines now agree better than §11 left them.
+
+## 12.4 What it does to the exclusion, which is less than it looks
+
+§11.5's bound table, recomputed about the corrected centre. The ±1-pixel
+pixelation systematic is a property of the 1-degree mask and is independent of
+the index expression, so it is re-applied rather than discarded:
+
+| Planck2018 edge-included bound on `f_v0` | value |
+|---|---|
+| as committed (offset-before index) | 0.6228 |
+| **corrected (VAST index)** | **0.6157** |
+| corrected, less half the ±1 px span | 0.6003 ← conservative |
+| corrected, plus half that span | 0.6311 ← aggressive |
+
+| arXiv:1410.3470 Table 2 | `f_v0` | vs corrected | vs conservative | vs aggressive |
+|---|---|---|---|---|
+| `A(H̄_dec)` | 0.627 | +0.0113 | +0.0267 | **excluded** |
+| `W(k ≠ 0)` | 0.557 | **excluded** | **excluded** | **excluded** |
+| `W(k = 0)` | 0.550 | **excluded** | **excluded** | **excluded** |
+
+**`0.550` and `0.557` remain excluded**, now 0.0503 and 0.0433 below even the
+conservative corrected bound. That exclusion has survived the edge treatment,
+the one-pixel footprint bracket and an index correction, and is the most robust
+result WP-4 has produced.
+
+**`0.627` is still not settled.** It sits between the conservative 0.6003 and
+the aggressive 0.6311, so the correction moved the centre without resolving the
+question. **Reading the code closed the `[LEAD]` in the sense it was asked —
+the convention is `[SOURCED]` — and did not settle the question it was asked in
+order to settle**, because the term that straddles 0.627 is the 1-degree
+pixelation, not the index expression, and pixelation is a property of the
+supplied mask that no amount of code-reading removes.
+
+K5 is unaffected and still does not fire. §8's second limb is untouched.
+
+## 12.5 The negative: Table 6's own volume code is not in VAST
+
+The obvious candidate for "what computed Table 6" is
+`python/vast/catalog/void_overlap.py`, which places a 1 h⁻¹ Mpc grid with
+`np.arange` and filters it through `MaskChecker.not_in_mask`, together with
+`python/vast/catalog/void_catalog.py`, whose `get_single_overlap` is documented
+"Calculates the void volume fraction of a void catalog".
+
+**Both first appear in commit `04233d7`, dated 2025-02-06 — three years after
+arXiv:2202.01226 was submitted.** At `133cfcf` the repository contains no
+grid-based volume-fraction code at all: searching the paper-era tree for
+`np.arange(x_min`, `grid_points` and `test particle` returns nothing. So that
+module did not produce Table 6.
+
+It is also not a candidate on its merits, because it defaults to
+`edge_buffer=30`, cutting every grid point within 30 h⁻¹ Mpc of the survey
+border out of **both** numerator and denominator. That is a far larger
+intervention than anything considered in §11 or here, and it is not what
+arXiv:2202.01226 §4.2 describes.
+
+**So the denominator convention remains `[UNKNOWN]` and cannot be settled from
+VAST's repository.** §11.4 established it is worth only 0.022 points as a
+rasterised-against-analytic choice, so this is a small residual ignorance, but
+it is ignorance and not a result.
+
+## 12.6 What is now open
+
+One thing, and it is a decision rather than a measurement.
+`verify/wp4_void_fraction.py` has a sourced defect worth 0.71 points, and its
+numbers are quoted in §3, §5, §6, §10.3, §10.4, §11 and two `explain/`
+write-ups. **Nothing in that file was altered.** Its 14 checks and its output
+stand as committed so that every finding quoting them stays resolvable, a
+correction notice was appended to its docstring, and this section carries the
+corrected numbers. Whether the script should instead be corrected in place, and
+every dependent number updated, is **`OPEN-QUESTIONS.md` Q-4**, with the
+reversible default being what was done here.

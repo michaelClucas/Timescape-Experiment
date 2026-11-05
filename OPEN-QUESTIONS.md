@@ -217,3 +217,90 @@ was not edited.
 left to the harness**, with the venv and data steps named so the next session
 does not have to work them out. Option 3's parent assertion is still wanted,
 because it catches the shared-ref-store case that a worktree does not.
+
+---
+
+## Q-4. Should `verify/wp4_void_fraction.py` be corrected in place, or left with a correction notice?
+
+**Raised:** 2026-11-05, third session, cycle 5, WP-4
+**Blocks:** nothing is unresolvable because of this. The corrected numbers
+exist and are committed in `verify/wp4_vast_mask_convention.py` and
+`findings/WP-4-void-fraction.md` §12.3. What it blocks is whether a reader who
+runs the repository's own scripts gets the right number or the wrong one with a
+pointer.
+
+**The argument.** `verify/wp4_void_fraction.py` indexes the survey mask's
+declination axis as `((dec + 90) * res)` truncated. [VAST], which wrote
+`NSA_main_mask.pickle`, builds and reads it as `int(res*dec) - res*dec_offset`
+with `dec_offset = -90` (`multizmask.py` lines 15, 166, 192;
+`voidfinder_functions.py` line 249; identical at commit `133cfcf` of 2022-02-10
+and at `24e66e1`). Truncation toward zero applied after scaling and before the
+offset differs by one pixel wherever `dec < 0`, which is 2.3% of this
+footprint. **An array must be read with the convention it was written with, so
+this is a defect and not a variant.** `[SOURCED]`.
+
+Correcting it moves the VoidFinder edge-included fraction from 62.280% to
+61.570% (Planck2018) and 62.628% to 61.923% (WMAP5), by **-0.710 and -0.705
+points**, and halves the residual against arXiv:2202.01226 Table 6. It does
+not change any conclusion: `f_v0 = 0.550` and `0.557` stay excluded and `0.627`
+stays undecided, for the reasons in §12.4.
+
+The difficulty is reach. Those numbers are quoted in §3, §5, §6, §10.3, §10.4
+and §11 of the finding, in `explain/004-is-the-void-fraction-measured.md` and
+`explain/004c-how-much-does-the-survey-edge-move-the-answer.md`, and in two day
+logs and three status files. `verify/wp4_fv0_comparison.py` and
+`verify/wp4_critical_threshold.py` both hard-code 0.6228 as the bound and would
+have to change with it, which means re-running and re-expecting 25 checks
+across two scripts.
+
+**Options:**
+
+1. **Leave the script, append the correction.** What was done. The docstring
+   carries a correction notice naming the corrected values and the script that
+   produces them; §12 carries them in the finding; the 14 checks and the
+   output stand exactly as committed, so every number quoted anywhere in the
+   repository stays resolvable to the script that produced it. Cost: a reader
+   who runs `verify/wp4_void_fraction.py` and does not read its docstring gets
+   62.280% with no warning in the output itself.
+2. **Correct the script in place, and every dependent number with it.** The
+   repository then reports the right number everywhere. Cost: it is a rewrite
+   of the evidence base for a conclusion, not an append, and it breaks the
+   repository's one strong convention - `SOURCE.md` §9, finding §10, §11 and
+   §12 all append-and-date rather than overwrite. Done carelessly it would also
+   leave three status files and two day logs quoting numbers no script
+   produces, which is the failure mode the convention exists to prevent.
+3. **Correct the script in place and leave a frozen copy** as
+   `verify/legacy/wp4_void_fraction_preindexfix.py`, so quoted numbers stay
+   resolvable while the live script is right. Costs a file and a line of
+   explanation; it is the option that satisfies both the append-only
+   convention and the "scripts are the evidence" rule, because nothing is
+   deleted and the live script is correct.
+4. **Add the correction as a second code path inside the script**, reporting
+   both conventions side by side with the VAST one marked correct. Cheapest to
+   verify, and the output then carries its own warning. Costs a slightly
+   confusing script and does not settle which number the finding quotes.
+
+**Default taken:** option 1, leave it and append. Reversible: nothing was
+deleted, the corrected numbers are committed in a second script and in §12.3,
+and options 2, 3 and 4 can all be done later from exactly this state. It was
+also the only option available without rewriting an evidence file an hour after
+the overseer had read the findings that rest on it, which is not a thing an
+unattended session should do on its own authority.
+
+**Recommendation: option 3.** The live script should produce the right number,
+because "every number in prose comes from a committed, runnable script" is
+weakened if running the script gives a different number from the prose; and a
+frozen copy keeps every already-quoted number resolvable, which is what the
+append-only convention is actually protecting. Option 1 is stable but leaves a
+known-wrong script as the repository's headline measurement. Option 2 should
+not be taken without option 3's frozen copy.
+
+**A note on sequencing, if option 2 or 3 is chosen.** `wp4_fv0_comparison.py`
+and `wp4_critical_threshold.py` hard-code the 0.6228 bound. Their expected
+values must be **corrected, not loosened** - the bound becomes 0.6157 and
+`0.627`'s margin becomes +0.0113 - and the check that currently reads "0.627
+survives the bound by less than the pipeline's own error" needs rewording,
+since §12 reduces that error. Rule 6 applies to that edit as much as to a new
+one.
+
+**Answer:** (overseer, pending)

@@ -162,3 +162,101 @@ found with `f_v0`, and this check does not touch it.
 Everything here is also conditional on something larger that has not happened
 yet: an independent adversarial audit of the reasoning this whole repository
 rests on, filed as WP-0. Until that runs, this is marked **provisional**.
+
+---
+
+# Added later the same day: the code was read, and it found a mistake of ours
+
+Section 3 above says the published pipeline's own code "was not read", and
+section 6 said reading it would settle whether `f_v0 = 0.627` is ruled out.
+**It has now been read.** Evidence: `verify/wp4_vast_mask_convention.py`, 10 of
+10 checks pass. Details in `findings/WP-4-void-fraction.md` §12.
+
+## What the code says
+
+The software is called VAST, it is public, and it both **wrote** the mask file
+we have been using and **reads** it when finding voids. The two places where it
+writes and reads the mask use the same line of arithmetic to turn a declination
+into a row number of the mask grid. We used different arithmetic.
+
+The difference sounds like nothing and is not. Both versions take a
+declination, scale it, and chop off the fractional part to get a whole-number
+row. Ours adds 90 **before** chopping; VAST adds 90 **after**. For declinations
+north of the equator the two give the same row. For declinations south of it
+they are **one row apart**, because chopping the fractional part off a negative
+number moves it *up* while chopping it off a positive number moves it *down*.
+
+About 2% of this survey's patch of sky is south of the equator, reaching about
+11 degrees down.
+
+**A grid has to be read the same way it was written**, or you are reading the
+wrong row. The file was written VAST's way. So this is not two defensible
+conventions; **ours was simply wrong for this file.**
+
+## What it changes
+
+| | Planck2018 | WMAP5 |
+|---|---|---|
+| what we had been reporting | 62.28% | 62.63% |
+| **corrected** | **61.57%** | **61.92%** |
+| the astronomers' published value | 60.8% | 61.1% |
+
+So we were overstating the void fraction by about 0.71 points, and correcting it
+**halves** the remaining disagreement with the published number, from about 1.5
+points to about 0.8. Everything section 3 above says still holds: the published
+value is still inside the ±1.5-point bracket, and the two measurements were
+never in conflict. They now agree better than this write-up first said.
+
+## Why none of our checks caught it
+
+The script that computes the void fraction does check its mask convention. It
+confirms that all 1,163 void centres land inside the surveyed patch, and that
+only 17% of them do if you swap the two axes. That test catches a swapped
+mask. It cannot catch a mask read one row off, because moving the whole patch
+by one degree still leaves essentially every void centre inside it.
+
+The check was right about what it tested and silent about this. That is the
+third time in three days that a passing check turned out not to establish the
+thing it was being relied on for — and all three were caught by writing down,
+in advance, what the answer ought to be, and then being wrong.
+
+## What it does to the conclusion, which is less than you would hope
+
+Recomputing section 5's table with the corrected floor:
+
+| one paper's three ways of fitting `f_v0` | value | ruled out? |
+|---|---|---|
+| matching `A(H̄_dec)` | 0.627 | **still undecided** |
+| matching `W(k ≠ 0)` | 0.557 | **yes** |
+| matching `W(k = 0)` | 0.550 | **yes** |
+
+The two that were ruled out are **still** ruled out, and by a wider margin than
+before relative to nothing having changed in their favour. That result has now
+survived three separate attempts to break it.
+
+But **0.627 is still undecided**, and this is the honest and slightly
+disappointing part. Reading the code was supposed to replace the ±1.5-point
+bracket with one number and settle it. It did not, because the bracket does not
+come from the arithmetic we got wrong. It comes from the mask being stored at
+one-degree resolution in the first place, which is a property of the file and
+not of anyone's code. Fixing our arithmetic moved the centre of the bracket;
+the bracket is the same width, and 0.627 is still inside it.
+
+**So: a real mistake found and fixed, the agreement with the published work
+improved, and the question it was all meant to settle still open.** That is a
+normal outcome and worth stating plainly rather than dressing up.
+
+## One more thing that was looked for and is not there
+
+The actual code that produced the published volume fractions **is not in VAST
+at the date of the paper.** The module that does exactly this calculation —
+place a grid, keep the points inside the survey, count how many are in voids —
+was added to VAST in February 2025, three years after the paper was submitted.
+At the paper's own date the software contains no such code at all. It also, in
+its 2025 form, throws away every grid point within 30 megaparsecs of the survey
+border, which is not what the paper describes doing.
+
+So how the published denominator was defined is still unknown, and cannot be
+found out from this software. It is worth about 0.02 points, so it changes
+nothing — but "we do not know" is the accurate answer and it is better than a
+guess.
