@@ -134,10 +134,17 @@ Rules that apply to everything you produce:
   `[UNKNOWN]` means you do not know. A citation you did not fetch is never
   `[SOURCED]`. This is checked, and a fabricated locator is kill criterion
   K7 for a reason.
-- **Pinned environment.** Use `env/requirements.txt`. If you need a package
-  that is not there, install it, verify the import actually works, and add
-  it with the version you ran. `classy` is unavailable on this platform;
-  camb substitutes.
+- **Use the repository's venv, not system Python.** `.venv/Scripts/python`
+  on this machine; nothing is installed globally and `import numpy` from
+  system Python fails. The venv is gitignored, so if it is missing rebuild
+  it: `python -m venv .venv` then
+  `.venv/Scripts/python -m pip install -r env/requirements.txt`. If you need
+  a package that is not pinned, install it, verify the import actually
+  works, and add it with the version you ran.
+- **`classy` and `healpy` are unavailable on this platform** and
+  `env/requirements.txt` records what was tried. camb substitutes for
+  CLASS. Do not work around a missing package by writing your own; say the
+  work does not run here.
 - **Record the negative.** A fit that failed to converge, a dataset that
   turned out unusable, an approach you abandoned after an hour: all of it
   goes in the day log. A day's work that reports only what succeeded is a
