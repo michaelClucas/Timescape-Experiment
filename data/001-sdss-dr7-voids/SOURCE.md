@@ -131,3 +131,47 @@ excludes.
   needs the surveyed volume as its denominator, and the `edge` flags mark
   voids touching the boundary. A Python pickle is executable content; load
   it only with the repository's own venv and treat it as data.
+
+## 9. Appended notes, after the analysis
+
+This file was written **before** any analysis touched the dataset, which is
+the point of it. Notes that only became available afterwards are appended
+here, dated, rather than written back into the fields above - because a
+provenance file edited to agree with the result it produced is no longer
+provenance.
+
+### 2026-11-05, second session: field 7's priority is wrong for this survey
+
+**Field 7's reasoning is right and its implied priority is wrong.** It
+presents the ΛCDM conditioning as the headline problem for WP-4. The
+conditioning is real, and `findings/WP-4-void-fraction.md` §5 puts it at
+**~2.0 percentage points** against a **17.5-point** survey-edge systematic
+(`verify/wp4_fv0_comparison.py`). So the thing field 7 names as the main
+caveat is about eight times smaller than the one it does not mention.
+
+The reason is specific to this dataset and does not generalise. `f_v` is a
+**ratio of volumes**, so a uniform rescaling of all distances cancels exactly;
+what survives is only the change in the *shape* of `D_C(z)` over
+`0 < z < 0.114`, and this survey is shallow enough that the shape barely
+moves. On a deep survey the term would not be small, and field 7's priority
+would be right.
+
+Two further notes from the same session, both bearing on field 7's point 4,
+which asks what the ΛCDM-conditioned number may be presented as:
+
+- The measured fraction is a **lower bound** on timescape's `f_v0`, not an
+  estimate of it, and `findings/WP-4-void-fraction.md` §10 now supports that
+  by three independent routes rather than the one `[INFERENCE]` it originally
+  rested on. A lower bound is a weaker object than field 7 anticipated and a
+  more robust one: it survives the conditioning, because the conditioning
+  moves the number by 2 points and the bound is one-sided.
+- There is **no numerical density threshold** in timescape to condition
+  against. arXiv:0712.3984 §5 Eq. (7) explicitly denies that the critical
+  density has the form `3 H_av^2 / (8 pi G)` in an inhomogeneous cosmology,
+  and defines the wall/void boundary kinematically instead, as the surface of
+  zero average expansion. Field 7's framing assumes the comparison is between
+  two numbers reduced under two distance relations. Part of it is not: one
+  side of the comparison has no numerical definition at all.
+
+**Nothing above this line was changed.** `cuts.md` is also unmodified; no
+radius cut was applied, so its cut 7 never came into play.

@@ -117,3 +117,60 @@ in which case option 2 should be folded into that work rather than done on
 SDSS DR7, where the edge systematic dominates anyway.
 
 **Answer:** (overseer, pending)
+
+---
+
+## Q-3. Does the standing loop need an isolated checkout?
+
+**Raised:** 2026-11-05, second session, cycle 3
+**Blocks:** nothing scientific. It blocks confidence in the process, which is
+worse, because the failure mode is silent.
+**The argument.** `prompts/standing-loop.md` says "One session, one branch,
+one day. Two writers on the same files produce a diff nobody can review", and
+forbids starting a second agent. That rule assumes the session controls the
+working tree. **It does not.** This session's `git reflog` records
+`checkout: moving from research/auto-2026-11-05-day2 to verify-check` and then
+`verify-check to main` between two of its own commits, for a branch it never
+created and which no longer exists. The result was that a cycle's commit landed
+on local `main` with every file from the previous session absent from its tree.
+
+It was caught by reading `git log --oneline -2` and noticing the parent commit
+was wrong. **Nothing in the protocol would have caught it.**
+`protocol/validate.py` checks run output, and this touched none.
+`verify/` scripts check numbers, and the numbers were right - they were simply
+committed on top of the wrong base. A session that did not happen to print the
+commit graph would have pushed a branch that looks complete and silently drops
+what it builds on.
+
+The repair used no forbidden operation: no force-push, no amend, no rebase, and
+`main` was never pushed to. Details in `logs/2026-11-05-day2.md` cycle 3.
+
+**Options:**
+1. **Leave it.** Rely on each session noticing. Costs nothing now. The failure
+   is silent, intermittent, and produces output that passes every existing
+   check, so "rely on noticing" is the option that already failed once today.
+2. **Give each unattended session its own `git worktree`.** One command at
+   session start, one at teardown. Another process checking out branches in the
+   main tree then cannot move this session's HEAD. Does not fix the underlying
+   cause and does not need to.
+3. **Add a base-commit assertion to the loop.** Have each session record its
+   expected parent sha at branch creation and assert `git rev-parse HEAD^`
+   against it before every commit. Catches the symptom mechanically rather
+   than relying on attention. Cheap, and it is the kind of check this
+   repository already prefers: `prompts/standing-loop.md`'s closing section
+   says that where the protocol depends on what a session will not do, it is
+   weaker than where it depends on what it cannot do.
+4. **Find out what `verify-check` was.** Not something an unattended session
+   can do, and the thing actually worth the overseer's time.
+
+**Default taken:** option 1 by necessity for the remainder of this session,
+with the mitigation that every cycle was pushed immediately rather than at
+day's end, so nothing lived only in a tree something else was moving.
+Reversible: options 2 and 3 are both changes to `prompts/standing-loop.md` and
+neither invalidates anything committed today. **Recommendation is 3 plus 4** -
+3 because it makes the failure loud instead of silent, and 4 because a second
+writer in this checkout is a bigger problem than anything in the research plan.
+This should be read alongside the Maple access problem: that one stalls work,
+this one corrupts it.
+
+**Answer:** (overseer, pending)
