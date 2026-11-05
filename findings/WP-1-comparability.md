@@ -162,13 +162,7 @@ states it is **not like-for-like**.
 
 `[SOURCED]` `[SW11]` Sec. 2 names the method it regards as satisfying the
 criterion: strong-lens time delays, citing a then-current `H_0 = 62 (+6/-4)`.
-That comparator has since moved. `[LEAD]` Modern time-delay cosmography
-reports `73.3 (+1.7/-1.8)` (H0LiCOW) and `67.4 (+4.1/-3.2)` (TDCOSMO+SLACS
-hierarchical). I have the locators arXiv:1907.04869 and arXiv:2007.02941 but
-did not fetch either, so these are leads, not sourced. **If they hold, the one
-method timescape named as like-for-like no longer gives a value in its
-admissible band, and WP-1 should be reopened on exactly that point.** This is
-the single most useful follow-up from this package.
+That comparator has since moved, and §4.5 follows it.
 
 ### 4.3 But the comparison is not a rescue either, and here is the number
 
@@ -210,12 +204,72 @@ actual work and is not done here. What is established here is only that the two
 numbers are the same order, which is what makes the `H_0` row
 non-discriminating.
 
+### 4.5 The endorsed method, followed up (added cycle 4)
+
+`[SW11]`'s own nominated like-for-like method is strong-lens time delays,
+because it is not calibrated below `z = 0.033`. Its modern values were fetched
+rather than left as leads.
+
+| Determination | `H_0` | Mass profile | Against the `57`-`68` band |
+|---|---|---|---|
+| Courbin et al. 2010, as cited by `[SW11]` | `62 (+6/-4)` | single lens | inside |
+| H0LiCOW XIII, 6 lenses `[W20]` | `73.3 (+1.7/-1.8)` | parametric: power law or stars+halo | **outside, by 2.94 sigma** |
+| TDCOSMO only, 7 lenses `[B20]` | `74.5 (+5.6/-6.1)` | flexible, kinematics-constrained | outside, by 1.07 sigma |
+| TDCOSMO + 33 SLACS, hierarchical `[B20]` | `67.4 (+4.1/-3.2)` | flexible, kinematics-constrained | **inside**, at the very top |
+
+`[W20]` = Wong et al., arXiv:1907.04869, MNRAS 498 (2020) 1420, DOI
+10.1093/mnras/stz3094. `[B20]` = Birrer et al., arXiv:2007.02941, A&A 643
+(2020) A165, DOI 10.1051/0004-6361/202038861. Both `[SOURCED]` from fetched
+abstracts.
+
+**The follow-up resolves, and not the way §4.2's first version anticipated.**
+The endorsed method does not give one answer. Relaxing the deflector
+mass-profile assumption, which `[B20]` does by replacing a fixed parametric
+form with flexible models whose mass-sheet degeneracy is constrained
+hierarchically by stellar kinematics, moves `H_0` from `74.5` to `67.4`. That
+`7.1` km/s/Mpc swing is larger than the `5.3` gap from timescape's ceiling to
+the H0LiCOW value. So whether the method timescape endorsed excludes timescape
+depends entirely on a lensing systematic that has nothing to do with
+timescape.
+
+**And a caveat that applies to all four rows.** A time-delay distance becomes
+an `H_0` only through a distance-redshift relation, and every value above
+assumes flat LCDM. These determinations are **calibration-independent but not
+model-independent**. Comparing them to timescape properly needs the
+time-delay inference redone with timescape's own relation, which nobody has
+done and which is not a day's work.
+
+**Net effect on WP-1's conclusion: unchanged, and more firmly held.** §4.3
+found the `H_0` row non-discriminating. The endorsed method turns out to be
+non-discriminating too, for a second and independent reason. The `H_0`
+objection has now failed to decide the question by three separate routes: the
+distance ladder is excluded by the model's own criterion, the predicted local
+variance is the same size as the discrepancy, and the endorsed alternative
+method spans the ceiling depending on its own systematics.
+
 ### 4.4 Why `60.98` is not used above
 
-Run 01's table gives the dressed range as `60.98`-`61.7`. I sourced `61.7`
-from three papers and did not locate `60.98` in any source I fetched.
-`[UNKNOWN]` where it comes from. Nothing here depends on it; the conclusions
-use `61.7` and `61.60`.
+Run 01's table gives the dressed range as `60.98`-`61.7`. At the time this
+section was written I had sourced `61.7` from three papers and could not locate
+`60.98`, so it was marked `[UNKNOWN]`.
+
+**Resolved in cycle 4, from WP-4's reading.** `[SOURCED]` Nazer & Wiltshire,
+arXiv:1410.3470, Phys. Rev. D 91, 043004 (2015), Table 2: the dressed `H_0`
+best fit under CMB matching prescription `A(H̄_dec)` is `60.984`. The same
+table gives `56.148` for `W(k = 0)` and `56.774` for `W(k ≠ 0)`.
+
+That last point is worth more than the bookkeeping. **Two of the three CMB
+matching prescriptions put the dressed `H_0` below `[SW11]`'s own admissible
+floor of `57`.** The prescription spread within a single CMB fit is `4.8`
+km/s/Mpc, comparable to the width of the whole admissible band. Run 01's table
+quoted the range as `60.98`-`61.7`, which is the top of the actual range; the
+full range across published fits is `56.1`-`61.7`.
+
+This does not change the conclusion. §4.3 found the `H_0` row
+non-discriminating because the discrepancy and the model's own predicted
+variance are the same size; a model whose own value is less well determined
+than Run 01's table implies is less discriminating, not more. It does add a
+correction for WP-10. Evidence in `verify/wp4_fv0_comparison.py`.
 
 ## 5. Does K1 fire? No.
 

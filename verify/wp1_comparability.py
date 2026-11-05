@@ -326,6 +326,103 @@ check("the as-printed [DNW13] middle term does not",
       % dressed_from_bare_dnw_asprinted(FV0_CMB, H_BAR_0))
 
 
+# ---------------------------------------------------------------------------
+# Part D. The one method timescape itself named as like-for-like
+# ---------------------------------------------------------------------------
+#
+# Added in cycle 4 of 2026-11-05, closing the follow-up this script's first
+# version left open. [SW11] Sec. 2 does not only exclude the distance ladder;
+# it names a method it regards as satisfying its own criterion, because it is
+# not calibrated below z = 0.033: strong-lens time delays. [SW11] cites a
+# then-current value of H_0 = 62 (+6/-4) from Courbin et al. (2010), which sits
+# comfortably inside its admissible band of 57 to 68.
+#
+# That comparator has since moved, and the modern values were fetched rather
+# than left as leads:
+#
+#   [W20]  Wong et al., "H0LiCOW XIII. A 2.4% measurement of H_0 from lensed
+#          quasars", arXiv:1907.04869, MNRAS 498 (2020) 1420,
+#          DOI 10.1093/mnras/stz3094. Six lensed quasars, flat LCDM, deflector
+#          mass profile fixed to a parametric form (power law, or stars plus
+#          halo). H_0 = 73.3 (+1.7/-1.8). The abstract states the method is
+#          "completely independent of both the supernovae and CMB analyses".
+#   [B20]  Birrer et al., "TDCOSMO IV: Hierarchical time-delay cosmography",
+#          arXiv:2007.02941, A&A 643 (2020) A165,
+#          DOI 10.1051/0004-6361/202038861. Replaces the fixed parametric
+#          profile with flexible mass models, so the mass-sheet degeneracy is
+#          constrained hierarchically by stellar kinematics instead of by the
+#          parametric choice. TDCOSMO only, 7 lenses: 74.5 (+5.6/-6.1).
+#          TDCOSMO + 33 SLACS lenses, hierarchical: 67.4 (+4.1/-3.2).
+
+TIME_DELAY = [
+    # label, H_0, +err, -err, source, what fixes the mass profile
+    ("Courbin et al. 2010, as cited by [SW11]", 62.0, 6.0, 4.0,
+     "arXiv:1009.5855 Sec. 2", "single lens HE 0435-1223"),
+    ("H0LiCOW XIII, 6 lenses", 73.3, 1.7, 1.8,
+     "arXiv:1907.04869 abstract", "parametric: power law or stars+halo"),
+    ("TDCOSMO only, 7 lenses", 74.5, 5.6, 6.1,
+     "arXiv:2007.02941 abstract", "flexible, kinematics-constrained"),
+    ("TDCOSMO + SLACS, hierarchical", 67.4, 4.1, 3.2,
+     "arXiv:2007.02941 abstract", "flexible, kinematics-constrained"),
+]
+
+TS_FLOOR, TS_CEILING = 57.0, 68.0   # [SW11] Sec. 2
+
+
+def sigma_above_ceiling(h0, err_lo):
+    """How far above timescape's own admissible ceiling, in the measurement's
+    own lower uncertainty. Negative means inside the band."""
+    return (h0 - TS_CEILING) / err_lo
+
+
+for _label, _h0, _ep, _em, _src, _prof in TIME_DELAY:
+    _s = sigma_above_ceiling(_h0, _em)
+    _inside = TS_FLOOR <= _h0 <= TS_CEILING
+    CHECKS.append((
+        True,
+        "time-delay H_0: %s" % _label,
+        _h0, _h0, 0.0, _src,
+        "%.1f (+%.1f/-%.1f), %s; %s the %.0f-%.0f band%s"
+        % (_h0, _ep, _em, _prof,
+           "INSIDE" if _inside else "OUTSIDE", TS_FLOOR, TS_CEILING,
+           "" if _inside else " by %.2f sigma" % _s)))
+
+# The value [SW11] relied on is inside the band; the tightest modern value from
+# the same method is outside it at 3 sigma.
+check("the comparator [SW11] cited is inside its own admissible band",
+      62.0, 62.0, 1e-9, "arXiv:1009.5855 Sec. 2",
+      "57 <= 62 <= 68, which is why [SW11] could point to it")
+check("H0LiCOW XIII is outside the band, in its own sigma",
+      sigma_above_ceiling(73.3, 1.8), 2.94, 0.02,
+      "arXiv:1907.04869; arXiv:1009.5855 Sec. 2",
+      "the tightest modern value from the method timescape endorsed")
+
+# But the method's own answer is not stable. Relaxing the mass-profile
+# assumption moves it by more than the gap to the ceiling, and the
+# hierarchical value lands back inside the band. So the endorsed method does
+# not settle the question either, and the reason has nothing to do with
+# timescape.
+_spread = 74.5 - 67.4
+check("relaxing the lens mass profile moves H_0 by more than the gap to the ceiling",
+      _spread, 7.1, 1e-9,
+      "arXiv:2007.02941 abstract",
+      "74.5 against 67.4 within one paper, versus a %.1f gap from the "
+      "ceiling to H0LiCOW" % (73.3 - TS_CEILING))
+check("the hierarchical time-delay value is inside the admissible band",
+      67.4, 67.4, 1e-9, "arXiv:2007.02941 abstract",
+      "57 <= 67.4 <= 68, at the very top of it")
+
+# And the caveat that stops this being a clean result either way: every
+# time-delay H_0 above is inferred assuming flat LCDM. A time-delay distance
+# becomes an H_0 only through a distance-redshift relation, so these values are
+# calibration-independent but NOT model-independent. Using them against
+# timescape needs the inference redone with timescape's relation.
+CHECKS.append((True, "time-delay values are calibration- but not model-independent",
+               0.0, 0.0, 0.0, "arXiv:1907.04869; arXiv:2007.02941",
+               "all assume flat LCDM in converting time-delay distance to "
+               "H_0; a timescape comparison needs the inference redone"))
+
+
 def main():
     width = max(len(c[1]) for c in CHECKS)
     failed = 0
@@ -357,6 +454,14 @@ def main():
     print(" 3. The excess needing explanation (18.6%) and the predicted")
     print("    enhancement (17%) are the same size, so the H_0 row cannot")
     print("    decide anything by itself. It refers to WP-8.")
+    print()
+    print(" 4. The one method timescape named as like-for-like, strong-lens")
+    print("    time delays, now gives 67.4 to 74.5 depending on how the lens")
+    print("    mass profile is treated. The tightest value is 2.9 sigma above")
+    print("    timescape's own ceiling; the hierarchical value is just inside")
+    print("    it. So the endorsed method does not settle it either, for a")
+    print("    reason internal to lensing. And all of these assume flat LCDM")
+    print("    in the inference, so none is model-independent.")
     print()
     print("K1 does not fire. Its first limb requires BOTH comparisons")
     print("like-for-like; the H_0 one is not. Its second limb requires WP-2,")
