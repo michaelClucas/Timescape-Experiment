@@ -1,0 +1,13 @@
+# Checksum manifests must round-trip byte for byte. git's CRLF conversion
+# appends \r to every line, and `sha256sum -c` then reports every file as
+# FAILED because the filename it parses ends in a carriage return. The data
+# is fine and the manifest is unusable, which is the worst of both: an
+# integrity check that fails for a reason unrelated to integrity.
+*.sha256 -text
+
+# Shell scripts are run by Git Bash here and by POSIX sh elsewhere. Git Bash
+# tolerates CRLF; most other shells do not.
+*.sh text eol=lf
+
+# Maple input files are read by Maple on another machine.
+*.mpl text eol=lf
