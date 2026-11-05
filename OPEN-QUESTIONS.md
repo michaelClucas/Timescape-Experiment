@@ -304,3 +304,77 @@ since §12 reduces that error. Rule 6 applies to that edit as much as to a new
 one.
 
 **Answer:** (overseer, pending)
+
+### Second note appended 2026-11-05 by the third session (day 3), cycle 6
+
+**Q-3's option 4 — "find out what `verify-check` was" — now has an answer, and
+it was obtained by accident rather than by investigation.** Q-3's text and the
+first appended note both stand unedited.
+
+**What happened.** This session finished its work, wrote its status file and
+updated its PR body. On a final check of repository state, `main` had moved
+from `96fe08e` to `ce5fcaa` and this session's PR #14 had become
+`CONFLICTING`. The cause was not corruption: **PR #13, "WP-4: correct the K5
+test, which applied an interval test to a one-sided bound", had been merged
+into `main` at 2026-11-05T21:05:54Z**, two minutes after this session branched.
+Its own body says it was "Caught by the parallel session of 2026-11-05".
+
+So **a second session was running against this repository at the same time as
+this one**, legitimately, doing good work. `git worktree list` confirms the
+shape of it:
+
+```
+C:/Users/mluca/Documents/Timescape-Experiment            ce5fcaa [main]
+C:/.../.claude/worktrees/timescape-experiment-day-3-...  561444e [research/auto-2026-11-05-day3]
+C:/Users/mluca/Documents/Timescape-Experiment-run01      f4dfea0 [run-01-audit]  prunable
+```
+
+**This explains the day-2 reflog entries exactly.** The second session of
+2026-11-05 was working in the **main checkout**, and so was a concurrent
+session. One of them ran `git checkout verify-check` and then
+`git checkout main` in that shared tree, between two of the other's commits.
+Nothing was corrupting anything; two sessions were sharing one working tree,
+which is precisely what `prompts/standing-loop.md` forbids and what Q-3
+suspected without being able to confirm. The branch no longer exists anywhere
+(`git branch -a --list "*verify-check*"` is empty), which is consistent with a
+short-lived scratch branch in a shared tree.
+
+**So Q-3 resolves, and the answer is the unexciting one.** The second writer
+was another Claude session, not a stray process, not a hook, not a tool
+misfiring. The failure mode is real, the diagnosis is confirmed, and **option 2
+is the fix** — as this session's first note recorded from the other side, having
+been handed a worktree and finding its reflog clean.
+
+**What this changes in the recommendation.** The first note recommended "3 plus
+4, plus 2 written into `prompts/standing-loop.md`". That stands, with option 4
+struck as **answered**:
+
+- **Option 2 is now evidenced on both sides**: a session in the main checkout
+  gets its HEAD moved under it, and a session in a worktree does not. It should
+  be in the prompt.
+- **Option 3's parent assertion is still wanted**, and cycle 6 is a second
+  argument for it: the shared ref store let `main` advance under this session,
+  which a worktree does not prevent. It did no harm here because the session
+  never committed to `main` and checked its parent every cycle, but the
+  mechanism that bit day 2 is still live.
+- **Option 4 is closed.** No overseer hour is needed to find out what
+  `verify-check` was.
+
+**One thing this session cannot determine, stated rather than guessed.** Every
+commit, PR and merge in this repository is authored and merged by the single
+account `michaelClucas`, so `gh pr view --json mergedBy` cannot distinguish a
+merge the overseer performed from one a session performed. #12 and #13 are
+indistinguishable by that field, and the overseer's instruction to merge #12 is
+known only from this session's prompt. **Whether #13's merge was instructed is
+therefore `[UNKNOWN]` to this session**, and no inference is drawn from it.
+Recording it because `prompts/standing-loop.md`'s "do not merge your own PR"
+rule is unenforceable and unauditable while every actor shares one identity,
+which is a separate and smaller problem than Q-3 but has the same shape: the
+protocol depends on what a session will not do rather than on what it cannot.
+
+**What this session did about the conflict.** Merged `origin/main` into the day
+branch — which is `prompts/standing-loop.md` cycle step 1, not a deviation —
+resolved the single conflict (the finding's header block, where both sessions
+had added a reader's note), kept **both** sessions' text, and re-ran all eight
+`verify/` scripts on the merged tree. No force-push, no amend, no rebase.
+`main` was not pushed to and this session's PR was not merged.
