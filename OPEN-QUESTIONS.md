@@ -174,3 +174,46 @@ This should be read alongside the Maple access problem: that one stalls work,
 this one corrupts it.
 
 **Answer:** (overseer, pending)
+
+### Note appended 2026-11-05 by the third session (day 3), cycle 1
+
+**Not an answer. Evidence on this question from a session that did not choose
+it.** Q-3's text above stands unedited.
+
+**Option 2 is already in place, and it works.** This session was handed a
+`git worktree` at `.claude/worktrees/timescape-experiment-day-3-65745f` by the
+harness rather than the main checkout. Nobody asked for it. Across the whole
+session `git reflog` shows only this session's own operations: no stray
+`checkout: moving from ... to verify-check`, which the second session recorded
+three times in one day.
+
+Why it works: a worktree has its own `HEAD` file and its own working tree, so
+another process checking out branches in the main checkout cannot move this
+session's `HEAD` or overwrite its files. That is exactly the failure Q-3
+describes - a commit landing on local `main` with the previous session's files
+absent from its tree.
+
+**Two limits, so that option 2 is not oversold.**
+
+1. **The ref store is shared.** `.git/refs` is common to all worktrees, so
+   another process can still create, move or delete branches, `main` and this
+   session's day branch included. What it cannot do is move a checked-out
+   `HEAD` or write to another worktree's files.
+2. **The stash stack is shared**, so `git stash` is unsafe across worktrees and
+   can pop another session's work. No stash was used today. A temporary commit
+   is the route if one is ever needed, and that is worth a line in
+   `prompts/standing-loop.md`.
+
+**Two costs, both small and both paid today.** The worktree has no `.venv` and
+no `data/raw/`, since both are gitignored. The main checkout's interpreter was
+used by absolute path (a venv is not tied to a working directory, so it is the
+same interpreter the previous two sessions ran), and the 17 catalogue files
+were copied in and re-verified against the committed manifest: all 17 `OK`
+after stripping carriage returns. Nothing was moved or deleted and the manifest
+was not edited.
+
+**Recommendation, amending the second session's by one clause.** Still **3 plus
+4**, and additionally **2 written into `prompts/standing-loop.md` rather than
+left to the harness**, with the venv and data steps named so the next session
+does not have to work them out. Option 3's parent assertion is still wanted,
+because it catches the shared-ref-store case that a worktree does not.
