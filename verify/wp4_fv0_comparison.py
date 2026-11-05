@@ -294,22 +294,52 @@ def main():
     print("  fitted f_v0.' Effect: branch stops, f_v0 is a fitting parameter")
     print("  and T13's evidential weight collapses.")
     print()
+    # CORRECTED 2026-11-05. The first version of this block tested whether each
+    # fitted value fell INSIDE the measured interval [lo, hi] and reported the
+    # two that did as evidence K5's condition was not met. That is invalid:
+    # Part B establishes the measurement as a LOWER BOUND on f_v0, not an
+    # interval containing it, and a lower bound excludes every value BELOW it.
+    # So the two values the old test counted as "inside" are the two the bound
+    # actually excludes. Caught by verify/wp4_critical_threshold.py and argued
+    # in findings/WP-4-void-fraction.md Sec. 10.3. The verdict is unchanged;
+    # the test is now the right one.
     lo = min(MEASURED.values()) / 100.0
     hi = max(MEASURED.values()) / 100.0
-    inside = [f for f in FITTED if lo <= f[0] <= hi]
-    print("  measured interval over every verified variant: %.3f to %.3f" % (lo, hi))
-    print("  fitted values inside it: %d of %d" % (len(inside), len(FITTED)))
-    for v, _, _, src, what in inside:
-        print("    %.3f  %-34s %s" % (v, what, src))
-    check("K5 does not fire: the measurement does not exclude every fit",
-          len(inside) > 0,
-          "%d fitted values fall inside the measured interval, so the "
-          "criterion's condition is not met" % len(inside))
-    check("but the lower bound does exclude the highest fits",
+    print("  the measurement is one-sided: it bounds f_v0 from BELOW only.")
+    print("  So the test is whether the bound sits above every fitted value.")
+    print()
+    print("  %-34s %8s %8s" % ("bound", "value", "fits below it"))
+    for label, bound in (("edge-included (strongest)", hi),
+                         ("edge-excluded (weakest)", lo)):
+        below = [f[0] for f in FITTED if f[0] < bound]
+        print("  %-34s %8.4f %8d   %s" % (
+            label, bound, len(below),
+            ", ".join("%.3f" % b for b in below) if below else "none"))
+    excluded_strong = [f for f in FITTED if f[0] < hi]
+    excluded_weak = [f for f in FITTED if f[0] < lo]
+    consistent = [f for f in FITTED if f[0] >= hi]
+    print()
+    check("K5 does not fire: the bound does not sit above every fitted value",
+          len(consistent) > 0,
+          "%d of %d fitted values sit at or above the strongest bound %.4f, "
+          "so they are consistent with it and K5's 'every' is not met"
+          % (len(consistent), len(FITTED), hi))
+    check("the strongest bound does exclude two fits, which the old test denied",
+          len(excluded_strong) == 2,
+          "%s lie below the edge-included bound %.4f and are excluded by it; "
+          "the superseded interval test called these two 'inside the measured "
+          "interval', which is the wrong test for a one-sided quantity"
+          % (" and ".join("%.3f" % f[0] for f in excluded_strong), hi))
+    check("and the weakest bound excludes nothing, so the exclusion is conditional",
+          len(excluded_weak) == 0,
+          "no fitted value lies below the edge-excluded bound %.4f, so whether "
+          "any fit is excluded is set entirely by the %.1f-point edge "
+          "systematic" % (lo, 100 * (hi - lo)))
+    check("a lower bound cannot touch the high fits in principle",
           all(f[0] > hi for f in FITTED if f[0] >= 0.72),
-          "every fit at or above 0.72 sits above the measured upper end of "
-          "%.3f, and the VoidFinder fraction is a LOWER bound, so those are "
-          "not excluded by it either" % hi)
+          "every fit at or above 0.72 clears the strongest bound, so the bulk "
+          "of the fitted spread is untested by this measurement by "
+          "construction, not merely in practice")
 
     # The second limb of the plan's "counts against" clause.
     print()
@@ -331,13 +361,16 @@ def main():
 
  2. That number is a LOWER BOUND on the quantity f_v0 names, not an
     estimate of it. VoidFinder voids are regions empty of wall galaxies;
-    timescape's void phase is all volume below the critical density, which
-    is a strictly larger set.
+    timescape's void phase is all volume below the true critical density,
+    which is a strictly larger set. That threshold is kinematic and has no
+    published numerical value - see verify/wp4_critical_threshold.py and
+    findings/WP-4-void-fraction.md Sec. 10.1.
 
- 3. K5 DOES NOT FIRE, and it cannot fire on this dataset. Two fitted
-    values lie inside the measured interval; the rest lie above a quantity
-    that is a lower bound, so they are not excluded either. The branch
-    does not stop.
+ 3. K5 DOES NOT FIRE. Eight of the ten fitted values sit at or above the
+    strongest bound, so K5's 'every fitted value' is not met and the branch
+    does not stop. The bound DOES exclude 0.550 and 0.557 under the
+    edge-included measurement and nothing under the edge-excluded one, so
+    that exclusion is conditional on the dominant systematic.
 
  4. The dominant systematic is the survey-edge treatment at 17.5 points,
     not the FLRW conditioning, which is about 2 points. That reorders
@@ -352,9 +385,14 @@ def main():
     value moves by fifteen sigma with the fitting prescription is a fitting
     parameter.
 
- 6. So objection O4 hardens, but not through K5. The void fraction is not
-    excluded by measurement; it is unconstrained BY measurement, and the
-    model's own fits do not agree with each other on it.
+ 6. So objection O4 hardens, but not through K5. Measurement constrains
+    f_v0 only from below, weakly, and conditionally on the edge treatment;
+    the model's own fits do not agree with each other on it.
+
+ 7. And the two prescriptions the bound excludes are the same two whose
+    dressed H_0 falls below timescape's own admissible floor of 57. Two
+    independent routes reject the same two of [NW15]'s three. See
+    findings/WP-4-void-fraction.md Sec. 10.4.
 """)
 
     width = max(len(c[1]) for c in CHECKS)

@@ -16,3 +16,8 @@ data/raw/
 # OS
 .DS_Store
 Thumbs.db
+
+# Stray sibling checkouts left in this working tree by other sessions.
+# See OPEN-QUESTIONS.md Q-3 on checkout isolation. Not deleted here: they
+# belong to those sessions, only untracked so git add -A cannot sweep them in.
+Timescape-Experiment-*/

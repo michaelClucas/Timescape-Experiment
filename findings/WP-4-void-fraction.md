@@ -2,37 +2,46 @@
 
 **Status:** complete for what this dataset can settle. One part deliberately
 not done and named in §7.
-**Read §11 and §12 before §3, and §10 before §4 and §6.** A third session of
-2026-11-05 checked §3's attribution of the 1.5-point gap to the mask, which had
-never been checked, and §11 confirms it and turns it into a ±1.5-point
-systematic that §3 and §5 do not carry. **§12 then found a sourced defect in
+**§6 was corrected on 2026-11-05 and §10 is why.** A later session settled the
+threshold question §4 has to argue around (§10.1-10.2) and found that §6
+applied an interval test to a one-sided bound (§10.3). §6 now carries the
+corrected test and §6.0 records what it got wrong. §4's `[INFERENCE]` premise
+is no longer unverified; §10.2 supports it twice.
+
+**Read §11 and §12 before §3.** A third session of 2026-11-05, running in
+parallel with the one that corrected §6, checked §3's attribution of the
+1.5-point pipeline-vs-published gap to the survey mask, which had never been
+checked. §11 confirms it and turns it into a ±1.5-point systematic that §3 and
+§5 do not carry. **§12 then found a sourced defect in
 `verify/wp4_void_fraction.py`'s own mask indexing**, worth −0.710 points: every
 measured fraction in §3, §5, §6, §10 and §11 is high by that amount, and §12.3
 carries the corrected values. The script was deliberately left unaltered; see
-§12.6 and `OPEN-QUESTIONS.md` Q-4.
-A later session of 2026-11-05 settled the
-threshold question §4 has to argue around, and **corrected §6**: the measured
-fraction is a lower bound, so it excludes fitted values *below* it, which §6
-does not test. §6's conclusion (K5 does not fire) survives; its reasoning does
-not.
+§12.6 and `OPEN-QUESTIONS.md` Q-4. **The corrected bound does not change which
+fitted values §6 and §10.3 exclude**, which §12.4 checks.
 **Provisional on WP-0.** Run 02 has not run.
 **Evidence:** `verify/wp4_inspect_inputs.py`, `verify/wp4_void_fraction.py`
-(14/14), `verify/wp4_fv0_comparison.py` (11/11),
+(14/14), `verify/wp4_fv0_comparison.py` (13/13, two checks added by the
+2026-11-05 correction to §6; this line still read 11/11 after that change),
 `verify/wp4_critical_threshold.py` (14/14, for §10),
 `verify/wp4_mask_resolution.py` (16/16, for §11),
 `verify/wp4_vast_mask_convention.py` (10/10, for §12).
 **Dataset:** VAST SDSS DR7 void catalogues v1.3.1,
 `doi:10.5281/zenodo.11043278`, provenance in `data/001-sdss-dr7-voids/`.
-**Kill criterion tested:** K5. **It does not fire, and it cannot fire on this
-dataset.** §6.
+**Kill criterion tested:** K5. **It does not fire.** §6.
 
-**The short version.** The measured void fraction does not exclude the fitted
-`f_v0`, so K5 does not fire. But WP-4's "counts against" clause has a second
-limb, that the fitted spread is irreducible, and that limb holds decisively.
-`f_v0` is not excluded by measurement; it is **unconstrained by measurement**,
-and the model's own fits disagree with each other about it at nine times the
-scatter their error bars allow. Objection O4 hardens, through the second limb
-rather than the first.
+**The short version.** The measurement bounds `f_v0` from below only. The
+strongest bound, 0.6228, excludes two of the ten fitted values and leaves
+eight consistent with it, so K5's "every fitted value" is not met and the
+branch does not stop. That exclusion is conditional on the 17.5-point edge
+systematic: under the other edge treatment the bound excludes nothing.
+
+The more durable result is WP-4's second "counts against" limb, that the fitted
+spread is irreducible. It holds decisively: arXiv:1410.3470 fits one Planck
+dataset three ways and gets 0.627, 0.550 and 0.557 with ±0.016 errors,
+`chi2/dof = 9.14`. And the two prescriptions the void bound excludes are the
+same two whose dressed `H_0` falls below timescape's own admissible floor
+(§10.4) — two independent routes rejecting the same two of three. Objection O4
+hardens, through the second limb rather than through K5.
 
 ---
 
@@ -159,28 +168,81 @@ and the effect is small *for this dataset*, because the survey is shallow and
 `f_v` is a ratio. That is a correction to the error budget, not to the
 reasoning: on a deep survey the term would not be small.
 
-## 6. Does K5 fire? No, and it cannot
+## 6. Does K5 fire? No. (Corrected 2026-11-05; see §6.0)
+
+### 6.0 What this section got wrong, and who caught it
+
+**The first version of this section applied an interval test to a one-sided
+quantity, which is invalid.** It said: the measured interval is 0.448 to 0.626,
+two fitted values (0.550 and 0.557) "lie inside it", so K5's condition is not
+met.
+
+But §4 establishes that the measurement is a **lower bound** on `f_v0`, not an
+interval containing it. If 0.6228 is a lower bound, then `f_v0 = 0.550` and
+`0.557` lie **below a lower bound** and are **excluded by it**. They are not
+"inside the measured interval" in any sense that bears on K5. The two values
+cited as sparing K5 are the two the bound actually excludes.
+
+Caught by the parallel session of 2026-11-05, which argued it in §10.3 and
+pinned it as a check in `verify/wp4_critical_threshold.py` so it cannot
+silently vanish. **§10.3 is the authority on why the old test was wrong**; this
+section is the corrected test. The verdict is unchanged; the argument for it
+was broken and is now sound.
+
+### 6.1 The corrected test
 
 K5: "WP-4 finds the measured void fraction excludes **every** fitted `f_v0`."
 
-The measured interval across every verified variant is 0.448 to 0.626. Two
-fitted values lie inside it: 0.550 and 0.557, the two CMB matching
-prescriptions of arXiv:1410.3470 Table 2. So the condition "excludes every
-fitted value" is not met and **K5 does not fire**.
+The measurement bounds `f_v0` from below only, so the test is: does the bound
+sit above every fitted value?
 
-It also could not have fired, for three independent reasons:
+Both cosmologies reported apart, per cut 3, never averaged.
 
-1. The measured quantity is a **lower bound** on `f_v0`, not an estimate (§4).
-   A lower bound of 0.626 does not exclude a fitted 0.791; it is consistent
-   with it.
-2. The dominant systematic, the edge treatment at 17.5 points, is comparable
-   to the entire fitted spread of 24 points. A measurement whose own
-   systematic is most of the range in dispute cannot exclude anything in it.
-3. K5's wording relies on an algorithm spread that this dataset cannot
-   independently establish (§3).
+| Bound | Value | Fitted values below it | K5 condition |
+|---|---|---|---|
+| edge-included, WMAP5 (strongest) | 0.6263 | 0.550, 0.557 | not met |
+| edge-included, Planck2018 | 0.6228 | 0.550, 0.557 | not met |
+| edge-excluded, Planck2018 | 0.4482 | none | not met |
+| edge-excluded, WMAP5 (weakest) | 0.4486 | none | not met |
 
-**The branch does not stop.** `T13`'s evidential weight does not collapse by
-this route.
+The two cosmologies agree on which fits are excluded, so the choice between
+them does not matter here; the edge treatment does.
+
+**Eight of the ten fitted values sit at or above the strongest measured lower
+bound**, so they are consistent with it and "every fitted value" is not met.
+**K5 does not fire. The branch does not stop** and `T13`'s evidential weight
+does not collapse by this route.
+
+### 6.2 The exclusion that is real, and what it is conditional on
+
+The bound does exclude two fits, which the first version of this section denied.
+Three qualifications, all of which matter more than the exclusion:
+
+1. **It is entirely conditional on the dominant systematic.** Edge-included,
+   the bound excludes 0.550 and 0.557. Edge-excluded, it excludes nothing. The
+   two variants disagree about whether any fit is excluded, and the gap between
+   them is the 17.5-point edge treatment §5 names as dominant.
+2. **The third low fit is not distinguished from the bound.** `0.627`, the
+   `A(H̄_dec)` prescription, clears the bound by `0.0042`. That is smaller than
+   the `0.0148` by which this pipeline disagrees with arXiv:2202.01226's own
+   published fraction. Not excluded, and not resolved either.
+3. **A lower bound cannot touch the high fits at all.** 0.72, 0.76, 0.791 and
+   0.95 are consistent with any bound at or below them, so the bulk of the
+   fitted spread is untested by this measurement in principle, not just in
+   practice.
+
+K5's wording also relies on an algorithm spread this dataset cannot
+independently establish (§3), which is a fourth reason the criterion could not
+have been decided here either way.
+
+### 6.3 Two routes converge on the same two prescriptions
+
+The two fits the edge-included bound excludes are the same two whose dressed
+`H_0` falls below timescape's own admissible floor of 57. **§10.4 has the
+table and the argument.** That convergence is the strongest thing in this
+package, and it is a sharper statement than §8's: the model's three CMB
+prescriptions are not merely mutually inconsistent with each other, two of the
+three are independently disfavoured.
 
 ## 7. What was not done, and the decision behind it
 
