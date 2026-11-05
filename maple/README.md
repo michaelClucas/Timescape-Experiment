@@ -17,6 +17,39 @@ its minimum duration in days. Where a package can be restructured to send
 three independent jobs at once instead of three sequential ones, it is, and
 the plan says so.
 
+## The queue is GitHub issues
+
+Jobs are dispatched as issues labelled `maple`. The repository is the
+record; issues are only dispatch.
+
+| Label | Meaning |
+| --- | --- |
+| `maple:queued` | ready to run, the runner picks these up |
+| `maple:running` | claimed by the runner |
+| `maple:blocked` | specified but not runnable yet, and the issue says why |
+| `maple:done` | result committed under `maple/results/` |
+
+File one with the **Maple job** issue template, which refuses a job whose
+`JOB.md` lacks an expected output form.
+
+**The spec never goes in the issue body.** An issue body can be edited
+after the fact and carries no sha, so it cannot be the record of what was
+run. The issue names a job directory and a commit sha; the runner checks
+out that sha. Where the issue body and `JOB.md` disagree, `JOB.md` at that
+sha wins.
+
+Queue order comes from the issue's **Blocks** field: a job blocking a work
+package outranks one blocking nothing, then lowest job number first.
+
+An issue is closed by the commit that adds its results directory. An issue
+closed with nothing under `maple/results/` looks exactly like work that was
+done, and is not.
+
+The runner is an agent on the machine that has Maple. Its standing brief is
+`RUNNER.md` in this directory, written to be handed over whole. The short
+version of it: run the job exactly as written, bring back exactly what came
+out, and never fix a job that looks broken.
+
 ## Layout
 
 ```

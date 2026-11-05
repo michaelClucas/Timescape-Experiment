@@ -1,0 +1,100 @@
+name: Maple job
+description: Queue a symbolic calculation for the machine that has Maple
+title: "Maple NNN-<slug>: <the quantity computed>"
+labels: ["maple", "maple:queued"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The spec lives in `maple/jobs/NNN-<slug>/JOB.md`, in git, at a
+        commit. **Do not put the spec in this issue.** An issue body can be
+        edited after the fact and has no sha, so it cannot be the record of
+        what was run. This issue is dispatch; the repository is the record.
+
+        A job is not ready to queue unless its `JOB.md` states the exact
+        expected output form and what a surprising answer would mean. With a
+        day's latency you cannot iterate your way to recognising a correct
+        answer.
+
+  - type: input
+    id: job_dir
+    attributes:
+      label: Job directory
+      description: Path in this repository.
+      placeholder: maple/jobs/001-two-phase-sensitivity/
+    validations:
+      required: true
+
+  - type: input
+    id: sha
+    attributes:
+      label: Commit sha
+      description: >
+        The commit the runner checks out to read the job. Full sha, not a
+        branch name, so the job cannot change under the runner.
+    validations:
+      required: true
+
+  - type: input
+    id: blocks
+    attributes:
+      label: Blocks
+      description: >
+        Which work package or step waits on this. Used for queue order: a
+        job blocking a package outranks one blocking nothing. Write "nothing"
+        if it is independent.
+      placeholder: WP-3, and step T12
+    validations:
+      required: true
+
+  - type: textarea
+    id: quantity
+    attributes:
+      label: What is computed
+      description: >
+        One or two sentences, as a quantity rather than a topic. This is for
+        a human scanning the queue; the authoritative statement is in JOB.md.
+    validations:
+      required: true
+
+  - type: input
+    id: round_trips
+    attributes:
+      label: Round trips this job is part of
+      description: >
+        1 if it stands alone. If it is step 2 of 3 in a sequence, say so and
+        name the others, since each is a day.
+      placeholder: "1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: crosscheck
+    attributes:
+      label: Independent cross-check
+      description: >
+        Has the expected answer been checked by another route before
+        queueing? A cross-checked job wastes a day on a wrong transcription
+        far less often.
+      options:
+        - "Yes, committed beside job.mpl"
+        - "Yes, described in JOB.md"
+        - "No, and JOB.md says why none is possible"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: ready
+    attributes:
+      label: Ready to queue
+      options:
+        - label: "`JOB.md` states the exact expected output form"
+          required: true
+        - label: "`JOB.md` states what a surprising or wrong answer would mean"
+          required: true
+        - label: "Every equation in `job.mpl` carries its source identifier and equation number in a comment"
+          required: true
+        - label: "`job.mpl` is self-contained: no network, no interactive input, no file writes, reads nothing outside `inputs/`"
+          required: true
+        - label: "The runner brief in `maple/RUNNER.md` is sufficient to run this without asking anyone"
+          required: true
