@@ -2,9 +2,15 @@
 
 **Status:** complete for what this dataset can settle. One part deliberately
 not done and named in §7.
+**Read §10 before §4 and §6.** A later session of 2026-11-05 settled the
+threshold question §4 has to argue around, and **corrected §6**: the measured
+fraction is a lower bound, so it excludes fitted values *below* it, which §6
+does not test. §6's conclusion (K5 does not fire) survives; its reasoning does
+not.
 **Provisional on WP-0.** Run 02 has not run.
 **Evidence:** `verify/wp4_inspect_inputs.py`, `verify/wp4_void_fraction.py`
-(14/14), `verify/wp4_fv0_comparison.py` (11/11).
+(14/14), `verify/wp4_fv0_comparison.py` (11/11),
+`verify/wp4_critical_threshold.py` (14/14, for §10).
 **Dataset:** VAST SDSS DR7 void catalogues v1.3.1,
 `doi:10.5281/zenodo.11043278`, provenance in `data/001-sdss-dr7-voids/`.
 **Kill criterion tested:** K5. **It does not fire, and it cannot fire on this
@@ -258,3 +264,215 @@ all, and the model's own determinations of it are mutually inconsistent.
   not negligible, with the void finders re-run under both distance-redshift
   relations. That is a work package, not a cycle, and it is not in the current
   plan.
+
+---
+
+# Addendum, 2026-11-05 (second session): the threshold, and a correction to §6
+
+**Added by a later session of the same date, on branch
+`research/auto-2026-11-05-day2`.** Appended rather than merged into the
+sections above, so that what was concluded when stays readable. §4 and §6 are
+unchanged in place; **§6's test is wrong and §10.3 below says how.**
+
+**Evidence:** `verify/wp4_critical_threshold.py` (14/14).
+**Still provisional on WP-0.**
+
+## 10.1 There is no numerical threshold, and there cannot be one
+
+`logs/2026-11-05-STATUS.md` §7 named the one question that would have changed
+yesterday most: *is `f_v0` the volume fraction below the critical density or
+below some other threshold, and is the threshold published as a number or an
+equation?* It has an answer, and the answer is negative for a reason stronger
+than absence.
+
+`[SOURCED]` arXiv:0712.3984 §5, "Finite infinity and the true critical
+density". Its Eq. (7) is a **denial**:
+
+> `rho_cr != 3 H_av^2 / (8 pi G)`
+
+"In the standard FLRW cosmology the critical density is proportional to the
+square of the Hubble parameter. However, in an inhomogeneous cosmology this is
+no longer true, [Eq. 7], as the average Hubble parameter, `H_av`, is related to
+the spatial scale of averaging and the clock chosen."
+
+The relation sign took two routes: `pdftotext` dropped the glyph and rendered
+it `=`, the `ar5iv` HTML gives `!=`. It is settled from inside the PDF
+independently of both, by the same section's later "as long as we evolve the
+average geometry purely by the Friedmann equation, **with equality in (7)**",
+which only parses if (7) as printed is not an equality.
+
+Finite infinity is then defined **kinematically**, `[SOURCED]`, same section:
+"finite infinity is defined in terms of a scale over which the average
+expansion, including virialized, collapsing and marginally expanding regions is
+zero, `[theta]_fi = 0`, while being positive outside. Then `rho_cr = rho_fi`."
+
+So the wall/void demarcation is a condition on the **average expansion** -
+local, scale-dependent and clock-dependent - and the model explicitly rejects
+the one formula that would turn it into a density. There is no threshold number
+to find. A later session should not go looking for one.
+
+This does not weaken §4. It explains why §4 had to argue about the *direction*
+of the mismatch rather than its size: the size has no definition in the model.
+
+## 10.2 The premise §4 could not check
+
+§4's `[INFERENCE]` premise was: a region containing no wall galaxies is below
+the critical density. It is now supported twice, by routes that fail
+independently.
+
+**Route 1, the model's own observational identification.** `[SOURCED]`
+arXiv:0909.0749 §II: bound structures formed from "over-critical
+perturbations" are enclosed "within regions which are spatially flat on
+average, and marginally expanding at the boundary. These boundaries are called
+finite infinity regions"; "The walls constitute the union of such finite
+infinity regions"; and "Observationally they would correspond to all extended
+structures that contain galaxy clusters, namely **sheets, filaments and
+knots**."
+
+That is the structure VoidFinder's wall galaxies trace, and it is timescape's
+own statement of how its wall phase is to be recognised in a galaxy survey. The
+premise §4 had to infer is in substance asserted by the model's author as the
+intended correspondence. What remains `[INFERENCE]` is narrower and more
+tractable: whether VoidFinder's third-nearest-neighbour cut implements that
+correspondence well. That is a question about an algorithm, not about physics.
+
+**Route 2, the failure condition quantified.** Under the FLRW-style reading
+that §10.1's Eq. (7) denies - the only reading in which the threshold is a
+number at all, and therefore the only one in which the premise can fail
+numerically - a matter-only region reaches critical density at
+`1 + delta_m = 1 / Omega_M`:
+
+| reading | `Omega_M` | threshold `1 + delta_m` |
+|---|---|---|
+| Planck2018, flat LCDM | 0.3150 | 3.175 |
+| WMAP5, flat LCDM | 0.2580 | 3.876 |
+| timescape dressed, `f_v0 = 0.550` | 0.5737 | **1.743** |
+| timescape dressed, `f_v0 = 0.695` | 0.4110 | 2.433 |
+| timescape dressed, `f_v0 = 0.950` | 0.0738 | 13.559 |
+
+The dressed relation is `Omega_M0 = (1/2)(1 - f_v0)(2 + f_v0)`, `[SOURCED]`
+arXiv:0909.0749 Fig. 3 caption, which prints it with the value 0.33 at
+`f_v0 = 0.762`. The script independently checks that composing that paper's
+Eq. (27), `Omega_M = gamma_w^3 Omega_M_bar`, with the tracker relations already
+verified in `verify/tracker_relations.py` reproduces the closed form to
+`2.2e-16` across `f` in `(0.01, 0.99)`.
+
+So in the most permissive case available, a VoidFinder void must reach **1.74
+times the mean matter density** to be above critical. That is a wall-level
+overdensity inside a region selected for containing no wall galaxies, and it
+needs galaxies to anti-correlate with matter on 10-30 h^-1 Mpc scales.
+`[INFERENCE]`; premise named: linear bias `b > 0` on those scales.
+
+**The radial density profiles were not obtained, and cannot be.** `[SOURCED]`
+arXiv:2202.01226 §4.4 defines the stacked profile in Eq. (5) as
+`delta(r) = n(r)/n_bar - 1`, a **galaxy number** density contrast, and
+publishes it only as Figures 5 and 6. There is no table of profile values in
+the paper, and both figures are raster JPEGs at 148 ppi, so there are no vector
+coordinates to recover. Reading values off them by eye would produce numbers
+indistinguishable in form from data, so it was not done. `[LEAD]`: whether the
+VAST project publishes the profile data separately was not checked.
+
+## 10.3 §6 applies the bound in one direction only, and that is wrong
+
+**This is a correction to §6 of this finding, not an extension of it.**
+
+§6 and `verify/wp4_fv0_comparison.py` test whether each fitted `f_v0` falls
+inside the measured **interval** `[0.448, 0.626]`, find that `0.550` and
+`0.557` do, and conclude `f_v0` is "unconstrained by measurement". But §4
+establishes the measured fraction as a **lower bound** on `f_v0`, and a lower
+bound excludes every value **below** it. Interval membership is the wrong test:
+the interval's low end is the edge-*excluded* variant, which is a weaker bound
+on the same quantity, not a second measurement of it. Taking the minimum over
+variants is the right conservative choice for the bound's validity, and it
+licenses nothing whatever about fitted values below the maximum.
+
+Applying the bound in the direction it actually cuts:
+
+| bound | excludes |
+|---|---|
+| 0.6228 (Planck2018, edge included) | `f_v0 = 0.550`, `0.557` |
+| 0.6263 (WMAP5, edge included) | `f_v0 = 0.550`, `0.557` |
+| 0.4482 (Planck2018, edge excluded) | nothing |
+| 0.4486 (WMAP5, edge excluded) | nothing |
+
+So the exclusion is **real and entirely conditional on the edge treatment**,
+which §5 had already identified as the dominant systematic at 17.5 points. The
+edge-included variant is the one matching the catalogue paper's own published
+60.8%, per §3. Both halves are asserted in
+`verify/wp4_critical_threshold.py` so neither can quietly vanish.
+
+`f_v0 = 0.627`, the third low fit, clears the edge-included bound by `+0.0042`
+- smaller than the `0.0148` by which this pipeline disagrees with the published
+fraction, and far inside the 0.175 edge systematic. It is not excluded, and it
+is not distinguished from the bound either.
+
+**K5 still does not fire**, and §6's conclusion is unchanged: eight of the ten
+fitted values sit at or above the strongest available bound, so "excludes every
+fitted `f_v0`" is not met. What changes is the reason. §6 says the measurement
+constrains nothing; it in fact excludes the bottom of the fitted range,
+conditional on the systematic that dominates it. §8's second limb is unaffected
+and still carries the package.
+
+## 10.4 Where two routes converge
+
+The two prescriptions the bound excludes, `0.550` and `0.557`, are the same two
+of arXiv:1410.3470 Table 2's three whose dressed `H_0` - 56.148 and 56.774 -
+falls below timescape's own admissible floor of 57 from arXiv:1009.5855 §2, as
+§9 records.
+
+| prescription | `f_v0` | dressed `H_0` | below the bound? | below the `H_0` floor? |
+|---|---|---|---|---|
+| `A(H_bar_dec)` | 0.627 | 60.984 | no (by 0.004) | no |
+| `W(k = 0)` | 0.550 | 56.148 | **yes** | **yes** |
+| `W(k != 0)` | 0.557 | 56.774 | **yes** | **yes** |
+
+Two independent routes, one from measured void volumes and one from the model's
+own admissible `H_0` band, reject the same two of three CMB matching
+prescriptions. `[INFERENCE]`; the premises are §4's lower-bound reading and the
+edge-included variant. It does not establish that `A(H_bar_dec)` is right - it
+survives the bound by less than this pipeline's own error - but it does mean
+only one of arXiv:1410.3470's three prescriptions is simultaneously consistent
+with the measured void volume and with timescape's own `H_0` floor.
+
+## 10.5 What timescape says fills the gap, and what it would take to measure it
+
+`[SOURCED]` arXiv:0909.0749 §II: "Voids of a characteristic diameter 30h^-1
+Mpc are observed to fill 40-50% of the universe at the present epoch", citing
+Hoyle & Vogeley, ApJ 566, 641 - **not fetched**, so 40-50% is `[SOURCED]` as a
+claim about what arXiv:0909.0749 says and `[LEAD]` as a claim about Hoyle &
+Vogeley. The passage continues: "In addition there are numerous minivoids ...
+Together voids of all sizes appear to dominate the volume of the present epoch
+universe, the exact volume fraction depending on the empirical definition of a
+void in terms of some particular negative density contrast."
+
+Three consequences.
+
+1. **That 40-50% overlaps this pipeline's measured 44.8-62.6%.** Timescape is
+   not working from a different measurement of the large-void fraction than
+   §3's.
+2. **Timescape's own reconciliation of `f_v0 ~ 0.7` with a catalogued 40-50%
+   runs through minivoids** - and arXiv:2202.01226's 10 h^-1 Mpc minimum radius
+   excludes that population by construction. So §4's lower-bound reading is
+   confirmed a third time, by a route needing no bias assumption and no density
+   threshold: the catalogue cannot see a population the model requires. This
+   also retires the cut-7 question for this comparison. No radius cut was
+   applied, `cuts.md` is unmodified, and a radius cut would only push the
+   measured fraction further below a floor.
+3. **The gap is quantifiable.** Against the edge-included 0.6228:
+
+   | fitted `f_v0` | minivoid volume fraction required |
+   |---|---|
+   | 0.627 | +0.004 |
+   | 0.695 | **+0.072** |
+   | 0.760 | +0.137 |
+   | 0.791 | **+0.168** |
+
+   The Planck acoustic-scale fit needs 7.2 points of the present horizon volume
+   in voids this catalogue cannot see. The DES-SN5YR fit needs 16.8, which is
+   27% of the measured large-void volume over again.
+
+**So the measurement that would constrain `f_v0` is the minivoid volume
+fraction, and there is no number for it anywhere in this dataset.** That is a
+sharper statement of what §9's "a new dataset would be needed" was reaching
+for: not merely a deeper survey, but a survey resolving voids below 10 h^-1 Mpc,
+with its own volume fraction computed the same way. It is a work package.
