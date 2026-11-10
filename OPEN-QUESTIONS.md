@@ -64,7 +64,19 @@ can add it to the prompt's scope table at any time and nothing done today
 needs redoing. I did not work WP-8 and did not promote it to fill the day,
 which is what the prompt's scoping section is for. Recommendation is option 3.
 
-**Answer:** (overseer, pending)
+**Answer:** (overseer, 2026-11-10; decided by relay generation 1 on the overseer's explicit instruction to answer Q-1 to Q-3) **Option 3.** WP-8 is promoted into the
+standing loop's scope as package 5, behind a pre-registration guard. Before
+any measured data is touched, the predicted statistic is specified in
+`findings/WP-8-prediction-spec.md` and committed on its own: what quantity is
+computed from the model, at which scales, with which weighting, and what
+measured outcome would count against the model. Measured data may be read
+only in a later commit. `prompts/standing-loop.md` previously said WP-8
+"depends on WP-7's machinery", while `docs/RESEARCH-PLAN.md` says it depends
+on nothing. The guard settles that conflict without assuming either side. If
+the predicted statistic cannot be specified from the published model without
+new perturbation theory, then the WP-7 dependency is real: WP-8 stops,
+blocked, and is not approximated. Scope table updated in
+`prompts/standing-loop.md`.
 
 ---
 
@@ -116,7 +128,10 @@ Recommendation is option 1 unless a deep-survey void dataset enters the plan,
 in which case option 2 should be folded into that work rather than done on
 SDSS DR7, where the edge systematic dominates anyway.
 
-**Answer:** (overseer, pending)
+**Answer:** (overseer, 2026-11-10; decided by relay generation 1 on the overseer's explicit instruction to answer Q-1 to Q-3) **Option 1.** Leave it, as recommended. WP-4's
+answer stands with the LCDM conditioning given as an estimate, labelled as
+such. If a deep-survey void dataset enters the plan, fold option 2 into that
+work instead of doing it on SDSS DR7.
 
 ---
 
@@ -173,4 +188,14 @@ writer in this checkout is a bigger problem than anything in the research plan.
 This should be read alongside the Maple access problem: that one stalls work,
 this one corrupts it.
 
-**Answer:** (overseer, pending)
+**Answer:** (overseer, 2026-11-10; decided by relay generation 1 on the overseer's explicit instruction to answer Q-1 to Q-3) **Options 2 and 3.** Option 4 was answered by
+the third session (PR #14, commit `db47115`): the second writer was a
+concurrent Claude session in the main checkout.
+Option 3 applies to every session: assert the parent before each commit (see
+`prompts/standing-loop.md` Step 5).
+Option 2 applies to any session that could run at the same time as another:
+use its own `git worktree`, use the main checkout's `.venv` by absolute path,
+and never use `git stash`, because the stash stack is shared.
+Relay generations run strictly one at a time, so `prompts/relay.md`'s
+`use_worktree: false` stands for them, and they still make option 3's
+assertion. Both prompt changes were made in `prompts/standing-loop.md`.
