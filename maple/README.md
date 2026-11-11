@@ -1,5 +1,15 @@
 # Maple as a daily batch service
 
+> **2026-11-10: the engine is now SymPy, run locally** (overseer decision,
+> `prompts/standing-loop.md` constraint 2). No Maple runner ever existed and
+> no free Maple route does. Jobs 001 and 002 remain queued as written and
+> are **not** run. `verify/maple_job_design_checks.py` shows both are
+> defective: 001 cannot run, and its intended form is blind to `T6` by
+> construction; 002 measures a normalisation artefact with the dressed `H_0`
+> in place of the bare one. New jobs from 003 on are `job.py`, with results
+> committed here by the session that ran them. The rest of this file
+> describes the original Maple arrangement.
+
 Maple runs on a different machine, under a different account, with roughly
 **one turnaround per day**. It is not a tool you call; it is a queue you
 post to and read from tomorrow.

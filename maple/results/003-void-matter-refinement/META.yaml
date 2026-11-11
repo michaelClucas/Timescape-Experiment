@@ -1,0 +1,14 @@
+job: 003-void-matter-refinement
+engine: sympy
+engine_version: "SymPy 1.14.0; SciPy 1.18.1; NumPy 2.5.4"
+python: ".venv/Scripts/python (Windows checkout)"
+job_py_blob: ee289421c3b3fd828751b69fead6e6a2cb47cb06
+job_md_commit: 2ed08ff
+machine: overseer's Windows workstation, via WSL
+operator: research session (relay generation 1), acting as its own runner by overseer decision 2026-11-10
+date_utc: 2026-11-11T00:21:14Z
+runtime_seconds: 33
+exit_status: ok
+expected_form_matched: true
+setup_selfcheck: failed
+independent_check: "verify/void_matter_sensitivity.py, 13/13"

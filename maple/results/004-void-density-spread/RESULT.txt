@@ -1,0 +1,7 @@
+SYMBOLIC_Q_REDUCES_TO_JOB003 = true
+SPREAD s=0.00 q_min=-0.034244 fv_signchange=0.680245 q_at_fv0=-0.006557 delta_1=-0.900000 delta_2=-0.900000
+SPREAD s=0.25 q_min=-0.034279 fv_signchange=0.679732 q_at_fv0=-0.006767 delta_1=-0.870280 delta_2=-0.918640
+SPREAD s=0.50 q_min=-0.034409 fv_signchange=0.678017 q_at_fv0=-0.007485 delta_1=-0.814907 delta_2=-0.931494
+SPREAD s=0.90 q_min=-0.035403 fv_signchange=0.668369 q_at_fv0=-0.011454 delta_1=-0.363173 delta_2=-0.945740
+MAX_ABS_DQMIN_OVER_S = 0.001159
+SETUP_SELFCHECK = ok

@@ -64,7 +64,19 @@ can add it to the prompt's scope table at any time and nothing done today
 needs redoing. I did not work WP-8 and did not promote it to fill the day,
 which is what the prompt's scoping section is for. Recommendation is option 3.
 
-**Answer:** (overseer, pending)
+**Answer:** (overseer, 2026-11-10; decided by relay generation 1 on the overseer's explicit instruction to answer Q-1 to Q-3) **Option 3.** WP-8 is promoted into the
+standing loop's scope as package 5, behind a pre-registration guard. Before
+any measured data is touched, the predicted statistic is specified in
+`findings/WP-8-prediction-spec.md` and committed on its own: what quantity is
+computed from the model, at which scales, with which weighting, and what
+measured outcome would count against the model. Measured data may be read
+only in a later commit. `prompts/standing-loop.md` previously said WP-8
+"depends on WP-7's machinery", while `docs/RESEARCH-PLAN.md` says it depends
+on nothing. The guard settles that conflict without assuming either side. If
+the predicted statistic cannot be specified from the published model without
+new perturbation theory, then the WP-7 dependency is real: WP-8 stops,
+blocked, and is not approximated. Scope table updated in
+`prompts/standing-loop.md`.
 
 ---
 
@@ -116,7 +128,10 @@ Recommendation is option 1 unless a deep-survey void dataset enters the plan,
 in which case option 2 should be folded into that work rather than done on
 SDSS DR7, where the edge systematic dominates anyway.
 
-**Answer:** (overseer, pending)
+**Answer:** (overseer, 2026-11-10; decided by relay generation 1 on the overseer's explicit instruction to answer Q-1 to Q-3) **Option 1.** Leave it, as recommended. WP-4's
+answer stands with the LCDM conditioning given as an estimate, labelled as
+such. If a deep-survey void dataset enters the plan, fold option 2 into that
+work instead of doing it on SDSS DR7.
 
 ---
 
@@ -173,4 +188,88 @@ writer in this checkout is a bigger problem than anything in the research plan.
 This should be read alongside the Maple access problem: that one stalls work,
 this one corrupts it.
 
+**Answer:** (overseer, 2026-11-10; decided by relay generation 1 on the overseer's explicit instruction to answer Q-1 to Q-3) **Options 2 and 3.** Option 4 was answered by
+the third session (PR #14, commit `db47115`): the second writer was a
+concurrent Claude session in the main checkout.
+Option 3 applies to every session: assert the parent before each commit (see
+`prompts/standing-loop.md` Step 5).
+Option 2 applies to any session that could run at the same time as another:
+use its own `git worktree`, use the main checkout's `.venv` by absolute path,
+and never use `git stash`, because the stash stack is shared.
+Relay generations run strictly one at a time, so `prompts/relay.md`'s
+`use_worktree: false` stands for them, and they still make option 3's
+assertion. Both prompt changes were made in `prompts/standing-loop.md`.
+
+---
+
+## Q-5. Is timescape's void phase the VoidFinder voids, or only their empty part?
+
+**Raised:** 2026-11-11, relay generation 1, WP-6
+**Blocks:** how two findings are read:
+- `findings/WP-6-two-phase-sensitivity.md` §4-§5 (how large the void
+  mass fraction `M_v` is taken to be);
+- the direction in which `findings/WP-4-void-fraction.md`'s lower bound
+  binds.
+
+No number changes. What changes is which of the two packages carries the
+exposure.
+
+**The argument.** The tracker requires empty voids
+(`verify/wp5_curvature_requirement.py` I2). Real voids hold matter, and with
+`M_v ≈ 0.07` the deceleration shifts by about twice its quoted error
+(`verify/void_matter_sensitivity.py`). A timescape author can define the
+void phase as only the truly empty regions, with occupied underdense regions
+counted as wall. That makes `M_v ≈ 0` by definition, but the void volume
+fraction observations can be compared with then falls below VoidFinder's
+0.62, and WP-4's lower bound stops binding.
+
+**Options:**
+1. **Void phase = VoidFinder voids**, as WP-4 assumed. Then `M_v` is the
+   measured void share of matter, and WP-6's shifts apply.
+2. **Void phase = the empty part only.** Then WP-6's shifts vanish, and the
+   measured void fraction becomes an overestimate of the void phase rather
+   than a lower bound. WP-4's §6 conclusions would need restating.
+3. **Report both** in each finding, and leave the choice to whatever paper
+   states the model's own operational definition. Run 01 found none
+   (`findings/WP-4-void-fraction.md` §9 quotes Wiltshire on recognising the
+   wall phase in a survey).
+
+**Default taken:** option 1, for consistency with WP-4, with option 2's
+consequence stated in WP-6 §5. Reversible: no script depends on the choice,
+only the prose that reads the scripts. Recommendation is option 3.
+
 **Answer:** (overseer, pending)
+
+---
+
+## Q-6. Should WP-8 acquire a full-sky local void catalogue?
+
+**Raised:** 2026-11-11, relay generation 1, WP-8
+**Blocks:** WP-8 steps 2-3 (`findings/WP-8-prediction-spec.md` §5).
+**The argument.** The measured statistic, `Delta H_s` in arXiv:2510.19945,
+is a CMB-minus-LG frame difference in radial shells out to about 150 Mpc.
+Timescape's prediction for it depends on the full-sky void and wall geometry
+around the Local Group. The repository's only void data, VAST SDSS DR7,
+covers the northern SDSS footprint.
+
+**Options:**
+1. **Leave WP-8 blocked.** It costs nothing, and the `H_0` question stays
+   open.
+2. **Acquire a full-sky local void catalogue**, for example one built on the
+   2MASS Redshift Survey, as dataset 003, and build bridge (a) on it. This
+   is a dataset package, with the same pre-registration as datasets 001 and
+   002.
+3. **Use the published Szekeres model of the local structure**
+   (arXiv:1512.07364) as the geometry. Run 01 notes that it is not timescape,
+   so this would test a different model's geometry with timescape's rates,
+   and the result would need that caveat on every line.
+
+**Default taken:** option 1. It is reversible: nothing has been computed
+that depends on the choice, and no Hubble-flow numbers have been read, so
+any option can still be taken cleanly. Recommendation is option 2.
+
+**Answer:** (overseer, 2026-11-11) **Option 2.** The overseer's instruction
+that day was "You have permission to do everything, just keep this research
+going", which was taken as authorising the recommended option. Dataset 003
+gets the same pre-registration (SOURCE.md and cuts.md before analysis) as
+datasets 001 and 002.

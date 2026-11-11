@@ -31,8 +31,16 @@ These came with the research plan and do not change.
 1. **Do not assume any conclusions.** This is an experiment, not an attempt
    to support timescape or to bury it. A clean negative is a success; so is
    a clean positive. Neither is the goal.
-2. **Symbolic calculation happens in Maple**, on another machine, one round
-   trip per day. See the queue protocol below.
+2. **Symbolic calculation happens in SymPy**, locally, in the repository's
+   `.venv`. Changed 2026-11-10 by the overseer: no Maple licence is
+   available and no free route to one exists. Before that date it read
+   "Symbolic calculation happens in Maple, on another machine, one round trip
+   per day". The queue's discipline survives the change of engine: a job's
+   `JOB.md`, with its expected output form and its surprises, is committed
+   **before** its `job.py` is run; the output is committed verbatim under
+   `maple/results/`; and an independent numeric check that shares no code with
+   SymPy is required. The directory keeps the name `maple/` so that existing
+   references stay resolvable.
 3. **Proofs are verified in Lean**, and only if a proof-shaped claim
    appears. Do not start a Lean project speculatively.
 4. **Data-driven.** Reanalyse the raw public data. A number taken from a
@@ -71,8 +79,8 @@ record. If they disagree, the file wins and you note the disagreement.
 
 ### Step 2. Pick the work
 
-**Your scope is four packages.** The research plan has eleven; the other
-seven are out of scope for this loop and the reasons are below. Work these,
+**Your scope is five packages.** The research plan has eleven; the other
+six are out of scope for this loop and the reasons are below. Work these,
 in this order, taking the first that is unblocked and unfinished:
 
 | | Package | Why it is in scope |
@@ -81,6 +89,7 @@ in this order, taking the first that is unblocked and unfinished:
 | 2 | **WP-6**, two-phase sensitivity | Maple job 001 is already queued. If `q_min` moves by more than half the effect under refinement, K4 fires and every quoted number in the programme is an artefact of `T6`. |
 | 3 | **WP-4**, `f_v0` against measured void fractions | Public void catalogues, bounded computation. A fitted parameter quoted with uncertainties far tighter than its scatter across datasets is a problem whichever way this falls. |
 | 4 | **WP-5**, the curvature requirement | Maple job 002 is already queued. The required void curvature against what observed voids provide. This is the highest-value item in the repository and the cleanest available kill (K3). |
+| 5 | **WP-8**, Hubble-flow variance, **behind a pre-registration guard** | Added 2026-11-10 by the overseer's answer to Q-1 (option 3). WP-1 found the `H_0` question undecided by three routes, all ending at this prediction. **Guard:** first commit `findings/WP-8-prediction-spec.md` specifying the predicted statistic (quantity, scales, weighting, what counts against), touching no measured data; only a later commit may read data. If the statistic cannot be specified from the published model without new perturbation theory, WP-8 is blocked on WP-7 and stops. |
 
 **WP-1 is the comparability check and nothing more.** Read the published
 results, establish whether the comparisons are like-for-like at matched
@@ -103,13 +112,14 @@ Do not work these. If you believe one has become necessary, write it to
 - **WP-3** (the ablation). Depends on WP-2.
 - **WP-7** (compute `Omega_b h^2` and `S_8`). Requires a perturbation theory
   timescape does not have. Building one is not a day's work and not yours.
-- **WP-8** (Hubble-flow variance prediction). Depends on WP-7's machinery.
+- **WP-8** was here until 2026-11-10; Q-1's answer moved it into scope
+  behind a guard. See package 5 above.
 - **WP-9** (light propagation, the conceded step `T12`). This is the open
   problem of the whole Buchert averaging programme, budgeted in the plan at
   two weeks. It will not be solved here. If you produce something that looks
   like a solution to it, you have made an error; find it.
 
-**When all four in-scope packages are finished or blocked, stop.** Do not
+**When all five in-scope packages are finished or blocked, stop.** Do not
 promote an out-of-scope package to fill the day. That instruction is the
 main thing this scoping is for.
 
@@ -173,6 +183,20 @@ WP-5: void curvature requirement, analytic bound before Maple 002
 
 Push every cycle. An unpushed day is a lost day if the session dies.
 
+**Assert the parent, every commit** (Q-3, option 3). Record
+`git rev-parse HEAD` when you create or check out the branch, and again
+after every push. Immediately after each commit, check that
+`git rev-parse HEAD^` equals the recorded sha. If it does not, something
+else moved your branch or your checkout. Stop and do not push. Log it.
+Do not repair it with a force-push, an amend or a rebase.
+
+**Isolation** (Q-3, option 2). If another session could be working in
+this repository at the same time, work in your own `git worktree`. Use
+the main checkout's `.venv` by absolute path, and copy `data/raw/` in and
+verify it against the manifest. Never use `git stash`: the stash stack is
+shared across worktrees. Relay generations run one at a time and are
+exempt from this paragraph, but not from the parent assertion.
+
 ### Step 6. Log
 
 Append to `logs/YYYY-MM-DD.md` — cycle number, package, what you did, what
@@ -187,6 +211,13 @@ Then go to step 1.
 ## Blocks, and the route around each
 
 ### Block: it needs a symbolic computation
+
+**Since 2026-11-10 (constraint 2): write a SymPy job and run it yourself,
+in two commits.** First commit `JOB.md`, which pre-registers the expected
+form and what would be surprising. Then run `job.py`, and commit its verbatim
+output and the independent check together. A job is never edited after its
+`JOB.md` is committed; a corrected job gets a new number. The Maple procedure
+below is kept for the record and for any job that genuinely needs Maple.
 
 File a Maple job. This is the whole reason the queue exists.
 
@@ -286,7 +317,7 @@ Stop and write the day up when any of these holds:
 
 1. **Every in-scope package is finished or blocked** — blocked on a Maple
    round trip, on WP-0, or on a question in `OPEN-QUESTIONS.md` whose
-   reversible default you have already taken as far as it goes. Four
+   reversible default you have already taken as far as it goes. Five
    packages is the whole day's scope and finishing them early is a good
    outcome, not an idle one.
 2. **A programme kill criterion fired** (K1 or K3).

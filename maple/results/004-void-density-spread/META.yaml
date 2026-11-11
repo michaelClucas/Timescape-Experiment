@@ -1,0 +1,12 @@
+job: 004-void-density-spread
+engine: sympy
+engine_version: "SymPy 1.14.0; SciPy 1.18.1; NumPy 2.5.4"
+job_py_blob: 4ecec28e9ffc94de891a59a9e08cb6dfd5136bb3
+job_md_commit: 5d7baaa
+operator: research session (relay generation 1), acting as its own runner by overseer decision 2026-11-10
+date_utc: 2026-11-11T18:26:21Z
+runtime_seconds: 12
+exit_status: ok
+expected_form_matched: true
+setup_selfcheck: ok
+independent_check: "verify/void_density_spread.py, 4/4"

@@ -1,0 +1,16 @@
+CONTROL_EQ26_RESIDUAL: 0
+CONTROL_GAMMA: f/2 + 1
+CONTROL_H_DRESSED_OVER_BARE: (4*f**2 + f + 4)/(2*(f + 2))
+EMPTY_SPLIT_Q_RESIDUAL: 0
+EMPTY_SPLIT_OMK_RESIDUAL: 0
+SCALING_MAX_ABS_DQ = 1.232e-14
+VOIDMATTER delta_v=-0.999000 Omega_m_v=0.000136 q_min=-0.042888 fv_at_qmin=0.774837 fv_signchange=0.588692 q_at_fv0=-0.035603
+VOIDMATTER delta_v=-0.990000 Omega_m_v=0.001376 q_min=-0.041826 fv_at_qmin=0.782942 fv_signchange=0.601682 q_at_fv0=-0.032626
+VOIDMATTER delta_v=-0.950000 Omega_m_v=0.007249 q_min=-0.037980 fv_at_qmin=0.808399 fv_signchange=0.642279 q_at_fv0=-0.020855
+VOIDMATTER delta_v=-0.900000 Omega_m_v=0.015424 q_min=-0.034244 fv_at_qmin=0.831802 fv_signchange=0.680228 q_at_fv0=-0.006557
+VOIDMATTER delta_v=-0.850000 Omega_m_v=0.024613 q_min=-0.031203 fv_at_qmin=0.850650 fv_signchange=0.711450 q_at_fv0=+0.008064
+VOIDMATTER delta_v=-0.800000 Omega_m_v=0.034951 q_min=-0.028633 fv_at_qmin=0.866610 fv_signchange=0.738427 q_at_fv0=+0.023315
+DELTA_V_AT_DQMIN_0p004 = -0.961856
+DELTA_V_AT_DQMIN_0p0215 = -0.611440
+DELTA_V_AT_Q_FV0_ZERO = -0.877361
+SETUP_SELFCHECK = failed
