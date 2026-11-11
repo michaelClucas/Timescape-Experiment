@@ -124,3 +124,38 @@ catalogue within about 150 Mpc of the Local Group, as a new dataset with its
 own SOURCE.md and cuts.md. Q-6 raises that choice. Steps 2 and 3 do not run
 until Q-6 is answered or a default is taken. No Hubble-flow numbers have been
 read.
+
+---
+
+## 6. 2026-11-11: dataset found; bridge (a) fails for a deeper reason; WP-8 stops
+
+**Q-6's dataset exists.** A subagent search identified the Manticore-Local
+VIDE void catalogue (arXiv:2507.06866, A&A 705, A160):
+- full sky, to about 200 h^-1 Mpc;
+- a posterior-combined void-membership grid (`Voronoi_cloud_all_voids_N64.npy`,
+  64^3 cells of 7.4 h^-1 Mpc);
+- LCDM with `Omega_m = 0.306`, from 2M++ via BORG.
+
+The anti-halo catalogue of Stopyra et al. (arXiv:2311.12926, Zenodo 10160612,
+CC-BY-4.0) would serve as the robustness check, though it shares the 2M++
+input. None of this was downloaded, for the reason below.
+
+**Bridge (a) is not well defined inside the model.** `[COMPUTED]` E4 in
+`verify/wp8_prediction_extremes.py`. The volume-weighted mixture of the two
+wall-clock rates at `f_v0 = 0.695` is `1.3475 Hbar0 = 67.51`. That is exactly
+`gamma_bar = 1 + f_v/2`, i.e. Wiltshire's `Hbar_tau0 = 67.5` [W19], and **not**
+the dressed `H0 = 61.6` that the model's own distance-redshift relation
+gives. The 9.6% gap is the `-d gamma_bar / dt` term in the dressed Hubble
+rate: the change of the lapse along the light path.
+
+Which of these rates low-redshift supernova distances sample in a 20-150 Mpc
+shell, and how that varies with direction, is therefore set by how light
+crosses walls and voids. That is step T12, the conceded step, and it is
+**WP-9, out of scope** (`prompts/standing-loop.md`). A void map does not
+supply it. Choosing a rule would be inventing T12's answer.
+
+**WP-8 stops here, blocked on WP-9.** This is Q-1's guard working as
+intended: the predicted statistic cannot be specified without new theory,
+which this time is light propagation rather than WP-7's perturbations. No
+Hubble-flow numbers were read at any point. The model-side facts in §1 stand
+and are scripted.

@@ -75,5 +75,18 @@ check("E3 empty limit is 1.5", abs(ratios[0.0] - 1.5) < 1e-12, f"{ratios[0.0]:.6
 check("E3 void matter lowers the void/wall rate ratio", ratios[0.07] < ratios[0.0265] < ratios[0.0],
       ", ".join(f"{r:.4f}" for r in ratios.values()))
 
+# E4 (appended 2026-11-11): is bridge (a), a volume-weighted mixture of the two
+# wall-clock rates, consistent with the model's own global dressed H0?
+fv0 = 0.695
+h_dressed = (4 * fv0**2 + fv0 + 4) / (2 * (2 + fv0))  # H0 / Hbar0, findings/WP-1 and job 003 item 1
+mix = (1 - fv0) * 1.0 + fv0 * 1.5  # volume-weighted wall-clock rate / Hbar0
+print(f"  E4: dressed H0/Hbar0 = {h_dressed:.4f} (61.60 from 50.1); volume mixture = {mix:.4f} "
+      f"({50.1 * mix:.2f}); mismatch {100 * (mix / h_dressed - 1):+.2f}%")
+check("E4 the naive volume mixture does NOT reproduce the model's own dressed H0",
+      abs(mix / h_dressed - 1) > 0.05, f"{mix:.4f} vs {h_dressed:.4f}")
+check("E4 the mixture is exactly gamma_bar = 1 + f_v/2, i.e. Hbar_tau0 = 67.5 [W19], not dressed H0",
+      abs(mix - (1 + fv0 / 2)) < 1e-12 and abs(50.1 * mix - 67.5) < 0.05,
+      f"{mix:.4f} = 1 + {fv0}/2; 50.1 x {mix:.4f} = {50.1 * mix:.2f}")
+
 print(f"\n{sum(CHECKS)}/{len(CHECKS)} checks passed")
 sys.exit(0 if all(CHECKS) else 1)
