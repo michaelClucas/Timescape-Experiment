@@ -63,3 +63,59 @@ None produced. No verify/ script was run or changed this generation.
 
 ### Open questions whose defaults I took
 None.
+
+## Generation 1, continued: paused on the overseer's order (2026-11-11)
+
+The overseer overrode the stop above. They answered Q-1..Q-3, chose SymPy
+over Maple, and ordered work to continue. This block is the resume point,
+not a handover: **the same session resumes**, and no successor was started.
+
+**Commits since the block above:** `53ad28f` (Q-1..Q-3 answered, standing
+loop updated), `ea84deb` (SymPy engine; jobs 001/002 shown defective),
+`2ed08ff` (job 003 pre-registered), `6693e60` (job 003 result + independent
+check), `3e4be5f` (WP-5 script), and the pause commit that adds this block
+(findings WP-5/WP-6, explain/006, derived-figure checks).
+
+### State
+| Package | State | Next |
+| --- | --- | --- |
+| WP-1, WP-4 | Complete (unchanged) | - |
+| WP-6 | Finding written; K4 does not fire | Measure `M_v` (below) |
+| WP-5 | Finding written; K3 does not fire | Same measurement |
+| WP-8 | In scope since Q-1; not started | Pre-registration spec first |
+
+### Resume here, in this order
+1. `findings/WP-5-curvature-requirement.md` quotes "9.5%" (line 17) and
+   "1.6%" (lines 102, 119) as hand arithmetic. Add both to
+   `verify/wp5_curvature_requirement.py` before relying on them. Rule:
+   `verify/README.md`.
+2. List the four new scripts in `verify/README.md`.
+3. Add Q-5 to `OPEN-QUESTIONS.md`: is the void phase VoidFinder's voids, or
+   only their empty part? Default: VoidFinder's voids, as WP-4 assumed.
+   Reversible. See WP-6 §5.
+4. Measure `M_v` for VoidFinder voids. This needs NSA galaxy positions
+   cross-matched to `*_comoving_holes.txt`, and the NSA catalogue is not in
+   the repo yet. It is a new dataset, so it gets a `data/002-*/SOURCE.md`
+   and a `cuts.md` written before any analysis.
+5. WP-8: commit `findings/WP-8-prediction-spec.md` before touching data
+   (Q-1 guard).
+6. Comment on Maple issues #7/#8, pointing to
+   `verify/maple_job_design_checks.py`. Do not close them.
+
+### What I established that is not in a committed file
+Nothing.
+
+### What I got wrong this generation
+- `ea84deb` cycle: first wrote `R_curv ∝ f_vi^(-1/3)`. It is `+1/3`; the
+  check caught it before commit.
+- Job 003 JOB.md: the self-check tolerance on the `delta_v=-0.999` row was
+  tighter than the effect. It was left as `failed` and is explained in
+  NOTES.md.
+- WP-6 finding draft: quoted a sign-change shift of 0.093. The script gives
+  0.0935, so it now reads 0.094. Also dropped an unscripted "82%".
+
+### Numbers the next session must not take on trust
+`M_v` thresholds 0.0852, 0.0265 and 0.270, and the shifts 0.0088 and 0.094:
+`verify/void_matter_sensitivity.py` (16/16). `R_v` = 5375.5 Mpc and
+`Omega_k_v` = 0.9845: `verify/wp5_curvature_requirement.py` (6/6). Pan et
+al.'s 7% is a `[LEAD]` from an abstract, not a measurement.

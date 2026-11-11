@@ -125,5 +125,19 @@ dz = brentq(q0_of_delta, -0.95, -0.80, xtol=1e-6)
 check("q(f_v=0.695) = 0 at delta_v = -0.877361 (job 003)", abs(dz + 0.877361) < 5e-4, f"{dz:+.6f}")
 print(f"  -> void mass fraction at that threshold: M_v = {FV0 * (1 + dz):.4f}")
 
+# 5. figures quoted in findings/WP-6 and explain/006, derived from the rows above
+fv, q, _ = run(c_from_mass(0.0695))
+qm7, fs7, q07 = stats(fv, q)
+fv, q, _ = run(0.0)
+qm0, fs0, q00 = stats(fv, q)
+dq, dfs = qm7 - qm0, fs7 - fs0
+print(f"  M_v=0.0695: dq_min={dq:.4f} ({dq / 0.004:.1f}x the +0.004 q_0 error), "
+      f"sign-change shift={dfs:.3f} ({dfs / 0.041:.1f}x the +0.041 f_v0 error), q(0.695) {q00:+.4f} -> {q07:+.4f}")
+check("WP-6 quoted shifts at M_v=0.0695", abs(dq - 0.0088) < 5e-5 and abs(dfs - 0.094) < 5e-4
+      and 2.0 < dq / 0.004 < 2.5 and 2.0 < dfs / 0.041 < 2.5, "0.0088, 0.094, both about twice the quoted error")
+for d_res, m_quoted in ((-0.961856, 0.0265), (-0.611440, 0.270)):
+    m = FV0 * (1 + d_res)
+    check(f"threshold delta_v={d_res} is M_v={m_quoted}", abs(m - m_quoted) < 5e-4, f"M_v = {m:.4f}")
+
 print(f"\n{sum(CHECKS)}/{len(CHECKS)} checks passed")
 sys.exit(0 if all(CHECKS) else 1)
