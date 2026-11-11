@@ -200,3 +200,28 @@ sources. They are `[LEAD]` until re-read.
 ### Open questions whose defaults I took
 - Q-5 (void phase = VoidFinder voids): option 1.
 - Q-6: answered as option 2 by the overseer instruction.
+
+### Addendum, 2026-11-11: waiting on the overseer for the HOD mock
+
+- **Tooling.**
+  - `.venv-hod/` (gitignored) holds halotools 0.9.5, which works.
+  - VAST 1.7.9 is built from `scratch/VAST` at `24e66e1`, with three local
+    build/IO-only patches visible in `git -C scratch/VAST diff`, plus a
+    `healpy` stub that raises if called.
+  - VoidFinder **cannot run on Windows**: its Cython core unlinks memory-mapped
+    temp files (POSIX). It needs WSL Linux with build tools; overseer action.
+- **Simulation.**
+  - halotools' hosted catalogues return 404.
+  - The overseer chose the IllustrisTNG API. Working assumption, unverified
+    because tng-project.org returned 503: TNG300-3-Dark, z = 0, full DM
+    coordinates plus the group catalogue.
+  - Needs `TNG_API_KEY` in `.env` (gitignored); overseer action.
+- **HOD.** Zheng et al. 2007 Table 1 for `M_r < -20` (halotools default:
+  logMmin 12.02, sigma 0.26, logM0 11.38, logM1 13.31, alpha 1.06). Zehavi
+  2011 Table `hod_thres` row -20.0 is the variant: logMmin 11.83, sigma 0.25,
+  logM0 12.35, logM1' 12.98, alpha 1.00, `b_g` 1.20.
+- **Next, once both are in place:**
+  1. Verify the TNG specs.
+  2. Pre-register job 005 (JOB.md) before downloading any particle data.
+  3. Run: HOD, then VoidFinder in periodic mode with the DR7 settings, then
+     cut-5a counts of galaxies and DM, giving `b_void`.
