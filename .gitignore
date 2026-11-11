@@ -5,6 +5,8 @@ scratch/
 # Agent tooling
 .env
 .venv/
+# Separate venv for the HOD-mock tooling (halotools, VAST), kept out of the pinned .venv
+.venv-hod/
 __pycache__/
 node_modules/
 
