@@ -31,8 +31,16 @@ These came with the research plan and do not change.
 1. **Do not assume any conclusions.** This is an experiment, not an attempt
    to support timescape or to bury it. A clean negative is a success; so is
    a clean positive. Neither is the goal.
-2. **Symbolic calculation happens in Maple**, on another machine, one round
-   trip per day. See the queue protocol below.
+2. **Symbolic calculation happens in SymPy**, locally, in the repository's
+   `.venv`. Changed 2026-11-10 by the overseer: no Maple licence is
+   available and no free route to one exists. Before that date it read
+   "Symbolic calculation happens in Maple, on another machine, one round trip
+   per day". The queue's discipline survives the change of engine: a job's
+   `JOB.md`, with its expected output form and its surprises, is committed
+   **before** its `job.py` is run; the output is committed verbatim under
+   `maple/results/`; and an independent numeric check that shares no code with
+   SymPy is required. The directory keeps the name `maple/` so that existing
+   references stay resolvable.
 3. **Proofs are verified in Lean**, and only if a proof-shaped claim
    appears. Do not start a Lean project speculatively.
 4. **Data-driven.** Reanalyse the raw public data. A number taken from a
@@ -203,6 +211,13 @@ Then go to step 1.
 ## Blocks, and the route around each
 
 ### Block: it needs a symbolic computation
+
+**Since 2026-11-10 (constraint 2): write a SymPy job and run it yourself,
+in two commits.** First commit `JOB.md`, which pre-registers the expected
+form and what would be surprising. Then run `job.py`, and commit its verbatim
+output and the independent check together. A job is never edited after its
+`JOB.md` is committed; a corrected job gets a new number. The Maple procedure
+below is kept for the record and for any job that genuinely needs Maple.
 
 File a Maple job. This is the whole reason the queue exists.
 
