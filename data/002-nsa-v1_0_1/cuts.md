@@ -57,3 +57,29 @@ dataset 001 and from conventions, not from galaxy positions:
    VoidFinder run on DR7. A result outside 2%-20% is investigated for a
    pipeline error before it is reported. A result inside that range is not
    thereby confirmed.
+
+---
+
+## Appended 2026-11-11, after the first run: cut 5a
+
+**Cut 5 was wrong as registered.** VoidFinder grows each hole until four
+wall galaxies lie exactly on its surface. `|x - c| <= R` therefore counts
+those **defining wall galaxies**: 35,530 galaxies in Planck 2018 sit within
+1e-3 h^-1 Mpc of a hole surface. On the first run, cut 5 gave
+`M_v,gal = 0.1718`.
+
+**Cut 5a**: inside means `|x - c| <= R - 1e-3`. The interior share is flat
+from 1e-3 to 1e-1 h^-1 Mpc (0.0609, 0.0608, 0.0603), so the boundary is
+resolved and the choice of 1e-3 does not drive the result. Both cuts are
+printed by `verify/wp6_void_galaxy_share.py`. The headline is cut 5a,
+because VoidFinder's construction defines hole-surface galaxies as wall
+galaxies.
+
+A diagnostic run that was not part of the registered outputs:
+- the sample is volume-limited, `M_r < -20.0` and `z < 0.114`, as the
+  catalogue paper states;
+- with Pan et al.'s `M_r < -20.09`, the cut-5a share is 0.0596.
+
+These figures come from an ad-hoc diagnostic, not from a committed script.
+They are recorded so that the reason for cut 5a is checkable, and they are
+not quoted as results.
