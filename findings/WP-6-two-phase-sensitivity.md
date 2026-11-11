@@ -193,3 +193,93 @@ query, and its quotes passed through a summariser, so every quote below is
 **Before any novelty claim is made publicly, an ADS full-text query is
 required**, e.g.
 `full:"timescape" AND full:("void density" OR "non-empty voids")`.
+
+---
+
+## 7. The measured void matter share (appended 2026-11-11)
+
+**Evidence:**
+- `verify/wp6_void_galaxy_share.py` (6/6), using dataset 002 with cuts
+  pre-registered at `78fa7a3` and cut 5a appended;
+- `verify/wp6_bias_mapping.py` (5/5).
+
+**Galaxy share, measured.** The sample is the `M_r < -20` volume-limited
+SDSS DR7 sample (194,124 galaxies, `z < 0.114`), and the voids are the same
+VoidFinder voids WP-4 measured at `f_v = 0.6228`. **6.09%** of the galaxies
+lie strictly inside them (`delta_g = -0.902`). The figure is stable to 0.0005
+across Planck 2018 / WMAP5 and both mask conventions, and flat to within
+0.0006 as the interior margin goes from 1e-3 to 1e-1 h^-1 Mpc.
+
+The registered cut 5 (`<= R`) gives 17.2%. That reproduces VAST's own
+"~18% of the galaxies" (arXiv:2202.01226 Sec. 3.2), but only by counting the
+hole-bounding galaxies. VAST's Sec. 2.1 identifies those as **wall**
+galaxies: a sphere "is grown … until it is bounded by four galaxies", and
+growth "explicitly stops once wall galaxies are encountered". So 6.09% is
+the interior figure and 17.2% is an upper bracket. The interior figure
+agrees with Pan et al. (7%, `[LEAD]`) and with Hoyle & Vogeley's galaxy
+contrasts of -0.92 to -0.96.
+
+**Matter share, under a sourced bias.** Zehavi et al. 2011 (arXiv:1005.2413,
+ApJ 736, 59, HOD threshold table) give, for `M_r < -20`,
+"`b_g × (σ8/0.8)` = 1.20 ± 0.01". At Planck's σ8 = 0.811 that is
+`b = 1.184`.
+
+With linear bias inside voids, `delta_m = delta_g / b`:
+- **`M_v = 0.148`** at `b = 1.184`.
+- The neighbouring thresholds bracket it: 0.130 at `b = 1.14` and 0.187 at
+  `b = 1.29`.
+
+Pollina et al. 2017 (arXiv:1610.06176, MNRAS 469, 787) find that the
+tracer-matter relation around voids "is always linear", with a slope above
+the large-scale bias for small voids. That points **higher**, not lower.
+Benson et al. 2003 (astro-ph/0208257) find galaxies in voids more
+underdense than the dark matter. The quotes and the subagent's verbatim
+sources are in this repository's session record, so they are `[LEAD]` until
+re-read.
+
+**Named premise: linear bias holds at `delta_g ≈ -0.9`.** Pollina 2017's
+text claims validity "for arbitrarily small values of r, as long as large
+enough voids are considered", but warns that Poisson noise rises near void
+centres. Whether the relation holds at this contrast is not shown in its
+text. No source gives the matter share inside VoidFinder voids directly. That
+would need VoidFinder run on an `M_r < -20` HOD mock, with the dark matter
+counted inside the voids.
+
+**What it does to the model** (job 003's model, figures from
+`verify/wp6_bias_mapping.py`):
+
+| inputs | `M_v` | `q_min` | share of the effect lost | `q` at `f_v0 = 0.695` | acceleration begins at `f_v` |
+|---|---|---|---|---|---|
+| empty voids (tracker) | 0 | -0.0430 | 0 | -0.036 | 0.587 |
+| interior, no bias | 0.061 | -0.0351 | 18% | -0.010 | 0.672 |
+| **interior, `b = 1.184`** | **0.148** | **-0.0280** | **35%** | **+0.027** | **0.745** |
+| interior, `b = 1.29` | 0.187 | -0.0256 | 40% | +0.046 | 0.771 |
+| surface-inclusive, `b = 1.184` | 0.242 | -0.0228 | 47% | +0.074 | 0.803 |
+
+**K4.** K4 requires more than half the effect lost, which needs `M_v >
+0.270`.
+- With the interior share it needs `b > 1.59`. The sourced bias is 1.18-1.29,
+  so **K4 does not fire**.
+- With the surface-inclusive share it needs `b > 1.28`. That falls between
+  Zehavi's `M_r < -20` and `-20.5` values, so under the upper-bracket
+  convention K4 is **marginal**.
+
+**What this establishes, at the strength the premises allow.** The empty-void
+assumption behind every published timescape number is not a harmless
+idealisation. At the void matter share that the measured galaxy content and
+the measured galaxy bias imply:
+- **The deepest apparent acceleration the model can produce is about a third
+  weaker.**
+- **Apparent acceleration starts only once voids fill 74.5% of the volume.**
+  Every published fitted `f_v0` from 0.550 to 0.695 lies below that, so each
+  describes a universe that would appear to be decelerating today. Run 01
+  T13 lists those fits.
+- **The model has to be refitted.** That is WP-2-class work, out of this
+  loop's scope. Whether a refit, now required to reach `f_v0 ≳ 0.75`,
+  still fits supernovae, and stays consistent with WP-4's measured void
+  fraction (a lower bound of 0.62), is the question this result hands on.
+
+**This is not the reformulation stop condition.** K4 is applied exactly as
+written and does not fire. The finding reports a large sensitivity below the
+kill threshold, which is what the plan's "counts against" limb for WP-6
+describes, short of a kill.
