@@ -151,3 +151,45 @@ galaxy formation is suppressed in low-density regions, so the void share of
 bright galaxies is more likely to understate the matter share than to
 overstate it. If that premise holds, `M_v ≈ 0.07` is closer to a floor than
 a ceiling, and the 0.0852 threshold sits 1.5 points above it.
+
+---
+
+## 6. Prior art (appended 2026-11-11)
+
+A subagent literature search covered about 12 queries over arXiv, search
+engines and ar5iv full texts. It did **not** run a direct NASA ADS full-text
+query, and its quotes passed through a summariser, so every quote below is
+`[LEAD]` until checked character by character against the source.
+
+- **Already known.**
+  - The tracker is "the walls expanding as an Einstein–de Sitter model … the
+    voids as an empty Milne universe" (arXiv:1311.3787 Sec. 5.2). §2's
+    control is therefore a consistency check, not a result.
+  - The local Hubble extremes are `Hbar0` and `Hbar0 / h_r`
+    (arXiv:1311.3787 Sec. 5.3; arXiv:1306.3208 fn. 7). This is cited, not
+    claimed as new, in `findings/WP-8-prediction-spec.md` §1.
+- **Formula known, characterisation not found.** `Omega_k_bar ≃
+  9 f_v/(2+f_v)^2` appears in arXiv:1306.3208 App. A. The statement that it
+  holds **iff** `Omega_k_v = 1` (WP-5 I2) was not found.
+- **Not found anywhere.**
+  - Timescape's lapse and dressing applied to voids that contain matter.
+  - Any parametrisation of the model by the void mass fraction `M_v`.
+  - Any computation of dressed `q` against void content, or a sign crossing
+    near `M_v ≈ 0.085`.
+  - Any sensitivity analysis of the two-phase ansatz.
+- **Closest work.**
+  - Wiegand & Buchert, arXiv:1002.3912: matter in the underdense region of a
+    two-scale Buchert model, with no lapse.
+  - Räsänen, astro-ph/0607626: varies void emptiness qualitatively, with no
+    dressing.
+  - Mattsson & Mattsson, arXiv:1012.4008: non-empty LTB voids, not
+    timescape.
+- **The tension this work addresses.**
+  - Wiltshire's own lecture notes give voids `delta = -0.94 ± 0.02`
+    (arXiv:1311.3787) while the phenomenology uses empty voids.
+  - Galoppo & Mourier (arXiv:2511.17160) describe voids as "dust-sourced"
+    but use the tracker.
+
+**Before any novelty claim is made publicly, an ADS full-text query is
+required**, e.g.
+`full:"timescape" AND full:("void density" OR "non-empty voids")`.
