@@ -283,3 +283,35 @@ the measured galaxy bias imply:
 written and does not fire. The finding reports a large sensitivity below the
 kill threshold, which is what the plan's "counts against" limb for WP-6
 describes, short of a kill.
+
+### 7.1 Correction to §7's headline (same day)
+
+**§7 led with `b = 1.184` and `q(0.695) = +0.027`. That overstates what the
+sources support.** Sutter et al. 2014 (arXiv:1311.3301, Conclusions, `[LEAD]`
+quote via the subagent) find, for galaxy-defined watershed voids in an HOD
+mock, that "mean densities in the galaxies are within 10% of the mean
+densities in the dark matter", with the dark-matter cores denser. At a
+void-averaged level that is **effective `b ≈ 1`**, not the large-scale 1.18.
+The defensible range of the bias inside voids is therefore about 1 to 1.3,
+and the rows of §7's table for `b` = 1.0 to 1.29 are the result. A single
+row is not.
+
+**Robust across that range, interior share:**
+- **`M_v` is at least 0.061.**
+- **The model loses 18% to 40% of its apparent acceleration** (`q_min` from
+  -0.035 to -0.026, against -0.043). Even the lower end is twice the
+  published `q_0` error.
+- **The onset of acceleration moves to `f_v` = 0.672 to 0.771**, against
+  0.587 for empty voids. Even the lower end, a shift of 0.085, is about
+  twice the published `f_v0` error.
+
+**Not robust:**
+- **The sign of `q` at `f_v0 = 0.695`.** It is -0.010 at `b = 1` and +0.046
+  at `b = 1.29`. It changes sign at `b = 1.045`, inside the range. So "no
+  apparent acceleration at the fitted `f_v0`" holds for any bias above 1.045,
+  but **not for all defensible biases**.
+- **K4.** It does not fire anywhere in the interior range.
+
+**What would settle the bias:** the matter share inside VoidFinder voids
+built from an `M_r < -20` HOD mock, as §7 already says. The question has
+narrowed to one number: `b_void` in [1.0, 1.3].
