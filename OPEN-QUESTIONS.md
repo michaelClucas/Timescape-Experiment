@@ -268,4 +268,8 @@ covers the northern SDSS footprint.
 that depends on the choice, and no Hubble-flow numbers have been read, so
 any option can still be taken cleanly. Recommendation is option 2.
 
-**Answer:** (overseer, pending)
+**Answer:** (overseer, 2026-11-11) **Option 2.** The overseer's instruction
+that day was "You have permission to do everything, just keep this research
+going", which was taken as authorising the recommended option. Dataset 003
+gets the same pre-registration (SOURCE.md and cuts.md before analysis) as
+datasets 001 and 002.
