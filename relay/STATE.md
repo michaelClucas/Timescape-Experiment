@@ -119,3 +119,84 @@ Nothing.
 `verify/void_matter_sensitivity.py` (16/16). `R_v` = 5375.5 Mpc and
 `Omega_k_v` = 0.9845: `verify/wp5_curvature_requirement.py` (6/6). Pan et
 al.'s 7% is a `[LEAD]` from an abstract, not a measurement.
+
+## Generation 1, continued again: checkpoint (2026-11-11)
+
+**Cycles this stretch:** about 12, far past the relay's handover point of
+about 8. **Not compacted.** This block is written as a handover so that the
+next session, whether it is this one resumed or generation 2, starts clean.
+**Branch at start of stretch:** `5edb707`. **At end:** the commit adding this
+block.
+
+**Overseer instructions this stretch:**
+- "Continue";
+- "You have permission to do everything, just keep this research going
+  until you make a publishable breakthrough";
+- "feel free to run as many subagents as you think you'll need".
+
+**Commits (subjects abbreviated):**
+- `efcb45f` WP-5 figures scripted, Q-5 raised
+- `78fa7a3` dataset 002 (NSA) SOURCE/cuts pre-registered
+- `f797d10` WP-8 pre-registration spec
+- `2df78ce` WP-8 step 1, Q-6 raised
+- `1442d1e` Q-6 answered (option 2)
+- `5d7baaa` job 004 pre-registered
+- `e620417` job 004 result: density spread negligible at fixed `M_v`
+- `b3cda92` measured void galaxy share 0.0609, cut 5a appended
+- `29ecc5e` bias-to-`M_v` mapping
+- `ac1d320` WP-8 stops, blocked on WP-9 (T12)
+- `ac93a1c` WP-6 prior art
+- `86e7770` WP-6 §7, measured `M_v`
+- `c434aba` §7.1, headline corrected to a bias bracket
+
+### State of every in-scope package
+| Package | State | Blocked on |
+| --- | --- | --- |
+| WP-1, WP-4 | Complete | - |
+| WP-5 | Complete on curvature (K3 does not fire) | - |
+| WP-6 | Measured, K4 does not fire; result bracketed by `b_void` in [1.0, 1.3] | An HOD-mock measurement of `b_void` |
+| WP-8 | Stopped | WP-9 (T12, light propagation), out of scope |
+
+### What the next session should do first, and why
+Settle `b_void`, the one number WP-6's sign question hangs on
+(`findings/WP-6-two-phase-sensitivity.md` §7.1).
+
+The route:
+1. Take a public N-body box with halos and a dark-matter particle subsample.
+2. Populate it with Zehavi 2011's `M_r < -20` HOD.
+3. Run VAST VoidFinder on the mock galaxies.
+4. Count both mock galaxies (cut 5a) and dark-matter particles strictly
+   inside the holes.
+
+The ratio of the two gives `b_void` directly, with no linear-bias premise.
+Pre-register it as dataset 003 or job 005 (SOURCE/cuts or JOB.md first)
+before touching any simulation output. Expected cost: a simulation download
+of 1-10 GB, and a VoidFinder run of tens of minutes.
+
+### What I established that is not in a committed file
+Nothing.
+
+### What I got wrong this stretch
+- **Cut 5 as registered** counted hole-surface wall galaxies, giving 0.172.
+  Caught by a margin diagnostic; cut 5a appended. Both are reported.
+- **§7's headline**, `q(0.695) = +0.027`, rested on a single bias value.
+  Corrected in §7.1 to a bracket after Sutter 2014.
+- **The first version of `verify/void_density_spread.py`** had a
+  third-derivative noise problem, fixed with the reason documented.
+- **WP-8 §1 presented `Hbar0` and `Hbar0/h_r` as structure** without noting
+  that it is already published (arXiv:1311.3787 Sec. 5.3). Cited in WP-6 §6.
+
+### Numbers the next session must not take on trust
+| Number | Script |
+| --- | --- |
+| Galaxy share 0.0609 / 0.1718 | `verify/wp6_void_galaxy_share.py` (6/6) |
+| `M_v` and `q` rows against `b` | `verify/wp6_bias_mapping.py` (5/5) |
+| Job 004's density-spread result | `verify/void_density_spread.py` (4/4) |
+| WP-8 E4, 67.51 vs 61.60 | `verify/wp8_prediction_extremes.py` (8/8) |
+
+Bias values and literature quotes come from subagents reading arXiv LaTeX
+sources. They are `[LEAD]` until re-read.
+
+### Open questions whose defaults I took
+- Q-5 (void phase = VoidFinder voids): option 1.
+- Q-6: answered as option 2 by the overseer instruction.

@@ -95,3 +95,38 @@ repository already uses. The second is a reply a timescape author could
 reasonably make: the "voids" in the model are only the truly empty parts.
 That reply works, but it shrinks the void fraction that observations can be
 compared with, and that comparison is already tight.
+
+---
+
+## Added 2026-11-11: measuring how much is really in the voids
+
+Since this was first written, the share of matter in the voids has been
+measured rather than taken from a paper's summary.
+
+**Counting galaxies.** We placed the 194,124 brighter galaxies of the
+northern SDSS survey on the same void map used for the void fraction. Of
+these, 6.1% sit inside the voids, which fill 62% of the volume. A first
+count gave 17%, but that included galaxies sitting exactly on void
+surfaces. The void-finder builds each void by growing a sphere until it
+touches four galaxies, and those four belong to the surrounding wall, not
+to the void.
+
+**From galaxies to matter.** Bright galaxies cluster more strongly than
+matter, so voids are emptier of galaxies than of matter. How much more
+depends on a number called the bias. The published values point to voids
+holding between 6% and 19% of all matter.
+
+**What that does to the model.** Across that whole range:
+- the strongest apparent acceleration the model can produce is 18% to 40%
+  weaker than with empty voids;
+- apparent acceleration starts only once voids fill 67% to 77% of space,
+  rather than 59%.
+
+Whether the model shows apparent acceleration at its own best-fit void
+fraction depends on where in that range the truth lies. It does at the low
+end and does not at the high end.
+
+**What it settles.** The empty-void assumption matters, by more than the
+model's published error bars, at the void content we actually measure. It
+does not kill the model. The model would have to be refitted with matter in
+its voids, and nobody has done that.
