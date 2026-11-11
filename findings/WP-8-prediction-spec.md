@@ -88,3 +88,39 @@ which is out of scope, and it stops there** (Q-1's answer).
 - **Neither.** The data cannot distinguish 1.45-1.50 from the LCDM outflow.
   That is a reportable null and does not license reformulating the
   statistic.
+
+---
+
+## 5. Step 1 done, 2026-11-11: what the measurement computes, and why bridge (a) fails here
+
+Only the methods of arXiv:2510.19945 were read. The fetch was instructed to
+return no results, values or conclusions, and none were seen.
+
+**The statistic** (their Eqs. 5, 11, 17-20):
+- `Delta H_s = H_s^CMB - H_s^LG`, the difference between the Hubble constant
+  fitted in the CMB rest frame and in the Local Group rest frame;
+- computed in concentric radial shells 30 Mpc wide, from 20-40 Mpc out to
+  about 150 Mpc;
+- using Pantheon+SH0ES SNe Ia at `0.008 <= z < 0.04`, with `M_B` fixed and
+  the full covariance;
+- the LCDM expectation comes from Monte Carlo resampling and random boosts,
+  not N-body.
+
+The statistic is the one introduced by arXiv:1201.5371 (Wiltshire et al.).
+
+**Why §1's prediction cannot yet be put into this statistic.** `Delta H_s`
+measures how the shell-averaged expansion depends on the choice of boost.
+Under timescape it is driven by where the voids and walls lie **in each
+direction** around the Local Group within about 150 Mpc, because that
+geometry decides how a direction-dependent non-kinematic expansion projects
+onto the dipole. §1 gives the two rates. Bridge (a) needs their full-sky
+geometry, and dataset 001 covers only the SDSS DR7 northern footprint.
+Arranging the two rates over the missing sky by assumption would be choosing
+a geometry, which is exactly the improvisation the guard forbids.
+
+**Status: WP-8 is blocked at bridge (a).** It is not blocked on WP-7; what
+it needs is data, not new theory. What would unblock it is a full-sky void
+catalogue within about 150 Mpc of the Local Group, as a new dataset with its
+own SOURCE.md and cuts.md. Q-6 raises that choice. Steps 2 and 3 do not run
+until Q-6 is answered or a default is taken. No Hubble-flow numbers have been
+read.

@@ -239,3 +239,33 @@ consequence stated in WP-6 §5. Reversible: no script depends on the choice,
 only the prose that reads the scripts. Recommendation is option 3.
 
 **Answer:** (overseer, pending)
+
+---
+
+## Q-6. Should WP-8 acquire a full-sky local void catalogue?
+
+**Raised:** 2026-11-11, relay generation 1, WP-8
+**Blocks:** WP-8 steps 2-3 (`findings/WP-8-prediction-spec.md` §5).
+**The argument.** The measured statistic, `Delta H_s` in arXiv:2510.19945,
+is a CMB-minus-LG frame difference in radial shells out to about 150 Mpc.
+Timescape's prediction for it depends on the full-sky void and wall geometry
+around the Local Group. The repository's only void data, VAST SDSS DR7,
+covers the northern SDSS footprint.
+
+**Options:**
+1. **Leave WP-8 blocked.** It costs nothing, and the `H_0` question stays
+   open.
+2. **Acquire a full-sky local void catalogue**, for example one built on the
+   2MASS Redshift Survey, as dataset 003, and build bridge (a) on it. This
+   is a dataset package, with the same pre-registration as datasets 001 and
+   002.
+3. **Use the published Szekeres model of the local structure**
+   (arXiv:1512.07364) as the geometry. Run 01 notes that it is not timescape,
+   so this would test a different model's geometry with timescape's rates,
+   and the result would need that caveat on every line.
+
+**Default taken:** option 1. It is reversible: nothing has been computed
+that depends on the choice, and no Hubble-flow numbers have been read, so
+any option can still be taken cleanly. Recommendation is option 2.
+
+**Answer:** (overseer, pending)
