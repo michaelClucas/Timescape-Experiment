@@ -14,7 +14,7 @@ measured (§4).
 voids. It holds if and only if the voids are exactly empty and pure
 curvature, a Milne expansion. In physical terms that means a curvature radius
 equal to the voids' own Hubble radius, **5.38 Gpc**. That figure varies by
-only 9.5% across the whole published `f_v0` spread.
+only 9.45% across the whole published `f_v0` spread.
 
 Voids that hold a realistic share of the matter still supply 98.4% of this
 curvature, so on curvature the model is safe. Run 01 named curvature as the
@@ -99,7 +99,7 @@ what real voids provide. Two caveats bound that answer:
   model, a void's curvature follows from its density and its expansion rate,
   and no survey measures void curvature directly. The defensible statement is
   that a void phase holding 7% of the matter falls short of the required
-  curvature by 1.6%.
+  curvature by 1.55%.
 - **The comparison scale is narrow.** That shortfall is inside the fitted
   `Omega_k_bar0` uncertainty of `+0.024/-0.032` on 0.862 (arXiv:1311.3787,
   via job 002's JOB.md). But that uncertainty is conditional on the tracker,
@@ -116,7 +116,7 @@ remaining exposure lies.
 ## 4. The one measurement both packages need
 
 Two things depend on `M_v`, the share of matter in the void phase:
-- the 1.6% curvature shortfall here;
+- the 1.55% curvature shortfall here;
 - WP-6's shifts in the deceleration (8.5% removes present acceleration at
   the fitted `f_v0`).
 

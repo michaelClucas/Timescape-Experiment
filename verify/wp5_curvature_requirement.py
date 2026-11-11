@@ -113,5 +113,12 @@ check("I4a matches job 003's Omega_m_v at delta_v=-0.90 (M_v=0.0695)",
 check("I4b at the observed-order M_v = 0.07, voids supply >98% of the required curvature",
       1 - rows[0.07] > 0.98, f"Omega_k_v = {1 - rows[0.07]:.4f}")
 
+# figures quoted in findings/WP-5-curvature-requirement.md
+spread = rs[0.791] / rs[0.550] - 1
+short = rows[0.07]  # 1 - Omega_k_v provided, at M_v = 0.07
+print(f"  quoted: R_v spread across f_v0 = {100 * spread:.1f}%; curvature shortfall at M_v=0.07 = {100 * short:.1f}%")
+check("WP-5 quoted 9.45% and 1.55%", f"{100 * spread:.2f}" == "9.45" and f"{100 * short:.2f}" == "1.55",
+      f"{100 * spread:.2f}%, {100 * short:.2f}%")
+
 print(f"\n{sum(CHECKS)}/{len(CHECKS)} checks passed")
 sys.exit(0 if all(CHECKS) else 1)

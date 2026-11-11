@@ -199,3 +199,43 @@ and never use `git stash`, because the stash stack is shared.
 Relay generations run strictly one at a time, so `prompts/relay.md`'s
 `use_worktree: false` stands for them, and they still make option 3's
 assertion. Both prompt changes were made in `prompts/standing-loop.md`.
+
+---
+
+## Q-5. Is timescape's void phase the VoidFinder voids, or only their empty part?
+
+**Raised:** 2026-11-11, relay generation 1, WP-6
+**Blocks:** how two findings are read:
+- `findings/WP-6-two-phase-sensitivity.md` §4-§5 (how large the void
+  mass fraction `M_v` is taken to be);
+- the direction in which `findings/WP-4-void-fraction.md`'s lower bound
+  binds.
+
+No number changes. What changes is which of the two packages carries the
+exposure.
+
+**The argument.** The tracker requires empty voids
+(`verify/wp5_curvature_requirement.py` I2). Real voids hold matter, and with
+`M_v ≈ 0.07` the deceleration shifts by about twice its quoted error
+(`verify/void_matter_sensitivity.py`). A timescape author can define the
+void phase as only the truly empty regions, with occupied underdense regions
+counted as wall. That makes `M_v ≈ 0` by definition, but the void volume
+fraction observations can be compared with then falls below VoidFinder's
+0.62, and WP-4's lower bound stops binding.
+
+**Options:**
+1. **Void phase = VoidFinder voids**, as WP-4 assumed. Then `M_v` is the
+   measured void share of matter, and WP-6's shifts apply.
+2. **Void phase = the empty part only.** Then WP-6's shifts vanish, and the
+   measured void fraction becomes an overestimate of the void phase rather
+   than a lower bound. WP-4's §6 conclusions would need restating.
+3. **Report both** in each finding, and leave the choice to whatever paper
+   states the model's own operational definition. Run 01 found none
+   (`findings/WP-4-void-fraction.md` §9 quotes Wiltshire on recognising the
+   wall phase in a survey).
+
+**Default taken:** option 1, for consistency with WP-4, with option 2's
+consequence stated in WP-6 §5. Reversible: no script depends on the choice,
+only the prose that reads the scripts. Recommendation is option 3.
+
+**Answer:** (overseer, pending)
